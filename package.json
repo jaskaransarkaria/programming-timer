@@ -5,13 +5,17 @@
     "build": "rollup -c",
     "dev": "rollup -c -w",
     "start": "sirv public",
-    "lint": "eslint src/**/**/*.svelte tests/**/**/*.svelte"
+    "lint": "eslint src/**/**/*.svelte tests/**/**/*.svelte",
+    "test": "nyc ava"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^11.0.0",
     "@rollup/plugin-node-resolve": "^7.0.0",
+    "ava": "^3.5.1",
     "eslint": "^6.8.0",
     "eslint-plugin-svelte3": "^2.7.3",
+    "husky": "^4.2.3",
+    "nyc": "^15.0.0",
     "rollup": "^1.20.0",
     "rollup-plugin-livereload": "^1.0.0",
     "rollup-plugin-svelte": "^5.0.3",
@@ -20,5 +24,30 @@
   },
   "dependencies": {
     "sirv-cli": "^0.4.4"
-  }
+  },
+  "ava": {
+    "compileEnhancements": false,
+    "files": [
+      "tests/**/*.test.svelte"
+    ],
+    "extensions": [
+      "svelte"
+    ],
+    "verbose": true
+  },
+  "nyc": {
+    "all": true,
+    "check-coverage": false,
+    "exclude": [
+      "tests/"
+    ],
+    "extensions": [
+      ".svelte"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "npm run lint && npm run test"
+    }
+}
 }
