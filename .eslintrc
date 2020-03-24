@@ -1,30 +1,38 @@
 {
-  "env": {
-    "browser": true,
-    "es6": true
-  },
   "parserOptions": {
     "ecmaVersion": 2019,
     "sourceType": "module"
   },
+  "env": {
+    "es6": true,
+    "browser": true
+  },
   "plugins": [
     "svelte3"
+  ],
+  "overrides": [
+    {
+      "files": ["**/*.svelte"],
+      "processor": "svelte3/svelte3"
+    }
   ],
   "extends": [
     "eslint:recommended"
   ],
-  "overrides": [
-    {
-      "files": [
-        "**/*.svelte"
-      ],
-      "processor": "svelte3/svelte3"
-    }
-  ],
   "rules": {
-    "svelte3/lint-template": 2
+    "comma-dangle": ["error", "always"],
+    "eol-last": ["error", "always"],
+    "computed-property-spacing": ["error", "always"],
+    "camelcase": ["error", {
+      "properties": "always",
+      "ignoreDestructuring": true,
+      "ignoreImports": true
+    }],
+    "brace-style": ["error", "1tbs", {"allowSingleLine": true}],
+    "array-element-newline": ["error", "always"],
+    "array-bracket-spacing": ["error", "always"],
+    "array-bracket-newline": ["error", "always"]
   },
   "settings": {
-    //
   }
 }

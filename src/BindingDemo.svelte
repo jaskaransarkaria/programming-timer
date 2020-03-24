@@ -1,6 +1,5 @@
-<script>
-  'use strict';
-  let name = "Jasky";
+<script> 
+  let name = 'Jasky';
 </script>
 
 <input bind:value={name}/>

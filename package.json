@@ -5,49 +5,35 @@
     "build": "rollup -c",
     "dev": "rollup -c -w",
     "start": "sirv public",
-    "lint": "eslint src/**/**/*.svelte tests/**/**/*.svelte",
-    "test": "nyc ava"
+    "lint": "eslint src/**/**/*.svelte tests/**/**/*.js",
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
   "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/preset-env": "^7.9.0",
     "@rollup/plugin-commonjs": "^11.0.0",
     "@rollup/plugin-node-resolve": "^7.0.0",
-    "ava": "^3.5.1",
+    "@testing-library/jest-dom": "^5.1.1",
+    "@testing-library/svelte": "^3.0.0",
+    "babel-jest": "^25.1.0",
     "eslint": "^6.8.0",
     "eslint-plugin-svelte3": "^2.7.3",
     "husky": "^4.2.3",
-    "nyc": "^15.0.0",
+    "jest": "^25.1.0",
     "rollup": "^1.20.0",
     "rollup-plugin-livereload": "^1.0.0",
     "rollup-plugin-svelte": "^5.0.3",
     "rollup-plugin-terser": "^5.1.2",
-    "svelte": "^3.0.0"
+    "svelte": "^3.0.0",
+    "svelte-jester": "^1.0.5"
   },
   "dependencies": {
     "sirv-cli": "^0.4.4"
-  },
-  "ava": {
-    "compileEnhancements": false,
-    "files": [
-      "tests/**/*.test.svelte"
-    ],
-    "extensions": [
-      "svelte"
-    ],
-    "verbose": true
-  },
-  "nyc": {
-    "all": true,
-    "check-coverage": false,
-    "exclude": [
-      "tests/"
-    ],
-    "extensions": [
-      ".svelte"
-    ]
   },
   "husky": {
     "hooks": {
       "pre-push": "npm run lint && npm run test"
     }
-}
+  }
 }

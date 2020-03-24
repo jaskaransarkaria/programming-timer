@@ -1,5 +1,4 @@
-<script>
-  'use strict';
+<script> 
   import Greeting from './Greeting.svelte';
   import Login from './Login.svelte';
   import FrameworkList from './FrameworkList.svelte';

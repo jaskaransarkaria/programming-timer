@@ -1,10 +1,9 @@
-<script>
-  'use strict';
-  let frameworks = [
-    { id: 1, name: "Svetle" },
-    { id: 2, name: "Angular" },
-    { id: 3, name: "React" },
-    { id: 4, name: "Vue" },
+<script> 
+  const frameworks = [
+    { id: 1, name: 'Svetle' },
+    { id: 2, name: 'Angular' },
+    { id: 3, name: 'React' },
+    { id: 4, name: 'Vue' },
   ];
 </script>
 

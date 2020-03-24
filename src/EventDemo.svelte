@@ -1,6 +1,5 @@
-<script>
-  'use strict';
-  let m = { x: 0, y: 0 };
+<script> 
+  const m = { x: 0, y: 0 };
 
   function handleMousemove({ clientX, clientY }) {
     m.x = clientX;

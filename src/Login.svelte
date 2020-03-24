@@ -1,21 +1,19 @@
 <script>
-  'use strict';
-
   export let user = { loggedIn: false };
 
-  function toggle () {
+  function toggle() {
     user.loggedIn = !user.loggedIn;
   }
 </script>
 
 
 {#if user.loggedIn}
-  <button on:click={toggle}>
-    Log out
+  <button on:click={toggle} data-testid=log-out-button>
+    Log Out
   </button>
 {:else}
-  <button on:click={toggle}>
-    Log in
+  <button on:click={toggle} data-testid=log-in-button>
+    Log In
   </button>
 {/if}
 
