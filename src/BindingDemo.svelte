@@ -1,4 +1,4 @@
-<script> 
+<script>
   let name = 'Jasky';
 </script>
 

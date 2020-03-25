@@ -1,4 +1,4 @@
-<script> 
+<script>
   const frameworks = [
     { id: 1, name: 'Svetle' },
     { id: 2, name: 'Angular' },

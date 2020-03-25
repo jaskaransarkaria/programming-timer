@@ -10,6 +10,12 @@
   "plugins": [
     "svelte3"
   ],
+  "globals": {
+    "module" : "readonly",
+    "describe": "readonly",
+    "it": "readonly",
+    "expect": "readonly"
+  },
   "overrides": [
     {
       "files": ["**/*.svelte"],
@@ -59,7 +65,7 @@
           "after": true
         }],
         "require-await": ["error"],
-        "multi-line ternary": ["error", "always"],
+        "multiline-ternary": ["error", "always"],
         "new-cap": ["error"],
         "no-trailing-spaces": ["error"]
   },

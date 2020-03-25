@@ -7,9 +7,7 @@
   $: fullName = `${firstName} ${lastName}`;
 </script>
 
-<main>
-  <h2>HELLOOOO {fullName} AGAIN</h2>
-</main>
+<h2 data-testId="greeting-header">HELLOOOO {fullName} AGAIN</h2>
 
 <style>
 h2 { 

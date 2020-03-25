@@ -1,4 +1,4 @@
-<script> 
+<script>
   const m = { x: 0, y: 0 };
 
   function handleMousemove({ clientX, clientY }) {
