@@ -1,8 +1,8 @@
 <script>
   'use strict';
 
-  export let firstName = 'Jasky';
-  export let lastName = 'Coderson';
+  export let firstName = "Jasky";
+  export let lastName = "Coderson";
 
   $: fullName = `${firstName} ${lastName}`;
 </script>

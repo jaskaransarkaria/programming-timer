@@ -20,7 +20,7 @@
     "eslint:recommended"
   ],
   "rules": {
-    "comma-dangle": ["error", "always"],
+    "comma-dangle": ["error", "always-multiline"],
     "eol-last": ["error", "always"],
     "computed-property-spacing": ["error", "always"],
     "camelcase": ["error", {
@@ -31,7 +31,37 @@
     "brace-style": ["error", "1tbs", {"allowSingleLine": true}],
     "array-element-newline": ["error", "always"],
     "array-bracket-spacing": ["error", "always"],
-    "array-bracket-newline": ["error", "always"]
+    "array-bracket-newline": ["error", "always"],
+    "indent": [
+        "error",
+        2
+      ],
+      "max-len": [
+        "error",
+        {
+          "code": 100
+        }
+      ],
+      "semi": ["error", "always"],
+      "no-duplicate-imports": ["error"],
+      "no-var": ["error"],
+      "prefer-const": ["error"],
+          "prefer-destructuring": [
+            "error",
+            {
+              "object": true,
+              "array": false
+            }
+          ],
+      "prefer-spread": ["error"],
+      "arrow-spacing": ["error", {
+          "before": true,
+          "after": true
+        }],
+        "require-await": ["error"],
+        "multi-line ternary": ["error", "always"],
+        "new-cap": ["error"],
+        "no-trailing-spaces": ["error"]
   },
   "settings": {
   }
