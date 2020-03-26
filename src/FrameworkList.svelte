@@ -1,5 +1,5 @@
 <script>
-  const frameworks = [
+  export let frameworks = [
     {
       id: 1,
       name: 'Svetle',
@@ -20,7 +20,7 @@
 </script>
 
 <h1>List Frameworks</h1>
-<ul>
+<ul data-testid='framework-ul'>
     {#each frameworks as { id, name }}
       <li>
         { id } : { name }

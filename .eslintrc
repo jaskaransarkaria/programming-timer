@@ -92,7 +92,8 @@
             }
           }
         ],
-      "object-property-newline": ["error"]
+      "object-property-newline": ["error"],
+      "quotes": ["error", "single"]
   },
   "settings": {
   }
