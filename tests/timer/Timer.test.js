@@ -13,6 +13,7 @@ describe('take duration as an prop and start a timer which alerts on expiration'
     const timerHeader = getByTestId('timer-header');
 
     await fireEvent.click(timer);
+    await jest.advanceTimersByTime(1000);
 
     expect(setTimeout).toBeCalledTimes(1);
     expect(timerHeader).toHaveTextContent('times up!');

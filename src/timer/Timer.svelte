@@ -8,8 +8,8 @@ function timesUp() {
   return;
 }
 
-function setTimer(duration, alert) {
-  setTimeout(alert, duration*1000);
+function setTimer(duration, timerAlert) {
+  setTimeout(() => timerAlert(), duration*1000);
 }
 </script>
 
