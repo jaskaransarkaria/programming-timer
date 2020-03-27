@@ -16,7 +16,9 @@
     "it": "readonly",
     "expect": "readonly",
     "process": "readonly",
-    "require": "readonly"
+    "require": "readonly",
+    "global": "readonly",
+    "jest": "readonly"
   },
   "overrides": [
     {
