@@ -3,6 +3,7 @@
   import Login from './Login.svelte';
   import FrameworkList from './FrameworkList.svelte';
   import EventDemo from './EventDemo.svelte';
+  import BindingDemo from './BindingDemo.svelte';
   
   export let name;
 </script>
@@ -13,6 +14,7 @@
   <Login />
   <FrameworkList />
   <EventDemo/>
+  <BindingDemo />
 </main>
 
 <style>

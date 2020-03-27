@@ -1,6 +1,6 @@
 <script>
-  let name = 'Jasky';
+  export let name = 'Jasky';
 </script>
 
-<input bind:value={name}/>
-<h1>Jello {name}</h1>
+<input data-testid="input-bind" bind:value={name}/>
+<h1 data-testid="header-bind">Jello {name}</h1>

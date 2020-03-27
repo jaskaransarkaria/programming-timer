@@ -15,15 +15,15 @@ describe('pass in framework array and create <li></li> for each item', () => {
           name: 'testName2',
         },
         {
-          id: 'testId2',
-          name: 'testName2',
+          id: 'testId3',
+          name: 'testName3',
         },
       ],
     },
     );
-    expect(getByText('testId1 : testName1')).toBeVisible('testId1 : testName1');
-    expect(getByText('testId2 : testName2')).toBeVisible('testId2 : testName2');
-    expect(getByText('testId3 : testName3')).toBeVisible('testId3 : testName3');
+    expect(getByText('testId1 : testName1')).toBeVisible();
+    expect(getByText('testId2 : testName2')).toBeVisible();
+    expect(getByText('testId3 : testName3')).toBeVisible();
   });
   it('pass in array of objects with insufficient properties', () => {
     const { getByTestId } = render(FrameworkList, {
@@ -46,5 +46,12 @@ describe('pass in framework array and create <li></li> for each item', () => {
     );
     const frameworkComponent = getByTestId('framework-ul');
     expect(frameworkComponent).toBeInTheDocument();
+  });
+  it('Do not pass in a frameworks array and this should use the default', () => {
+    const { getByText } = render(FrameworkList);
+
+    expect(getByText('1 : Svelte')).toBeVisible();
+    expect(getByText('2 : Angular')).toBeVisible();
+    expect(getByText('3 : React')).toBeVisible();
   });
 });

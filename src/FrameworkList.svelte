@@ -2,7 +2,7 @@
   export let frameworks = [
     {
       id: 1,
-      name: 'Svetle',
+      name: 'Svelte',
     },
     {
       id: 2,
