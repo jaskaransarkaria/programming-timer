@@ -10,7 +10,7 @@
   }
 </script>
 
-<div on:mousemove={handleMousemove}>
+<div data-testid="mouse-movement-div" on:mousemove={handleMousemove}>
   The mouse position is {m.x} x {m.y}
 </div>
 
