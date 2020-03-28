@@ -30,7 +30,7 @@
   function displayRemainingTime() {
     setInterval(() => {
       !isNaN(remainingTimeMillis) ?
-        updateTime :
+        updateTime() :
         remainingTimeMillis;
     }, 1000);
     return;
@@ -43,6 +43,7 @@
   }
 
   function timesUp() {
+    remainingTimeMillis = 'stop';
     displayTime = 'Times up!';
     return;
   }
