@@ -4,14 +4,14 @@
   import FrameworkList from './FrameworkList.svelte';
   import EventDemo from './EventDemo.svelte';
   import BindingDemo from './BindingDemo.svelte';
-  import Timer from './timer/Timer.svelte';
+  import SetupTimer from './timer/SetupTimer.svelte';
   
   export let name;
 </script>
 
 <main>
 	<h1>Hello {name}!</h1>
-  <Timer/>
+  <SetupTimer/>
   <Greeting/>
   <Login />
   <FrameworkList />

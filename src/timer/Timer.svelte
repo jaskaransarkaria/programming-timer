@@ -1,7 +1,12 @@
 <script>
   'use strict';
-  const MAX_DURATION_LIMIT = convertMinsToMillis(120);
-  export let durationMins = convertMinsToMillis(30);
+  import {
+    minsToMillis,
+    millisToMinutesAndSeconds,
+  } from '../utils/utils.js';
+
+  const MAX_DURATION_LIMIT = minsToMillis(120);
+  export let durationMins = minsToMillis(30);
   let displayTime = 'Start the timer';
   let remainingTimeMillis;
 
@@ -14,17 +19,6 @@
       return;
     }
     return displayTime = remainingTimeMillis;
-  }
-
-  function convertMinsToMillis(mins) {
-    return mins*60*1000;
-  }
-
-  function millisToMinutesAndSeconds(millis) {
-    const minutes = Math.floor(millis / 60000);
-    const seconds = ((millis % 60000) / 1000).toFixed(0);
-    // eslint-disable-next-line multiline-ternary
-    return `${minutes}:${(seconds < 10 ? '0' : '')}${seconds}`;
   }
 
   function displayRemainingTime() {
@@ -65,7 +59,9 @@
   }
 </script>
 
-<button data-testid="trigger-timer-button" on:click={() => setTimer(durationMins)} />
+<button data-testid="trigger-timer-button" on:click={() => setTimer(durationMins)} >
+  Start timer
+</button>
 <h1 data-testid="timer-header">{displayTime}</h1>
 
 <style>
