@@ -1,31 +1,49 @@
 <script>
   'use strict';
-  const MAX_DURATION_LIMIT = 120 * 60;
-  export let durationSecs = 30;
-  let remainingTimeSecs = 'display remaining time';
+  const MAX_DURATION_LIMIT = convertMinsToMillis(120);
+  export let durationMins = convertMinsToMillis(30);
+  let displayTime = 'Start the timer';
+  let remainingTimeMillis;
 
   function setTimer(duration) {
-    remainingTimeSecs = sanitizeDurationProp(duration);
+    remainingTimeMillis = sanitizeDurationProp(duration);
 
-    if (!isNaN(remainingTimeSecs)) {
-      setTimeout(() => timesUp(), duration*1000);
+    if (!isNaN(remainingTimeMillis)) {
+      setTimeout(() => timesUp(), duration);
       displayRemainingTime();
       return;
     }
-    return;
+    return displayTime = remainingTimeMillis;
+  }
+
+  function convertMinsToMillis(mins) {
+    return mins*60*1000;
+  }
+
+  function millisToMinutesAndSeconds(millis) {
+    const minutes = Math.floor(millis / 60000);
+    const seconds = ((millis % 60000) / 1000).toFixed(0);
+    // eslint-disable-next-line multiline-ternary
+    return `${minutes}:${(seconds < 10 ? '0' : '')}${seconds}`;
   }
 
   function displayRemainingTime() {
     setInterval(() => {
-      !isNaN(remainingTimeSecs) ?
-        remainingTimeSecs -= 1 :
-        remainingTimeSecs;
+      !isNaN(remainingTimeMillis) ?
+        updateTime :
+        remainingTimeMillis;
     }, 1000);
     return;
   }
 
+  function updateTime () {
+    displayTime = millisToMinutesAndSeconds(remainingTimeMillis - 1000);
+    remainingTimeMillis -= 1000;
+    return;
+  }
+
   function timesUp() {
-    remainingTimeSecs = 'times up!';
+    displayTime = 'Times up!';
     return;
   }
 
@@ -46,8 +64,8 @@
   }
 </script>
 
-<button data-testid="trigger-timer-button" on:click={() => setTimer(durationSecs)} />
-<h1 data-testid="timer-header">{remainingTimeSecs}</h1>
+<button data-testid="trigger-timer-button" on:click={() => setTimer(durationMins)} />
+<h1 data-testid="timer-header">{displayTime}</h1>
 
 <style>
 </style>
