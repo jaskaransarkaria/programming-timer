@@ -60,7 +60,7 @@
 </script>
 
 <button data-testid="trigger-timer-button" on:click={() => setTimer(durationMins)} >
-  Start timer
+  Start Timer
 </button>
 <h1 data-testid="timer-header">{displayTime}</h1>
 
