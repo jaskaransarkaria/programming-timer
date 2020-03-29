@@ -16,15 +16,15 @@
 </script>
 
 {#if newTimer && !hideInput}
-  <input bind:value={timerLength} on:keydown={hideOnSubmit}>
+  <input data-testid="setupTimer-input" bind:value={timerLength} on:keydown={hideOnSubmit}>
 {/if}
 
 {#if !newTimer}
-  <button on:click={() => newTimer = true}>New Timer</button>
+  <button data-testid="setupTimer-newTimerButton" on:click={() => newTimer = true}>New Timer</button>
 {/if}
 
 {#if timerLength > 0}
-  <Timer durationMins={minsToMillis(timerLength)} />
+  <Timer data-testid="setupTimer-timer" durationMins={minsToMillis(timerLength)} />
 {/if}
 
 <style>
