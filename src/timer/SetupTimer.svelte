@@ -1,8 +1,12 @@
 <script>
+  'use strict';
   import Timer from './Timer.svelte';
   import { minsToMillis } from '../utils/utils.js';
-  'use strict';
+  import {
+    initWebsocket, uuid,
+} from '../utils/websocket.js';
 
+  let ws;
   let newTimer = false;
   let existingSession = false;
   let hideInput = false;
@@ -13,6 +17,13 @@
     if (e.keyCode === 13) {
       hideInput = true;
     }
+    return;
+  }
+  
+  function initNewTimer() {
+    newTimer = true;
+    ws = initWebsocket(process.env.addr);
+    return;
   }
 
 </script>
@@ -20,12 +31,12 @@
 
 {#if !newTimer && !existingSession}
   <button data-testid="setup-timer-new-timer-button"
-    on:click={() => newTimer = true}>
+    on:click={initNewTimer}>
     New Timer
   </button>
 
   <button data-testid="setup-timer-existing-session-button"
-    on:click={() => existingSession = true }>
+    on:click={() => existingSession = true}>
     Join Session
   </button>
 {/if}
@@ -41,7 +52,7 @@
 {/if}
 
 {#if timerLength > 0}
-  <Timer durationMins={minsToMillis(timerLength)} />
+  <Timer ws={ws} durationMins={minsToMillis(timerLength)} uuid={uuid} />
 {/if}
 
 <style>

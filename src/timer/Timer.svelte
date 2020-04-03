@@ -7,6 +7,8 @@
 
   const MAX_DURATION_LIMIT = minsToMillis(120);
   export let durationMins = minsToMillis(30);
+  export let uuid;
+  export let ws;
   let displayTime = 'Start the timer';
   let remainingTimeMillis;
 
@@ -57,9 +59,19 @@
 
     return duration;
   }
+
+  function startTimer(duration, uuid, ws) {
+    console.log('uuid', uuid);
+    setTimer(duration);
+    ws.send(JSON.stringify({
+      uuid,
+      duration,
+      startTime: Date.now(),
+    }));
+  }
 </script>
 
-<button data-testid="trigger-timer-button" on:click={() => setTimer(durationMins)} >
+<button data-testid="trigger-timer-button" on:click={startTimer(durationMins, uuid, ws)} >
   Start Timer
 </button>
 <h1 data-testid="timer-header">{displayTime}</h1>
