@@ -1,7 +1,7 @@
 <script>
   'use strict';
   import Timer from './Timer.svelte';
-  import { minsToMillis } from '../utils/utils.js';
+  import {  minsToMillis } from '../utils/utils.js';
   import {
     initWebsocket, uuid,
 } from '../utils/websocket.js';

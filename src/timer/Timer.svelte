@@ -48,26 +48,23 @@
     if (isNaN(duration)) {
       return 'Please enter a number';
     }
-  
     if (duration <= 0) {
       return 'Please enter a larger timer duration';
     }
-  
     if (duration > MAX_DURATION_LIMIT) {
       return 'The max timer length is 2 hours enter a small timer length';
     }
-
     return duration;
   }
 
   function startTimer(duration, uuid, ws) {
-    console.log('uuid', uuid);
     setTimer(duration);
     ws.send(JSON.stringify({
-      uuid,
-      duration,
+      uuid: uuid,
+      duration: duration,
       startTime: Date.now(),
     }));
+    return;
   }
 </script>
 
