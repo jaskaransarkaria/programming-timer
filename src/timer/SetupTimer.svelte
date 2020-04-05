@@ -2,10 +2,7 @@
   'use strict';
   import Timer from './Timer.svelte';
   import {  minsToMillis } from '../utils/utils.js';
-  import {
-    initWebsocket, uuid,
-} from '../utils/websocket.js';
-
+  import {  initWebsocket } from '../utils/websocket.js';
   let ws;
   let newTimer = false;
   let existingSession = false;
@@ -52,7 +49,7 @@
 {/if}
 
 {#if timerLength > 0}
-  <Timer ws={ws} durationMins={minsToMillis(timerLength)} uuid={uuid} />
+  <Timer ws={ws} durationMins={minsToMillis(timerLength)} />
 {/if}
 
 <style>

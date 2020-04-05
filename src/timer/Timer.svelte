@@ -9,6 +9,7 @@
   export let durationMins = minsToMillis(30);
   export let uuid;
   export let ws;
+  let sessionData;
   let displayTime = 'Start the timer';
   let remainingTimeMillis;
 
@@ -60,18 +61,27 @@
   function startTimer(duration, uuid, ws) {
     setTimer(duration);
     ws.send(JSON.stringify({
-      uuid: uuid,
       duration: duration,
       startTime: Date.now(),
     }));
+    ws.onmessage = (msg) => {
+      try {
+        sessionData = JSON.parse(msg.data);
+      } catch (err) {
+        console.log('data is not json', err);
+        console.log(msg.data);
+      }
+    };
     return;
   }
 </script>
-
 <button data-testid="trigger-timer-button" on:click={startTimer(durationMins, uuid, ws)} >
   Start Timer
 </button>
 <h1 data-testid="timer-header">{displayTime}</h1>
 
+{#if sessionData}
+  <h2>Session Id: {sessionData.SessionID}</h2>
+{/if}
 <style>
 </style>

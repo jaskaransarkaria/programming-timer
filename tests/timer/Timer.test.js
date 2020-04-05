@@ -16,7 +16,6 @@ describe('take duration as an prop and start a timer which alerts on expiration'
   it('alert after the duration has expired', async () => {
     const { getByTestId } = render(Timer, {
       durationMins: 1,
-      uuid: 'example',
       ws: { send: () => { return true; } },
     });
     const timer = getByTestId('trigger-timer-button');
@@ -34,7 +33,6 @@ describe('take duration as an prop and start a timer which alerts on expiration'
   it('if duration isNaN(), then don\'t begin timer and reprompt', async () => {
     const { getByTestId } = render(Timer, {
       durationMins: 'not a number',
-      uuid: 'example',
       ws: { send: () => { return true; } },
     });
     const timer = getByTestId('trigger-timer-button');
@@ -46,10 +44,7 @@ describe('take duration as an prop and start a timer which alerts on expiration'
   });
 
   it('if no prop passed in the use default 30 mins', async () => {
-    const { getByTestId } = render(Timer, {
-      uuid: 'example',
-      ws: { send: () => { return true; } },
-    });
+    const { getByTestId } = render(Timer, { ws: { send: () => { return true; } } });
     const timer = getByTestId('trigger-timer-button');
     const timerHeader = getByTestId('timer-header');
 
@@ -65,7 +60,6 @@ describe('take duration as an prop and start a timer which alerts on expiration'
   it('if duration prop <= 0 then don\'t begin timer and reprompt', async () => {
     const { getByTestId } = render(Timer, {
       durationMins: -1,
-      uuid: 'example',
       ws: { send: () => { return true; } },
     });
     const timer = getByTestId('trigger-timer-button');
@@ -82,7 +76,6 @@ describe('take duration as an prop and start a timer which alerts on expiration'
   it('if duration prop is too large then don\'t begin timer and reprompt', async () => {
     const { getByTestId } = render(Timer, {
       durationMins: 121 * 60 * 1000,
-      uuid: 'example',
       ws: { send: () => { return true; } },
     });
     const timer = getByTestId('trigger-timer-button');

@@ -1,6 +1,3 @@
-
-export let uuid;
-
 export function initWebsocket(addr) {
 
   const socket = new WebSocket(`ws://${addr}/ws`);
@@ -20,9 +17,8 @@ export function initWebsocket(addr) {
     console.log('Socket Error', error);
   };
 
-  socket.onmessage = (msg) => {
-    console.log(msg);
-    uuid = msg.data;
+  socket.onmessage = () => {
+    console.log('recieved from socket init');
   };
 
   return socket;
