@@ -57,7 +57,7 @@
     return duration;
   }
 
-  function startTimer(duration, uuid, ws) {
+  function startTimer(duration, ws) {
     setTimer(duration);
     ws.send(JSON.stringify({
       duration: duration,
@@ -74,7 +74,7 @@
     return;
   }
 </script>
-<button data-testid="trigger-timer-button" on:click={startTimer(durationMins, uuid, ws)} >
+<button data-testid="trigger-timer-button" on:click={startTimer(durationMins, ws)} >
   Start Timer
 </button>
 <h1 data-testid="timer-header">{displayTime}</h1>
