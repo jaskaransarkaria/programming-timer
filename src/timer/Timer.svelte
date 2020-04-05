@@ -7,7 +7,6 @@
 
   const MAX_DURATION_LIMIT = minsToMillis(120);
   export let durationMins = minsToMillis(30);
-  export let uuid;
   export let ws;
   let sessionData;
   let displayTime = 'Start the timer';
