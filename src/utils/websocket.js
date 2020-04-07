@@ -17,9 +17,5 @@ export function initWebsocket(addr) {
     console.log('Socket Error', error);
   };
 
-  socket.onmessage = () => {
-    console.log('recieved from socket init');
-  };
-
   return socket;
 }
