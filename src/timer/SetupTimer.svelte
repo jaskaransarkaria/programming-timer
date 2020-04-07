@@ -30,6 +30,7 @@
   }
 
   async function joinExistingSession(e) {
+    existingSession = true;
     await ws.send(JSON.stringify({ joinSession: e.target.value }));
     ws.onmessage = (msg) => {
       try {
@@ -39,7 +40,6 @@
         console.log(msg.data);
       }
     };
-    existingSession = true;
     return;
   }
 </script>

@@ -6,13 +6,11 @@ import {
 import SetupTimer from '../../src/timer/SetupTimer.svelte';
 
 describe('Conditional rendering of the Timer Component', () => {
-
   it('If newTimer true and hideInput false show input', async () => {
     const { getByTestId } = render(SetupTimer);
     const newTimerButton = getByTestId('setup-timer-new-timer-button');
     await fireEvent.click(newTimerButton);
     const input = getByTestId('setup-timer-new-timer-input');
-
     expect(input).toBeInTheDOM();
   });
 
@@ -31,16 +29,7 @@ describe('Conditional rendering of the Timer Component', () => {
     expect(input).not.toBeInTheDocument();
   });
 
-  it('Show start timer button when time has been input', async () => {
-    const { getByText, getByTestId } = render(SetupTimer);
-    const newTimerButton = getByTestId('setup-timer-new-timer-button');
-    await fireEvent.click(newTimerButton);
-    const input = getByTestId('setup-timer-new-timer-input');
-    await fireEvent.input(input, { target: { value: '9' } });
-    expect(getByText('Start Timer')).toBeInTheDocument();
-  });
-
-  it('Existing session button clicked; show input to join the session', async () => {
+  it('Existing session button clicked; show input to join the sesion', async () => {
     const { getByTestId } = render(SetupTimer);
     const existingSessionButton = getByTestId('setup-timer-existing-session-button');
     await fireEvent.click(existingSessionButton);

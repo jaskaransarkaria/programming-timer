@@ -38,6 +38,11 @@
       duration: duration,
       startTime: Date.now(),
     }));
+    listenForWebSockMsg(ws);
+    return;
+  }
+
+  function listenForWebSockMsg(ws) {
     ws.onmessage = (msg) => {
       try {
         sessionData = JSON.parse(msg.data);
@@ -50,7 +55,7 @@
   }
 
   function setTimer(duration) {
-    displayRemainingTime(sanitizeDurationProp(duration));
+    displayRemainingTime(duration);
     return;
   }
 
@@ -62,19 +67,27 @@
       return 'Please enter a larger timer duration';
     }
     if (duration > MAX_DURATION_LIMIT) {
-      return 'The max timer length is 2 hours enter a small timer length';
+      return 'The max timer length is 2 hours; enter a smaller timer length';
     }
     return duration;
   }
 
   function displayRemainingTime(remainingTime) {
-    let remainingTimeMillis = remainingTime;
-    setInterval(() => {
-      !isNaN(remainingTimeMillis) ?
-        remainingTimeMillis -= updateTime(remainingTimeMillis) :
-        remainingTimeMillis;
-    }, 1000);
+    display(sanitizeDurationProp(remainingTime));
     return;
+  }
+
+  function display(remainingTimeMillis) {
+    if (isNaN(remainingTimeMillis)) {
+      return displayTime = remainingTimeMillis;
+    } else {
+      const interval = setInterval(() => {
+        !isNaN(remainingTimeMillis) ?
+          remainingTimeMillis -= updateTime(remainingTimeMillis) :
+          clearInterval(interval);
+      }, 1000);
+      return;
+    }
   }
 
   function updateTime (remainingTimeMillis) {
