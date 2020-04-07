@@ -18,6 +18,8 @@
   onMount(() => {
     if (existingSessionData) {
       calculateRemainingTime(existingSessionData);
+      //TODO: display sessionID
+      //TODO: store uid(s)
     } else {
       startTimer(durationMins, ws);
     }
