@@ -1,46 +1,56 @@
 <script>
   'use strict';
+  import { onMount } from 'svelte';
   import {
     minsToMillis,
     millisToMinutesAndSeconds,
   } from '../utils/utils.js';
 
   const MAX_DURATION_LIMIT = minsToMillis(120);
+
   export let durationMins = minsToMillis(30);
   export let ws;
+  export let existingSessionData;
+
   let sessionData;
   let displayTime = 'Start the timer';
-  let remainingTimeMillis;
+  
+  onMount(() => {
+    if (existingSessionData) {
+      calculateRemainingTime(existingSessionData);
+    } else {
+      startTimer(durationMins, ws);
+    }
+    // probably want to return a function which closes the connection here
+    return;
+  });
+
+  function calculateRemainingTime(existingSessionData) {
+    const endTime = existingSessionData.EndTime;
+    const remainingTimeMillis = endTime - Date.now();
+    displayRemainingTime(remainingTimeMillis);
+    return;
+  }
+
+  async function startTimer(duration, ws) {
+    setTimer(duration);
+    await ws.send(JSON.stringify({
+      duration: duration,
+      startTime: Date.now(),
+    }));
+    ws.onmessage = (msg) => {
+      try {
+        sessionData = JSON.parse(msg.data);
+      } catch (err) {
+        console.log('data is not json', err);
+        console.log(msg.data);
+      }
+    };
+    return;
+  }
 
   function setTimer(duration) {
-    remainingTimeMillis = sanitizeDurationProp(duration);
-
-    if (!isNaN(remainingTimeMillis)) {
-      setTimeout(() => timesUp(), duration);
-      displayRemainingTime();
-      return;
-    }
-    return displayTime = remainingTimeMillis;
-  }
-
-  function displayRemainingTime() {
-    setInterval(() => {
-      !isNaN(remainingTimeMillis) ?
-        updateTime() :
-        remainingTimeMillis;
-    }, 1000);
-    return;
-  }
-
-  function updateTime () {
-    displayTime = millisToMinutesAndSeconds(remainingTimeMillis - 1000);
-    remainingTimeMillis -= 1000;
-    return;
-  }
-
-  function timesUp() {
-    remainingTimeMillis = 'stop';
-    displayTime = 'Times up!';
+    displayRemainingTime(sanitizeDurationProp(duration));
     return;
   }
 
@@ -57,30 +67,36 @@
     return duration;
   }
 
-  function startTimer(duration, ws) {
-    setTimer(duration);
-    ws.send(JSON.stringify({
-      duration: duration,
-      startTime: Date.now(),
-    }));
-    ws.onmessage = (msg) => {
-      try {
-        sessionData = JSON.parse(msg.data);
-      } catch (err) {
-        console.log('data is not json', err);
-        console.log(msg.data);
-      }
-    };
+  function displayRemainingTime(remainingTime) {
+    let remainingTimeMillis = remainingTime;
+    setInterval(() => {
+      !isNaN(remainingTimeMillis) ?
+        remainingTimeMillis -= updateTime(remainingTimeMillis) :
+        remainingTimeMillis;
+    }, 1000);
+    return;
+  }
+
+  function updateTime (remainingTimeMillis) {
+    if (remainingTimeMillis < 1000) {
+      timesUp();
+      return;
+    } else {
+      displayTime = millisToMinutesAndSeconds(remainingTimeMillis - 1000);
+      return 1000;
+    }
+  }
+
+  function timesUp() {
+    displayTime = 'Times up!';
     return;
   }
 </script>
-<button data-testid="trigger-timer-button" on:click={startTimer(durationMins, ws)} >
-  Start Timer
-</button>
-<h1 data-testid="timer-header">{displayTime}</h1>
 
+<h1 data-testid="timer-header">{displayTime}</h1>
 {#if sessionData}
   <h2>Session Id: {sessionData.SessionID}</h2>
 {/if}
+
 <style>
 </style>
