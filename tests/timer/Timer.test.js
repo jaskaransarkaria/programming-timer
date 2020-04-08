@@ -69,5 +69,26 @@ describe('take duration as an prop and start a timer which alerts on expiration'
       'The max timer length is 2 hours; enter a smaller timer length',
     );
   });
-  it.skip('Test the join existing session flow - remember to mock the ws call', () => {});
+
+  it('pass in expectedSessionData and display it correctly', async () => {
+    const remainingTime = Date.now() + (119 * 60 * 1000);
+    const { getByTestId } = render(Timer, {
+      durationMins: 121 * 60 * 1000,
+      ws: { send: () => { return true; } },
+      existingSessionData: {
+        SessionId: '1234',
+        Duration: 121,
+        StartTime: Date.now() - (119*60*1000),
+        EndTime: remainingTime,
+        Users: [
+          'randomUser',
+        ],
+      },
+    });
+    const timerHeader = getByTestId('timer-header');
+    expect(timerHeader).toHaveTextContent('Start the timer');
+    await jest.advanceTimersByTime(remainingTime);
+    expect(setInterval).toBeCalledTimes(1);
+    expect(timerHeader).toHaveTextContent('Times up!');
+  });
 });

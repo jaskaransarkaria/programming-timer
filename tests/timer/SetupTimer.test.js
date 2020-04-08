@@ -31,10 +31,21 @@ describe('Conditional rendering of the Timer Component', () => {
 
   it('Existing session button clicked; show input to join the sesion', async () => {
     const { getByTestId } = render(SetupTimer);
-    const existingSessionButton = getByTestId('setup-timer-existing-session-button');
-    await fireEvent.click(existingSessionButton);
+    const joinSessionButton = getByTestId('setup-timer-existing-session-button');
+    await fireEvent.click(joinSessionButton);
     expect(getByTestId('setup-timer-join-session-input')).toBeInTheDocument();
   });
 
-  it.skip('When the unique session is input, join and display that session', () => {});
+  it('When join session is clicked, store the response in existingSessionData', async () => {
+    const { getByTestId } = render(SetupTimer);
+    const joinSessionButton = getByTestId('setup-timer-existing-session-button');
+    await fireEvent.click(joinSessionButton);
+    // mock the function call to the web socket
+    jest.spyOn(SetupTimer, 'joinExistingSession').mockImplementation(() => {
+      return true;
+    });
+    expect(getByTestId('setup-timer-join-session-input')).toBeInTheDocument();
+    // store the data into existingSessionData
+    // expect against the variable
+  });
 });

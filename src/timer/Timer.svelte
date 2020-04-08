@@ -19,7 +19,7 @@
     if (existingSessionData) {
       calculateRemainingTime(existingSessionData);
       //TODO: display sessionID
-      //TODO: store uid(s)
+      //TODO: store uid(s) as a session cookie or something?
     } else {
       startTimer(durationMins, ws);
     }
