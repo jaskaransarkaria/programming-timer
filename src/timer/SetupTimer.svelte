@@ -3,7 +3,10 @@
   import { onMount } from 'svelte';
   import Timer from './Timer.svelte';
   import {  minsToMillis } from '../utils/utils.js';
-  import {  initWebsocket } from '../utils/websocket.js';
+  import {
+    initWebsocket,
+    sendAndListenToExistingSession,
+  } from '../utils/websocket.js';
   
   let ws;
   let newTimer = false;
@@ -29,18 +32,9 @@
     return;
   }
 
-  async function joinExistingSession(e) {
+  function joinExistingSession(e) {
     existingSession = true;
-    await ws.send(JSON.stringify({ joinSession: e.target.value }));
-    ws.onmessage = (msg) => {
-      try {
-        existingSessionData = JSON.parse(msg.data);
-      } catch (err) {
-        console.log('data is not json', err);
-        console.log(msg.data);
-      }
-    };
-    return;
+    sendAndListenToExistingSession(ws, e.target.value);
   }
 </script>
 

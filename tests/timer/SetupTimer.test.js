@@ -4,6 +4,17 @@ import {
   fireEvent,
 } from '@testing-library/svelte';
 import SetupTimer from '../../src/timer/SetupTimer.svelte';
+import * as mockWebsocket from '../../src/utils/websocket';
+
+jest.mock('../../src/utils/websocket.js', () => ({
+  initWebsocket: jest.fn(() => true),
+  sendAndListenToExistingSession: jest.fn(() => true),
+}));
+
+beforeEach(() => {
+  jest.clearAllMocks();
+});
+
 
 describe('Conditional rendering of the Timer Component', () => {
   it('If newTimer true and hideInput false show input', async () => {
@@ -36,16 +47,16 @@ describe('Conditional rendering of the Timer Component', () => {
     expect(getByTestId('setup-timer-join-session-input')).toBeInTheDocument();
   });
 
+  it('OnMount initWebsocket', () => {
+    render(SetupTimer);
+    expect(mockWebsocket.initWebsocket).toBeCalled();
+  });
+
   it('When join session is clicked, store the response in existingSessionData', async () => {
     const { getByTestId } = render(SetupTimer);
     const joinSessionButton = getByTestId('setup-timer-existing-session-button');
     await fireEvent.click(joinSessionButton);
-    // mock the function call to the web socket
-    jest.spyOn(SetupTimer, 'joinExistingSession').mockImplementation(() => {
-      return true;
-    });
+    expect(mockWebsocket.sendAndListenToExistingSession).toBeCalled();
     expect(getByTestId('setup-timer-join-session-input')).toBeInTheDocument();
-    // store the data into existingSessionData
-    // expect against the variable
   });
 });

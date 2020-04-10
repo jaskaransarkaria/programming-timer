@@ -19,3 +19,17 @@ export function initWebsocket(addr) {
 
   return socket;
 }
+
+export async function sendAndListenToExistingSession(ws, payload) {
+  let existingSessionData;
+  await ws.send(JSON.stringify({ joinSession: payload }));
+  ws.onmessage = (msg) => {
+    try {
+      existingSessionData = JSON.parse(msg.data);
+    } catch (err) {
+      console.log('data is not json', err);
+      console.log(msg.data);
+    }
+  };
+  return existingSessionData;
+}
