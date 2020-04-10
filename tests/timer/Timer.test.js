@@ -1,7 +1,5 @@
 import '@testing-library/jest-dom/extend-expect';
-import {
-  render, getAllByText,
-} from '@testing-library/svelte';
+import { render } from '@testing-library/svelte';
 import Timer from '../../src/timer/Timer.svelte';
 
 beforeEach(() => {
