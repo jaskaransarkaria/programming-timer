@@ -6,7 +6,7 @@
     millisToMinutesAndSeconds,
   } from '../utils/utils.js';
   import {
-    sendStartTimer, listenForWebSockMsg,
+    sendStartTimer, setListener,
 } from '../utils/websocket.js';
 
   const MAX_DURATION_LIMIT = minsToMillis(120);
@@ -40,7 +40,8 @@
   async function startTimer( ws, duration) {
     setTimer(duration);
     await sendStartTimer(ws, duration);
-    sessionData = listenForWebSockMsg(ws);
+    sessionData = setListener(ws);
+    console.log('sessionData', sessionData);
     return;
   }
 
