@@ -1,12 +1,12 @@
 <script>
-  "use strict";
-  import { onMount } from "svelte";
-  import Timer from "./Timer.svelte";
-  import { minsToMillis } from "../utils/utils.js";
+  'use strict';
+  import { onMount } from 'svelte';
+  import Timer from './Timer.svelte';
+  import { minsToMillis } from '../utils/utils.js';
   import {
     initWebsocket,
-    sendAndListenToExistingSession
-  } from "../utils/websocket.js";
+    sendAndListenToExistingSession,
+  } from '../utils/websocket.js';
 
   let ws;
   let newTimer = false;
@@ -37,7 +37,7 @@
     submit(e);
     return (existingSessionData = sendAndListenToExistingSession(
       ws,
-      e.target.value
+      e.target.value,
     ));
   }
 </script>
