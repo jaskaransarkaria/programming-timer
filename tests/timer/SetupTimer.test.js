@@ -22,7 +22,7 @@ describe('Conditional rendering of the Timer Component', () => {
     const newTimerButton = getByTestId('setup-timer-new-timer-button');
     await fireEvent.click(newTimerButton);
     const input = getByTestId('setup-timer-new-timer-input');
-    expect(input).toBeInTheDOM();
+    expect(input).toBeInTheDocument();
   });
 
   it('If newTimer false show just newTimer button', () => {
