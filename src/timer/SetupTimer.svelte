@@ -10,6 +10,7 @@
   
   let ws;
   let newTimer = false;
+  // eslint-disable-next-line prefer-const
   let existingSession = false;
   let hideInput = false;
   let timerLength;
@@ -19,7 +20,7 @@
     ws = await initWebsocket(process.env.addr);
   });
 
-  function hideOnSubmit(e) {
+  function submit(e) {
     if (e.keyCode === 13) {
       hideInput = true;
       return;
@@ -33,8 +34,8 @@
   }
 
   function joinExistingSession(e) {
-    existingSession = true;
-    sendAndListenToExistingSession(ws, e.target.value);
+    submit(e);
+    return existingSessionData = sendAndListenToExistingSession(ws, e.target.value);
   }
 </script>
 
@@ -47,7 +48,11 @@
 
   <button 
     data-testid="setup-timer-existing-session-button"
-    on:click={joinExistingSession}>
+    on:click={() => {
+      existingSession = true;
+      console.log('inside click', existingSession);
+      return existingSession = true;
+}}>
       Join Session
   </button>
 {/if}
@@ -56,7 +61,7 @@
   <input
     data-testid="setup-timer-new-timer-input" 
     bind:value={timerLength}
-    on:keydown={hideOnSubmit} 
+    on:keydown={submit} 
     placeholder="enter the timer length in mins"
   />
 {/if}
@@ -64,7 +69,7 @@
 {#if existingSession && !hideInput}
   <input 
     data-testid="setup-timer-join-session-input"
-    on:keydown={hideOnSubmit} 
+    on:keydown={joinExistingSession} 
     placeholder="enter your session code here"
   />
 {/if}

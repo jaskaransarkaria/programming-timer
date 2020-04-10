@@ -12,7 +12,6 @@ jest.mock('../../src/utils/websocket.js', () => ({
   sendAndListenToExistingSession: jest.fn(() => true),
 }));
 
-
 describe('Conditional rendering of the Timer Component', () => {
   it('If newTimer true and hideInput false show input', async () => {
     const { getByTestId } = render(SetupTimer);
@@ -53,7 +52,12 @@ describe('Conditional rendering of the Timer Component', () => {
     const { getByTestId } = render(SetupTimer);
     const joinSessionButton = getByTestId('setup-timer-existing-session-button');
     await fireEvent.click(joinSessionButton);
+    const input = getByTestId('setup-timer-join-session-input');
+    expect(input).toBeInTheDocument();
+    await fireEvent.keyDown(input, {
+      key: 'Enter',
+      code: 'Enter',
+    });
     expect(mockWebsocket.sendAndListenToExistingSession).toBeCalled();
-    expect(getByTestId('setup-timer-join-session-input')).toBeInTheDocument();
   });
 });

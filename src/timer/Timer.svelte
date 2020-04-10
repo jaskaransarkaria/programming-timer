@@ -5,6 +5,9 @@
     minsToMillis,
     millisToMinutesAndSeconds,
   } from '../utils/utils.js';
+  import {
+    sendStartTimer, listenForWebSockMsg,
+} from '../utils/websocket.js';
 
   const MAX_DURATION_LIMIT = minsToMillis(120);
 
@@ -36,23 +39,8 @@
 
   async function startTimer(duration, ws) {
     setTimer(duration);
-    await ws.send(JSON.stringify({
-      duration: duration,
-      startTime: Date.now(),
-    }));
-    listenForWebSockMsg(ws);
-    return;
-  }
-
-  function listenForWebSockMsg(ws) {
-    ws.onmessage = (msg) => {
-      try {
-        sessionData = JSON.parse(msg.data);
-      } catch (err) {
-        console.log('data is not json', err);
-        console.log(msg.data);
-      }
-    };
+    await sendStartTimer(ws, duration);
+    sessionData = listenForWebSockMsg(ws);
     return;
   }
 
