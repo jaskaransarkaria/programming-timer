@@ -38,7 +38,7 @@ export default {
       ],
     }),
     commonjs(),
-    replace({ process: JSON.stringify({ env: { addr: 'localhost:8080' } }) }),
+    replace({ process: JSON.stringify({ env: { ADDR: 'localhost:8080' } }) }),
 
     // In dev mode, call `npm run start` once
     // the bundle has been generated

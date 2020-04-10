@@ -1,25 +1,24 @@
-export async function initWebsocket(addr) {
-  let socket;
+export function initWebsocket() {
+  let socket = false;
   try {
-    const socket = await new WebSocket(`ws://${addr}/ws`);
-    console.log('attempting websocket connection');
+    socket = new WebSocket(`ws://${process.env.ADDR}/ws`);
+    console.log("attempting websocket connection");
 
     socket.onopen = () => {
-      console.log('successfully connected to the websocket');
-      socket.send('Hi from Svelte');
+      console.log("successfully connected to the websocket");
+      socket.send("Hi from Svelte");
     };
 
     socket.onclose = (event) => {
-      console.log('socket closed connection', event);
+      console.log("socket closed connection", event);
     };
 
     socket.onerror = (error) => {
-      console.log('Socket Error', error);
+      console.log("Socket Error", error);
     };
   } catch (err) {
-    console.log('initWebsocket', err);
+    console.log("initWebsocket", err);
   }
-
   return socket;
 }
 
@@ -31,27 +30,28 @@ export async function sendAndListenToExistingSession(ws, payload) {
       try {
         existingSessionData = JSON.parse(msg.data);
       } catch (err) {
-        console.log('data is not json', err);
+        console.log("data is not json", err);
         console.log(msg.data);
       }
     };
   } catch (err) {
-    console.log('sendAndListenToExistingSession', err);
+    console.log("sendAndListenToExistingSession", err);
   }
   return existingSessionData;
 }
 
 export async function sendStartTimer(ws, payload) {
   try {
-    await ws.send(JSON.stringify({
-      duration: payload,
-      startTime: Date.now(),
-    }));
+    await ws.send(
+      JSON.stringify({
+        duration: payload,
+        startTime: Date.now(),
+      })
+    );
   } catch (err) {
-    console.log('sendStartTimer', err);
+    console.log("sendStartTimer", err);
   }
 }
-
 
 export function listenForWebSockMsg(ws) {
   let sessionData;
@@ -59,7 +59,7 @@ export function listenForWebSockMsg(ws) {
     try {
       sessionData = JSON.parse(msg.data);
     } catch (err) {
-      console.log('listenForWebSockMsg -- data is not json', err);
+      console.log("listenForWebSockMsg -- data is not json", err);
       console.log(msg.data);
     }
   };

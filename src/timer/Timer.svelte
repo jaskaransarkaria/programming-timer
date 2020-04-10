@@ -17,14 +17,14 @@
 
   let sessionData;
   let displayTime = 'Start the timer';
-  
+
   onMount(() => {
     if (existingSessionData) {
       calculateRemainingTime(existingSessionData);
       sessionData = existingSessionData;
       //TODO: store uid(s) as a session cookie or something?
     } else {
-      startTimer(durationMins, ws);
+      startTimer(ws, durationMins);
     }
     // probably want to return a function which closes the connection here
     return;
@@ -37,7 +37,7 @@
     return;
   }
 
-  async function startTimer(duration, ws) {
+  async function startTimer( ws, duration) {
     setTimer(duration);
     await sendStartTimer(ws, duration);
     sessionData = listenForWebSockMsg(ws);
