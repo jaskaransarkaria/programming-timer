@@ -1,5 +1,7 @@
 import '@testing-library/jest-dom/extend-expect';
-import { render } from '@testing-library/svelte';
+import {
+  render, getAllByText,
+} from '@testing-library/svelte';
 import Timer from '../../src/timer/Timer.svelte';
 
 beforeEach(() => {
@@ -76,7 +78,7 @@ describe('take duration as an prop and start a timer which alerts on expiration'
       durationMins: 121 * 60 * 1000,
       ws: { send: () => { return true; } },
       existingSessionData: {
-        SessionId: '1234',
+        SessionID : '1234',
         Duration: 121,
         StartTime: Date.now() - (119*60*1000),
         EndTime: remainingTime,
@@ -90,5 +92,23 @@ describe('take duration as an prop and start a timer which alerts on expiration'
     await jest.advanceTimersByTime(remainingTime);
     expect(setInterval).toBeCalledTimes(1);
     expect(timerHeader).toHaveTextContent('Times up!');
+  });
+
+  it('existingSessionData SessionID passed, so should be displayed', () => {
+    const remainingTime = Date.now() + (119 * 60 * 1000);
+    const { getByText } = render(Timer, {
+      durationMins: 121 * 60 * 1000,
+      ws: { send: () => { return true; } },
+      existingSessionData: {
+        SessionID: '1234',
+        Duration: 121,
+        StartTime: Date.now() - (119 * 60 * 1000),
+        EndTime: remainingTime,
+        Users: [
+          'randomUser',
+        ],
+      },
+    });
+    expect(getByText('Session Id: 1234')).toBeInTheDocument();
   });
 });

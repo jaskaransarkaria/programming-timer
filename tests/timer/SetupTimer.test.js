@@ -6,14 +6,11 @@ import {
 import SetupTimer from '../../src/timer/SetupTimer.svelte';
 import * as mockWebsocket from '../../src/utils/websocket';
 
+
 jest.mock('../../src/utils/websocket.js', () => ({
   initWebsocket: jest.fn(() => true),
   sendAndListenToExistingSession: jest.fn(() => true),
 }));
-
-beforeEach(() => {
-  jest.clearAllMocks();
-});
 
 
 describe('Conditional rendering of the Timer Component', () => {

@@ -18,7 +18,7 @@
   onMount(() => {
     if (existingSessionData) {
       calculateRemainingTime(existingSessionData);
-      //TODO: display sessionID
+      sessionData = existingSessionData;
       //TODO: store uid(s) as a session cookie or something?
     } else {
       startTimer(durationMins, ws);
@@ -111,6 +111,8 @@
 <h1 data-testid="timer-header">{displayTime}</h1>
 {#if sessionData}
   <h2>Session Id: {sessionData.SessionID}</h2>
+{:else if existingSessionData}
+  <h2>Session Id: {existingSessionData.SessionID}</h2>
 {/if}
 
 <style>
