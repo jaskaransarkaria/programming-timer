@@ -5,9 +5,7 @@
     minsToMillis,
     millisToMinutesAndSeconds,
   } from '../utils/utils.js';
-  import {
-    sendStartTimer, setListener,
-} from '../utils/websocket.js';
+  import {  sendStartTimer } from '../utils/websocket.js';
 
   const MAX_DURATION_LIMIT = minsToMillis(120);
 
@@ -18,13 +16,13 @@
   let sessionData;
   let displayTime = 'Start the timer';
 
-  onMount(() => {
+  onMount(async () => {
     if (existingSessionData) {
       calculateRemainingTime(existingSessionData);
       sessionData = existingSessionData;
       //TODO: store uid(s) as a session cookie or something?
     } else {
-      startTimer(ws, durationMins);
+      sessionData = await startTimer(ws, durationMins);
     }
     // probably want to return a function which closes the connection here
     return;
@@ -37,12 +35,16 @@
     return;
   }
 
-  async function startTimer( ws, duration) {
+  async function startTimer(ws, duration) {
     setTimer(duration);
-    await sendStartTimer(ws, duration);
-    sessionData = setListener(ws);
-    console.log('sessionData', sessionData);
-    return;
+    const response = await fetch(`http://${process.env.ADDR}/session/new`, {
+      method: 'POST',
+      body: JSON.stringify({
+        duration,
+        'startTime': Date.now(),
+      }),
+    });
+    return response.json();
   }
 
   function setTimer(duration) {

@@ -28,11 +28,6 @@
     return;
   }
 
-  function initNewTimer() {
-    newTimer = true;
-    return;
-  }
-
   function joinExistingSession(e) {
     submit(e);
     return (existingSessionData = sendAndListenToExistingSession(
@@ -47,16 +42,16 @@
 </style>
 
 {#if !newTimer && !existingSession}
-  <button data-testid="setup-timer-new-timer-button" on:click={initNewTimer}>
+  <button data-testid="setup-timer-new-timer-button" on:click={() => {
+    return newTimer = true;
+  }}>
     New Timer
-  </button>
+</button>
 
   <button
     data-testid="setup-timer-existing-session-button"
     on:click={() => {
-      existingSession = true;
-      console.log('inside click', existingSession);
-      return (existingSession = true);
+      return existingSession = true;
     }}>
     Join Session
   </button>
