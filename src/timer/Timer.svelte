@@ -5,7 +5,6 @@
     minsToMillis,
     millisToMinutesAndSeconds,
   } from '../utils/utils.js';
-  import {  sendStartTimer } from '../utils/websocket.js';
 
   const MAX_DURATION_LIMIT = minsToMillis(120);
 
