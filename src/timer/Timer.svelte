@@ -10,18 +10,17 @@
 
   export let durationMins = minsToMillis(30);
   export let ws;
-  export let existingSessionData;
+  export let sessionData;
 
-  let sessionData;
   let displayTime = 'Start the timer';
 
-  onMount(async () => {
-    if (existingSessionData) {
-      calculateRemainingTime(existingSessionData);
-      sessionData = existingSessionData;
+  onMount(() => {
+    console.log('from timer',sessionData);
+    if (!sessionData.newTimer) {
+      calculateRemainingTime(sessionData);
       //TODO: store uid(s) as a session cookie or something?
     } else {
-      sessionData = await startTimer(ws, durationMins);
+      startTimer(minsToMillis(sessionData.Duration));
     }
     // probably want to return a function which closes the connection here
     return;
@@ -31,24 +30,14 @@
     const endTime = existingSessionData.EndTime;
     const remainingTimeMillis = endTime - Date.now();
     displayRemainingTime(remainingTimeMillis);
-    return;
   }
 
-  async function startTimer(ws, duration) {
+  function startTimer(duration) {
     setTimer(duration);
-    const response = await fetch(`http://${process.env.ADDR}/session/new`, {
-      method: 'POST',
-      body: JSON.stringify({
-        duration,
-        'startTime': Date.now(),
-      }),
-    });
-    return response.json();
   }
 
   function setTimer(duration) {
     displayRemainingTime(duration);
-    return;
   }
 
   function sanitizeDurationProp(duration) {
@@ -99,11 +88,7 @@
 </script>
 
 <h1 data-testid="timer-header">{displayTime}</h1>
-{#if sessionData}
-  <h2>Session Id: {sessionData.SessionID}</h2>
-{:else if existingSessionData}
-  <h2>Session Id: {existingSessionData.SessionID}</h2>
-{/if}
+<h2>Session Id: {sessionData.SessionID}</h2>
 
 <style>
 </style>

@@ -21,39 +21,3 @@ export function initWebsocket() {
   }
   return socket;
 }
-
-export async function sendAndListenToExistingSession(ws, payload) {
-  let existingSessionData;
-  try {
-    await ws.send(JSON.stringify({ joinSession: payload }));
-    ws.onmessage = (msg) => {
-      try {
-        existingSessionData = JSON.parse(msg.data);
-      } catch (err) {
-        console.log('data is not json', err);
-        console.log(msg.data);
-      }
-    };
-  } catch (err) {
-    console.log('sendAndListenToExistingSession', err);
-  }
-  return existingSessionData;
-}
-
-export async function sendStartTimer(ws, payload) {
-  try {
-    await ws.send(
-      JSON.stringify({
-        duration: payload,
-        startTime: Date.now(),
-      }),
-    );
-  } catch (err) {
-    console.log('sendStartTimer', err);
-  }
-}
-
-export function setListener(ws) {
-  ws.onmessage = (msg) => (JSON.parse(msg.data));
-  return;
-}
