@@ -15,9 +15,9 @@
   let displayTime = 'Start the timer';
 
   onMount(() => {
-    console.log('from timer',sessionData);
     if (!sessionData.newTimer) {
       calculateRemainingTime(sessionData);
+
       //TODO: store uid(s) as a session cookie or something?
     } else {
       startTimer(minsToMillis(sessionData.Duration));
@@ -55,13 +55,13 @@
 
   function displayRemainingTime(remainingTime) {
     display(sanitizeDurationProp(remainingTime));
-    return;
   }
 
   function display(remainingTimeMillis) {
     if (isNaN(remainingTimeMillis)) {
       return displayTime = remainingTimeMillis;
     } else {
+      console.log('inside display',remainingTimeMillis);
       const interval = setInterval(() => {
         !isNaN(remainingTimeMillis) ?
           remainingTimeMillis -= updateTime(remainingTimeMillis) :
