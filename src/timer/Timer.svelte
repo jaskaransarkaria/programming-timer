@@ -20,7 +20,7 @@
 
       //TODO: store uid(s) as a session cookie or something?
     } else {
-      startTimer(minsToMillis(sessionData.Duration));
+      startTimer(sessionData.Duration);
     }
     // probably want to return a function which closes the connection here
     return;
@@ -28,6 +28,10 @@
 
   function calculateRemainingTime(existingSessionData) {
     const endTime = existingSessionData.EndTime;
+
+    console.log('date now', Date.now());
+    console.log('end time', endTime);
+    console.log('calulate', endTime - Date.now());
     const remainingTimeMillis = endTime - Date.now();
     displayRemainingTime(remainingTimeMillis);
   }

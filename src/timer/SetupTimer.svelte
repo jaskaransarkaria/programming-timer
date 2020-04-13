@@ -3,6 +3,7 @@
   import { onMount } from 'svelte';
   import Timer from './Timer.svelte';
   import {  initWebsocket } from '../utils/websocket.js';
+  import { minsToMillis } from '../utils/utils.js';
 
   let ws;
   let newTimer = false;
@@ -30,11 +31,13 @@
   }
 
   async function initNewSession(duration) {
+    console.log('minstomillis', duration);
+    console.log('minstomillis', minsToMillis(duration));
     newTimer = true;
     const response = await fetch(`http://${process.env.ADDR}/session/new`, {
       method: 'POST',
       body: JSON.stringify({
-        duration: parseInt(duration, 10),
+        duration: parseInt(minsToMillis(duration), 10),
         startTime: Date.now(),
       }),
     });
