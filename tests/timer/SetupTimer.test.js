@@ -9,9 +9,10 @@ import * as mockHandleSession from '../../src/utils/handleSession';
 
 jest.mock('../../src/utils/websocket.js');
 jest.mock('../../src/utils/handleSession.js');
-// mockHandleSession.newSession.mockImplementation(() => (new Response(
-//   JSON.stringify({ example: 'json' }))));
-mockHandleSession.joinSession.mockImplementation(() => (JSON.stringify({ example: 'json' })));
+
+// const resp = new Response(JSON.stringify({ example: 'json' }));
+// mockHandleSession.newSession.mockResolvedValue(resp);
+// // mockHandleSession.joinSession.mockImplementation(() => ());
 
 beforeEach(() => {
   mockWebsocket.default.mockClear();
@@ -80,18 +81,5 @@ describe('Conditional rendering of the Timer Component', () => {
     expect(input).toHaveValue('9');
     await fireEvent.keyDown(input, { keyCode: '13' });
     expect(input).not.toBeVisible();
-  });
-
-  it.skip('When join session is clicked, store the response in existingSessionData', async () => {
-    const { getByTestId } = render(SetupTimer);
-    const joinSessionButton = getByTestId('setup-timer-existing-session-button');
-    await fireEvent.click(joinSessionButton);
-    const input = getByTestId('setup-timer-join-session-input');
-    expect(input).toBeInTheDocument();
-    await fireEvent.keyDown(input, {
-      key: 'Enter',
-      code: 'Enter',
-    });
-    expect(mockWebsocket.sendAndListenToExistingSession).toBeCalled();
   });
 });
