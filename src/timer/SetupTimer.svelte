@@ -26,6 +26,7 @@
       if (existingSession) {
         await joinExistingSession(e.target.value);
       }
+      sessionData.newTimer = newTimer;
       hideInput = true;
     }
   }
@@ -33,9 +34,7 @@
   async function initNewSession(duration) {
     try {
       const response = await newSession(duration);
-      const responseJson = await response.json();
-      Object.assign(sessionData, responseJson);
-      sessionData.newTimer = true;
+      Object.assign(sessionData, response);
     } catch (err) {
       console.error(err);
     }
@@ -44,9 +43,7 @@
   async function joinExistingSession(sessionId) {
     try {
       const response = await joinSession(sessionId);
-      const responseJson = await response.json();
-      Object.assign(sessionData, responseJson);
-      sessionData.newTimer = false;
+      Object.assign(sessionData, response);
     } catch (err) {
       console.error(err);
     }

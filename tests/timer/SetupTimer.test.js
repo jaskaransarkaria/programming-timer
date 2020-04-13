@@ -10,10 +10,6 @@ import * as mockHandleSession from '../../src/utils/handleSession';
 jest.mock('../../src/utils/websocket.js');
 jest.mock('../../src/utils/handleSession.js');
 
-// const resp = new Response(JSON.stringify({ example: 'json' }));
-// mockHandleSession.newSession.mockResolvedValue(resp);
-// // mockHandleSession.joinSession.mockImplementation(() => ());
-
 beforeEach(() => {
   mockWebsocket.default.mockClear();
   mockHandleSession.newSession.mockClear();
@@ -48,6 +44,7 @@ describe('Conditional rendering of the Timer Component', () => {
   });
 
   it('expect new session POST to be called when new session time is input', async () => {
+    mockHandleSession.newSession.mockReturnValue({ example: 'json' });
     const { getByTestId } = render(SetupTimer);
     const newTimerButton = getByTestId('setup-timer-new-timer-button');
     await fireEvent.click(newTimerButton);
@@ -60,6 +57,7 @@ describe('Conditional rendering of the Timer Component', () => {
   });
 
   it('expect join session POST to be called when join session code is input', async () => {
+    mockHandleSession.joinSession.mockReturnValue({ example: 'json' });
     const { getByTestId } = render(SetupTimer);
     const existingTimerButton = getByTestId('setup-timer-existing-session-button');
     await fireEvent.click(existingTimerButton);
@@ -80,6 +78,6 @@ describe('Conditional rendering of the Timer Component', () => {
     await fireEvent.input(input, { target: { value: '9' } });
     expect(input).toHaveValue('9');
     await fireEvent.keyDown(input, { keyCode: '13' });
-    expect(input).not.toBeVisible();
+    expect(input).not.toBeInTheDocument();
   });
 });
