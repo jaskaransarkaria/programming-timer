@@ -13,44 +13,47 @@ afterEach(() => {
 describe('take duration as an prop and start a timer which alerts on expiration', () => {
   it('alert after the duration has expired', async () => {
     const { getByTestId } = render(Timer, {
-      durationMins: 1,
-      ws: { send: () => { return true; } },
-      existingSessionData: false,
+      ws : true,
+      sessionData: {
+        newTimer: true,
+        Duration: 1 *60 * 1000,
+      },
     });
     const timerHeader = getByTestId('timer-header');
     expect(timerHeader).toHaveTextContent('Start the timer');
-    await jest.advanceTimersByTime(1*60*1000);
+    await jest.advanceTimersByTime(1*61*1000);
     expect(setInterval).toBeCalledTimes(1);
     expect(timerHeader).toHaveTextContent('Times up!');
   });
 
   it('if duration isNaN(), then don\'t begin timer and reprompt', () => {
     const { getByTestId } = render(Timer, {
-      durationMins: 'not a number',
-      ws: { send: () => { return true; } },
-      existingSessionData: false,
+      ws: true,
+      sessionData: {
+        newTimer: true,
+        Duration: 'not a number',
+      },
     });
     const timerHeader = getByTestId('timer-header');
     expect(timerHeader).toHaveTextContent('Please enter a number');
   });
 
-  it('if no prop passed in the use default 30 mins', async () => {
+  it('if no prop passed prompt a number', () => {
     const { getByTestId } = render(Timer, {
-      ws: { send: () => { return true; } },
-      existingSessionData: false,
+      ws: true,
+      sessionData: { newTimer: true },
     });
     const timerHeader = getByTestId('timer-header');
-    expect(timerHeader).toHaveTextContent('Start the timer');
-    await jest.advanceTimersByTime(31*60*1000);
-    expect(setInterval).toBeCalledTimes(1);
-    expect(timerHeader).toHaveTextContent('Times up!');
+    expect(timerHeader).toHaveTextContent('Please enter a number');
   });
 
   it('if duration prop <= 0 then don\'t begin timer and reprompt', () => {
     const { getByTestId } = render(Timer, {
-      durationMins: -1,
-      ws: { send: () => { return true; } },
-      existingSessionData: false,
+      ws: true,
+      sessionData: {
+        newTimer: true,
+        Duration: -1,
+      },
     });
     const timerHeader = getByTestId('timer-header');
     expect(setInterval).toBeCalledTimes(0);
@@ -59,9 +62,11 @@ describe('take duration as an prop and start a timer which alerts on expiration'
 
   it('if duration prop is too large then don\'t begin timer and reprompt', () => {
     const { getByTestId } = render(Timer, {
-      durationMins: 121 * 60 * 1000,
-      ws: { send: () => { return true; } },
-      existingSessionData: false,
+      ws: true,
+      sessionData: {
+        newTimer: true,
+        Duration: 121 * 60 * 1000,
+      },
     });
     const timerHeader = getByTestId('timer-header');
     expect(setInterval).toBeCalledTimes(0);
@@ -70,14 +75,14 @@ describe('take duration as an prop and start a timer which alerts on expiration'
     );
   });
 
-  it('pass in expectedSessionData and display it correctly', async () => {
+  it('pass in existing session\'s SessionData and display it correctly', async () => {
     const remainingTime = Date.now() + (119 * 60 * 1000);
     const { getByTestId } = render(Timer, {
-      durationMins: 121 * 60 * 1000,
-      ws: { send: () => { return true; } },
-      existingSessionData: {
+      ws: true,
+      sessionData: {
+        newTimer: false,
         SessionID : '1234',
-        Duration: 121,
+        Duration: 121 * 60 * 1000,
         StartTime: Date.now() - (119*60*1000),
         EndTime: remainingTime,
         Users: [
@@ -92,14 +97,14 @@ describe('take duration as an prop and start a timer which alerts on expiration'
     expect(timerHeader).toHaveTextContent('Times up!');
   });
 
-  it('existingSessionData SessionID passed, so should be displayed', () => {
+  it('existing session SessionID passed, so should be displayed', () => {
     const remainingTime = Date.now() + (119 * 60 * 1000);
     const { getByText } = render(Timer, {
-      durationMins: 121 * 60 * 1000,
-      ws: { send: () => { return true; } },
-      existingSessionData: {
+      ws: true,
+      sessionData: {
+        newTimer: false,
         SessionID: '1234',
-        Duration: 121,
+        Duration: 121 * 60 * 1000,
         StartTime: Date.now() - (119 * 60 * 1000),
         EndTime: remainingTime,
         Users: [

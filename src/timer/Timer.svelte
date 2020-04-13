@@ -8,7 +8,6 @@
 
   const MAX_DURATION_LIMIT = minsToMillis(120);
 
-  export let durationMins = minsToMillis(30);
   export let ws;
   export let sessionData;
 
@@ -61,7 +60,6 @@
     if (isNaN(remainingTimeMillis)) {
       return displayTime = remainingTimeMillis;
     } else {
-      console.log('inside display',remainingTimeMillis);
       const interval = setInterval(() => {
         !isNaN(remainingTimeMillis) ?
           remainingTimeMillis -= updateTime(remainingTimeMillis) :

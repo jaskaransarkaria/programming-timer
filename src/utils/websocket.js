@@ -1,4 +1,4 @@
-export class Websocket {
+export default class Websocket {
   constructor() {
     this.ws = new WebSocket(`ws://${process.env.ADDR}/ws`);
     this.ws.onopen = () => {

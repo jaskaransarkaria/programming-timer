@@ -2,7 +2,7 @@
   'use strict';
   import { onMount } from 'svelte';
   import Timer from './Timer.svelte';
-  import {  Websocket } from '../utils/websocket.js';
+  import Websocket from '../utils/websocket.js';
   import { minsToMillis } from '../utils/utils.js';
 
   let ws;
