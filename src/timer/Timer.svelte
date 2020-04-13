@@ -17,8 +17,8 @@
   onMount(() => {
     if (!sessionData.newTimer) {
       calculateRemainingTime(sessionData);
-
       //TODO: store uid(s) as a session cookie or something?
+      // So that we can track who is next.
     } else {
       startTimer(sessionData.Duration);
     }
@@ -28,10 +28,6 @@
 
   function calculateRemainingTime(existingSessionData) {
     const endTime = existingSessionData.EndTime;
-
-    console.log('date now', Date.now());
-    console.log('end time', endTime);
-    console.log('calulate', endTime - Date.now());
     const remainingTimeMillis = endTime - Date.now();
     displayRemainingTime(remainingTimeMillis);
   }
