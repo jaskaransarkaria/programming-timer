@@ -3,14 +3,16 @@
   import { onMount } from 'svelte';
   import Timer from './Timer.svelte';
   import Websocket from '../utils/websocket.js';
-  import { minsToMillis } from '../utils/utils.js';
+  import {
+    newSession, joinSession,
+} from '../utils/handleSession.js';
 
   let ws;
   let newTimer = false;
   // eslint-disable-next-line prefer-const
   let existingSession = false;
   let hideInput = false;
-  let sessionData = {};
+  const sessionData = {};
 
   onMount( () => {
     ws = new Websocket();
@@ -19,36 +21,35 @@
   async function submit(e) {
     if (e.keyCode === 13) {
       if (newTimer) {
-        const response = await initNewSession(e.target.value);
-        Object.assign(sessionData, response);
-        sessionData.newTimer = true;
+        await initNewSession(e.target.value);
       }
       if (existingSession) {
-        await joinExistingSession(e);
+        await joinExistingSession(e.target.value);
       }
       hideInput = true;
     }
   }
 
   async function initNewSession(duration) {
-    newTimer = true;
-    const response = await fetch(`http://${process.env.ADDR}/session/new`, {
-      method: 'POST',
-      body: JSON.stringify({
-        duration: parseInt(minsToMillis(duration), 10),
-        startTime: Date.now(),
-      }),
-    });
-    return response.json();
+    try {
+      const response = await newSession(duration);
+      const responseJson = await response.json();
+      Object.assign(sessionData, responseJson);
+      sessionData.newTimer = true;
+    } catch (err) {
+      console.error(err);
+    }
   }
-
-  async function joinExistingSession(e) {
-    const response = await fetch(`http://${process.env.ADDR}/session/join`, {
-      method: 'POST',
-      body: JSON.stringify({  joinSession: e.target.value }),
-    });
-    sessionData = await response.json();
-    sessionData.newTimer = false;
+  
+  async function joinExistingSession(sessionId) {
+    try {
+      const response = await joinSession(sessionId);
+      const responseJson = await response.json();
+      Object.assign(sessionData, responseJson);
+      sessionData.newTimer = false;
+    } catch (err) {
+      console.error(err);
+    }
   }
 </script>
 
