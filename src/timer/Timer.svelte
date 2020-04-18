@@ -81,6 +81,10 @@
 
   function timesUp() {
     displayTime = 'Times up!';
+    const uuid = sessionStorage.getItem('uuid');
+    if (uuid === sessionData.CurrentDriver.UUID) {
+      ws.ws.send(JSON.stringify(sessionData));
+    }
     return;
   }
 </script>

@@ -16,6 +16,7 @@
 
   onMount( () => {
     ws = new Websocket();
+    sessionStorage.clear();
   });
 
   async function submit(e) {
@@ -34,7 +35,8 @@
   async function initNewSession(duration) {
     try {
       const response = await newSession(duration);
-      Object.assign(sessionData, response);
+      Object.assign(sessionData, response.Session);
+      sessionStorage.setItem('uuid', response.User.UUID);
     } catch (err) {
       console.error(err);
     }
@@ -43,7 +45,8 @@
   async function joinExistingSession(sessionId) {
     try {
       const response = await joinSession(sessionId);
-      Object.assign(sessionData, response);
+      Object.assign(sessionData, response.Session);
+      sessionStorage.setItem('uuid', response.User.UUID);
     } catch (err) {
       console.error(err);
     }
