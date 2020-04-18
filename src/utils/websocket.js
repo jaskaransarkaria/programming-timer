@@ -3,7 +3,7 @@ export default class Websocket {
     this.ws = new WebSocket(`ws://${process.env.ADDR}/ws`);
     this.ws.onopen = () => {
       console.log('successfully connected to the websocket');
-      this.ws.send('Hi from Svelte');
+      this.ws.send(sessionStorage.getItem('uuid'));
     };
     this.ws.onmessage = (event) => {
       console.log('message recieved', event);

@@ -2,12 +2,10 @@
   'use strict';
   import { onMount } from 'svelte';
   import Timer from './Timer.svelte';
-  import Websocket from '../utils/websocket.js';
   import {
     newSession, joinSession,
 } from '../utils/handleSession.js';
 
-  let ws;
   let newTimer = false;
   // eslint-disable-next-line prefer-const
   let existingSession = false;
@@ -15,7 +13,6 @@
   const sessionData = {};
 
   onMount( () => {
-    ws = new Websocket();
     sessionStorage.clear();
   });
 
@@ -72,7 +69,8 @@
 {/if}
 
 {#if newTimer && !hideInput}
-  <input
+  <input 
+    autofocus
     data-testid="setup-timer-new-timer-input"
     on:keydown={submit}
     placeholder="enter the timer length in mins" />
@@ -80,11 +78,12 @@
 
 {#if existingSession && !hideInput}
   <input
+    autofocus
     data-testid="setup-timer-join-session-input"
     on:keydown={submit}
     placeholder="enter your session code here" />
 {/if}
 
 {#if (newTimer && hideInput) || sessionData && existingSession && hideInput}
-  <Timer {ws} {sessionData}/>
+  <Timer {sessionData}/>
 {/if}

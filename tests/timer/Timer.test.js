@@ -13,7 +13,6 @@ afterEach(() => {
 describe('take duration as an prop and start a timer which alerts on expiration', () => {
   it('alert after the duration has expired', async () => {
     const { getByTestId } = render(Timer, {
-      ws : true,
       sessionData: {
         newTimer: true,
         Duration: 1 *60 * 1000,
@@ -28,7 +27,6 @@ describe('take duration as an prop and start a timer which alerts on expiration'
 
   it('if duration isNaN(), then don\'t begin timer and reprompt', () => {
     const { getByTestId } = render(Timer, {
-      ws: true,
       sessionData: {
         newTimer: true,
         Duration: 'not a number',
@@ -39,17 +37,13 @@ describe('take duration as an prop and start a timer which alerts on expiration'
   });
 
   it('if no prop passed prompt a number', () => {
-    const { getByTestId } = render(Timer, {
-      ws: true,
-      sessionData: { newTimer: true },
-    });
+    const { getByTestId } = render(Timer, { sessionData: { newTimer: true } });
     const timerHeader = getByTestId('timer-header');
     expect(timerHeader).toHaveTextContent('Please enter a number');
   });
 
   it('if duration prop <= 0 then don\'t begin timer and reprompt', () => {
     const { getByTestId } = render(Timer, {
-      ws: true,
       sessionData: {
         newTimer: true,
         Duration: -1,
@@ -62,7 +56,6 @@ describe('take duration as an prop and start a timer which alerts on expiration'
 
   it('if duration prop is too large then don\'t begin timer and reprompt', () => {
     const { getByTestId } = render(Timer, {
-      ws: true,
       sessionData: {
         newTimer: true,
         Duration: 121 * 60 * 1000,
@@ -78,7 +71,6 @@ describe('take duration as an prop and start a timer which alerts on expiration'
   it('pass in existing session\'s SessionData and display it correctly', async () => {
     const remainingTime = Date.now() + (119 * 60 * 1000);
     const { getByTestId } = render(Timer, {
-      ws: true,
       sessionData: {
         newTimer: false,
         SessionID : '1234',
@@ -100,7 +92,6 @@ describe('take duration as an prop and start a timer which alerts on expiration'
   it('existing session SessionID passed, so should be displayed', () => {
     const remainingTime = Date.now() + (119 * 60 * 1000);
     const { getByText } = render(Timer, {
-      ws: true,
       sessionData: {
         newTimer: false,
         SessionID: '1234',

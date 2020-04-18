@@ -5,19 +5,19 @@
     minsToMillis,
     millisToMinutesAndSeconds,
   } from '../utils/utils.js';
+  import Websocket from '../utils/websocket.js';
 
   const MAX_DURATION_LIMIT = minsToMillis(120);
 
-  export let ws;
+  let ws;
   export let sessionData;
 
   let displayTime = 'Start the timer';
 
   onMount(() => {
+    ws = new Websocket();
     if (!sessionData.newTimer) {
       calculateRemainingTime(sessionData);
-      //TODO: store uid(s) as a session cookie or something?
-      // So that we can track who is next.
     } else {
       startTimer(sessionData.Duration);
     }
