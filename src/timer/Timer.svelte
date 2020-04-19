@@ -16,6 +16,15 @@
 
   onMount(() => {
     ws = new Websocket();
+    ws.ws.onmessage = (event) => {
+      try {
+        Object.assign(sessionData, JSON.parse(event.data));
+        startTimer(sessionData.Duration);
+      } catch {
+        console.log('message recieved but event.data could not be parsed');
+      }
+
+    };
     if (!sessionData.newTimer) {
       calculateRemainingTime(sessionData);
     } else {
