@@ -91,7 +91,6 @@
   function timesUp() {
     displayTime = 'Times up!';
     const uuid = sessionStorage.getItem('uuid');
-    console.log(sessionData.CurrentDriver.UUID);
     if (uuid === sessionData.CurrentDriver.UUID) {
       updateSession(sessionData);
     }
