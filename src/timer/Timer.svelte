@@ -6,6 +6,7 @@
     millisToMinutesAndSeconds,
   } from '../utils/utils.js';
   import Websocket from '../utils/websocket.js';
+  import { updateSession } from '../utils/handleSession.js';
 
   const MAX_DURATION_LIMIT = minsToMillis(120);
 
@@ -19,11 +20,10 @@
     ws.ws.onmessage = (event) => {
       try {
         Object.assign(sessionData, JSON.parse(event.data));
-        startTimer(sessionData.Duration);
+        calculateRemainingTime(sessionData);
       } catch {
         console.log('message recieved but event.data could not be parsed');
       }
-
     };
     if (!sessionData.newTimer) {
       calculateRemainingTime(sessionData);
@@ -47,6 +47,23 @@
   function setTimer(duration) {
     displayRemainingTime(duration);
   }
+  
+  function displayRemainingTime(remainingTime) {
+    display(sanitizeDurationProp(remainingTime));
+  }
+  
+  function display(remainingTimeMillis) {
+    if (isNaN(remainingTimeMillis)) {
+      return displayTime = remainingTimeMillis;
+    } else {
+      const interval = setInterval(() => {
+        !isNaN(remainingTimeMillis) ?
+          remainingTimeMillis -= updateTime(remainingTimeMillis) :
+          clearInterval(interval);
+      }, 1000);
+      return;
+    }
+  }
 
   function sanitizeDurationProp(duration) {
     if (isNaN(duration)) {
@@ -59,23 +76,6 @@
       return 'The max timer length is 2 hours; enter a smaller timer length';
     }
     return duration;
-  }
-
-  function displayRemainingTime(remainingTime) {
-    display(sanitizeDurationProp(remainingTime));
-  }
-
-  function display(remainingTimeMillis) {
-    if (isNaN(remainingTimeMillis)) {
-      return displayTime = remainingTimeMillis;
-    } else {
-      const interval = setInterval(() => {
-        !isNaN(remainingTimeMillis) ?
-          remainingTimeMillis -= updateTime(remainingTimeMillis) :
-          clearInterval(interval);
-      }, 1000);
-      return;
-    }
   }
 
   function updateTime (remainingTimeMillis) {
@@ -91,8 +91,9 @@
   function timesUp() {
     displayTime = 'Times up!';
     const uuid = sessionStorage.getItem('uuid');
+    console.log(sessionData.CurrentDriver.UUID);
     if (uuid === sessionData.CurrentDriver.UUID) {
-      ws.ws.send(JSON.stringify(sessionData));
+      updateSession(sessionData);
     }
     return;
   }

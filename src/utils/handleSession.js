@@ -9,6 +9,13 @@ export async function joinSession(value) {
   return await response.json();
 }
 
+export async function updateSession(value) {
+  await fetch(`http://${process.env.ADDR}/session/update`, {
+    method: 'POST',
+    body: JSON.stringify( value ),
+  });
+}
+
 export async function newSession(duration) {
   const response = await fetch(`http://${process.env.ADDR}/session/new`, {
     method: 'POST',
