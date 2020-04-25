@@ -19,7 +19,7 @@
     ws = new Websocket();
     ws.ws.onmessage = (event) => {
       try {
-        Object.assign(sessionData, JSON.parse(event.data));
+        sessionData = JSON.parse(event.data);
         calculateRemainingTime(sessionData);
       } catch {
         console.log('message recieved but event.data could not be parsed');
@@ -61,7 +61,6 @@
           remainingTimeMillis -= updateTime(remainingTimeMillis) :
           clearInterval(interval);
       }, 1000);
-      return;
     }
   }
 
@@ -81,7 +80,6 @@
   function updateTime (remainingTimeMillis) {
     if (remainingTimeMillis < 1000) {
       timesUp();
-      return;
     } else {
       displayTime = millisToMinutesAndSeconds(remainingTimeMillis - 1000);
       return 1000;
@@ -94,7 +92,6 @@
     if (uuid === sessionData.CurrentDriver.UUID) {
       updateSession(sessionData);
     }
-    return;
   }
 </script>
 
