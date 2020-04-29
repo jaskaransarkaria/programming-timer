@@ -13,14 +13,23 @@
   let ws;
   export let sessionData;
 
+  let intervals = [
+];
   let displayTime = 'Start the timer';
 
   onMount(() => {
     ws = new Websocket();
-    ws.ws.onmessage = (event) => {
+    ws.ws.onmessage = async (event) => {
       try {
         sessionData = JSON.parse(event.data);
-        calculateRemainingTime(sessionData);
+        if (intervals.length === 0) {
+          await calculateRemainingTime(sessionData);
+          console.log(sessionData.CurrentDriver);
+          console.log(event.data);
+
+        } else {
+          console.log('caught a double');
+        }
       } catch {
         console.log('message recieved but event.data could not be parsed');
       }
@@ -30,8 +39,7 @@
     } else {
       startTimer(sessionData.Duration);
     }
-    // probably want to return a function which closes the connection here
-    return;
+    return () => ws.ws.close();
   });
 
   function calculateRemainingTime(existingSessionData) {
@@ -56,11 +64,13 @@
     if (isNaN(remainingTimeMillis)) {
       return displayTime = remainingTimeMillis;
     } else {
-      const interval = setInterval(() => {
-        !isNaN(remainingTimeMillis) ?
-          remainingTimeMillis -= updateTime(remainingTimeMillis) :
-          clearInterval(interval);
+      const currentInterval = setInterval(() => {
+        if (!isNaN(remainingTimeMillis)) {
+          remainingTimeMillis -= updateTime(remainingTimeMillis);
+        }
       }, 1000);
+      intervals.push(currentInterval);
+      console.log('adding to intervals', intervals);
     }
   }
 
@@ -78,7 +88,7 @@
   }
 
   function updateTime (remainingTimeMillis) {
-    if (remainingTimeMillis < 1000) {
+    if (sessionData.EndTime - Date.now() <= 1000) {
       timesUp();
     } else {
       displayTime = millisToMinutesAndSeconds(remainingTimeMillis - 1000);
@@ -86,11 +96,15 @@
     }
   }
 
-  function timesUp() {
+  async function timesUp() {
     displayTime = 'Times up!';
+    intervals.forEach(interval => clearInterval(interval));
+    intervals = [
+    ];
+    console.log(intervals);
     const uuid = sessionStorage.getItem('uuid');
-    if (uuid === sessionData.CurrentDriver.UUID) {
-      updateSession(sessionData);
+    if (uuid === sessionData.CurrentDriver.UUID && !(Number.isInteger(displayTime))) {
+      await updateSession(sessionData);
     }
   }
 </script>
