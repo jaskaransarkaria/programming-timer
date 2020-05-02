@@ -22,14 +22,8 @@
     ws.ws.onmessage = async (event) => {
       try {
         sessionData = JSON.parse(event.data);
-        if (intervals.length === 0) {
-          await calculateRemainingTime(sessionData);
-          console.log(sessionData.CurrentDriver);
-          console.log(event.data);
-
-        } else {
-          console.log('caught a double');
-        }
+        clearTimer();
+        await calculateRemainingTime(sessionData);
       } catch {
         console.log('message recieved but event.data could not be parsed');
       }
@@ -70,7 +64,6 @@
         }
       }, 1000);
       intervals.push(currentInterval);
-      console.log('adding to intervals', intervals);
     }
   }
 
@@ -89,6 +82,7 @@
 
   function updateTime (remainingTimeMillis) {
     if (sessionData.EndTime - Date.now() <= 1000) {
+      clearTimer();
       timesUp();
     } else {
       displayTime = millisToMinutesAndSeconds(remainingTimeMillis - 1000);
@@ -98,14 +92,16 @@
 
   async function timesUp() {
     displayTime = 'Times up!';
-    intervals.forEach(interval => clearInterval(interval));
-    intervals = [
-    ];
-    console.log(intervals);
     const uuid = sessionStorage.getItem('uuid');
     if (uuid === sessionData.CurrentDriver.UUID && !(Number.isInteger(displayTime))) {
       await updateSession(sessionData);
     }
+  }
+
+  function clearTimer() {
+    intervals.forEach(interval => clearInterval(interval));
+    intervals = [
+    ];
   }
 </script>
 
