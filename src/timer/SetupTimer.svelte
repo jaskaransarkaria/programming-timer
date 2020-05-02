@@ -85,5 +85,5 @@
 {/if}
 
 {#if (newTimer && hideInput) || sessionData && existingSession && hideInput}
-  <Timer {sessionData}/>
+  <Timer {sessionData} />
 {/if}

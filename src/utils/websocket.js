@@ -16,3 +16,23 @@ export default class Websocket {
     };
   }
 }
+
+export function initWebsocket(onmessageConfig) {
+  const ws = new WebSocket(`ws://${process.env.ADDR}/ws`);
+  ws.onopen = () => {
+    console.log('successfully connected to the websocket');
+    ws.send(sessionStorage.getItem('uuid'));
+  };
+  ws.onmessage = onmessageConfig();
+  ws.onclose = (event) => {
+    console.log('socket closed connection', event);
+  };
+  ws.onerror = (error) => {
+    console.log('Socket Error', error);
+  };
+  return ws;
+}
+
+export function closeWs(ws) {
+  return ws.close();
+}

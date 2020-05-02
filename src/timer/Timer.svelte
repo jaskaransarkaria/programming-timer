@@ -5,35 +5,38 @@
     minsToMillis,
     millisToMinutesAndSeconds,
   } from '../utils/utils.js';
-  import Websocket from '../utils/websocket.js';
+  import {
+    initWebsocket, closeWs,
+}from '../utils/websocket.js';
   import { updateSession } from '../utils/handleSession.js';
 
   const MAX_DURATION_LIMIT = minsToMillis(120);
 
   let ws;
-  export let sessionData;
+  export let sessionData = {};
 
   let intervals = [
 ];
   let displayTime = 'Start the timer';
 
+  const wsOnMessageOverwrite = async (event) => {
+    clearTimer();
+    try {
+      sessionData = JSON.parse(event.data);
+      await calculateRemainingTime(sessionData);
+    } catch {
+      console.log('message recieved but event.data could not be parsed');
+    }
+};
+
   onMount(() => {
-    ws = new Websocket();
-    ws.ws.onmessage = async (event) => {
-      try {
-        sessionData = JSON.parse(event.data);
-        clearTimer();
-        await calculateRemainingTime(sessionData);
-      } catch {
-        console.log('message recieved but event.data could not be parsed');
-      }
-    };
+    ws = initWebsocket(wsOnMessageOverwrite);
     if (!sessionData.newTimer) {
       calculateRemainingTime(sessionData);
     } else {
       startTimer(sessionData.Duration);
     }
-    return () => ws.ws.close();
+    return () => closeWs(ws);
   });
 
   function calculateRemainingTime(existingSessionData) {
@@ -43,13 +46,9 @@
   }
 
   function startTimer(duration) {
-    setTimer(duration);
-  }
-
-  function setTimer(duration) {
     displayRemainingTime(duration);
   }
-  
+
   function displayRemainingTime(remainingTime) {
     display(sanitizeDurationProp(remainingTime));
   }
@@ -81,7 +80,8 @@
   }
 
   function updateTime (remainingTimeMillis) {
-    if (sessionData.EndTime - Date.now() <= 1000) {
+    // need both conditional statements -- guard against timers getting out of sync
+    if (sessionData.EndTime - Date.now() <= 1000 || remainingTimeMillis <= 1000) {
       clearTimer();
       timesUp();
     } else {
@@ -93,8 +93,13 @@
   async function timesUp() {
     displayTime = 'Times up!';
     const uuid = sessionStorage.getItem('uuid');
-    if (uuid === sessionData.CurrentDriver.UUID && !(Number.isInteger(displayTime))) {
-      await updateSession(sessionData);
+    if (
+      Object.prototype.hasOwnProperty.call(sessionData, 'CurrentDriver') &&
+      Object.prototype.hasOwnProperty.call(sessionData, 'UUID')
+    ) {
+      if (uuid === sessionData.CurrentDriver.UUID && !(Number.isInteger(displayTime))) {
+        await updateSession(sessionData);
+      }
     }
   }
 
@@ -106,7 +111,11 @@
 </script>
 
 <h1 data-testid="timer-header">{displayTime}</h1>
-<h2>Session Id: {sessionData.SessionID}</h2>
+<h2>Session Id: {
+  Object.prototype.hasOwnProperty.call(sessionData, 'SessionID') ?
+  sessionData.SessionID :
+  'loading..'
+}</h2>
 
 <style>
 </style>
