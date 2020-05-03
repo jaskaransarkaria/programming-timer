@@ -23,7 +23,6 @@
     clearTimer();
     try {
       sessionData = JSON.parse(event.data);
-      console.log(sessionData);
       await calculateRemainingTime(sessionData);
     } catch {
       console.log('message recieved but event.data could not be parsed');
