@@ -6,7 +6,7 @@ import * as mockWebsocket from '../../src/utils/websocket';
 jest.mock('../../src/utils/websocket.js');
 
 beforeEach(() => {
-  mockWebsocket.default.mockClear();
+  mockWebsocket.initWebsocket.mockClear();
   jest.useFakeTimers();
 });
 
