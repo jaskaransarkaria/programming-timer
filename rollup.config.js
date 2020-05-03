@@ -4,6 +4,7 @@ import commonjs from '@rollup/plugin-commonjs';
 import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
 import replace from '@rollup/plugin-replace';
+require('dotenv').config();
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -38,7 +39,7 @@ export default {
       ],
     }),
     commonjs(),
-    replace({ process: JSON.stringify({ env: { ADDR: 'localhost:8080' } }) }),
+    replace({ process: JSON.stringify({ env: { ADDR: process.env.SERVER_ADDR } }) }),
 
     // In dev mode, call `npm run start` once
     // the bundle has been generated
