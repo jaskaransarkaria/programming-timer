@@ -1,12 +1,9 @@
-
-public/build/
-
 node_modules/
+
+npm-debug.log
 
 .env
 
 .DS_Store
 
 .kubernetes/
-
-DockerFile

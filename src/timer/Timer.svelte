@@ -20,9 +20,11 @@
   let displayTime = 'Start the timer';
 
   const wsOnMessageOverwrite = async (event) => {
+    console.log(event);
     clearTimer();
     try {
       sessionData = JSON.parse(event.data);
+      console.log(sessionData);
       await calculateRemainingTime(sessionData);
     } catch {
       console.log('message recieved but event.data could not be parsed');
@@ -95,7 +97,7 @@
     const uuid = sessionStorage.getItem('uuid');
     if (
       Object.prototype.hasOwnProperty.call(sessionData, 'CurrentDriver') &&
-      Object.prototype.hasOwnProperty.call(sessionData, 'UUID')
+      Object.prototype.hasOwnProperty.call(sessionData.CurrentDriver, 'UUID')
     ) {
       if (uuid === sessionData.CurrentDriver.UUID && !(Number.isInteger(displayTime))) {
         await updateSession(sessionData);
