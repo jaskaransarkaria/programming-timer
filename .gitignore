@@ -7,6 +7,4 @@ node_modules/
 
 .DS_Store
 
-.kubernetes/
-
 DockerFile

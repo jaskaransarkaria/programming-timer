@@ -20,7 +20,6 @@
   let displayTime = 'Start the timer';
 
   const wsOnMessageOverwrite = async (event) => {
-    console.log(event);
     clearTimer();
     try {
       sessionData = JSON.parse(event.data);
