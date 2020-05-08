@@ -36,7 +36,7 @@ Install the dependencies and run locally...
 
   * `npm run dev`
 
-[ NOTE ] - By default, the server will only respond to requests from localhost. To allow connections from other computers, edit the `sirv` commands in package.json to include the option `--host 0.0.0.0`.
+> **NOTE**  - By default, the server will only respond to requests from localhost. To allow connections from other computers, edit the `sirv` commands in package.json to include the option `--host 0.0.0.0`.
 
 *Environment varibales such as the `SERVER_ADDR` can be found in `rollup.config.js`
 
@@ -58,7 +58,7 @@ To deploy your changes run (see "Useful Commands" for details):
 
   `./scripts/deploy.sh $VERSION_NUMBER`
 
-[ NOTE ] - If you change the VERSION_NUMBER of the docker image you must manually change the associated tag in `.kubernetes/deployment.yaml`. Use `scripts/deploy_kubernetes_config.sh` for updating just  k8 config.
+ > **NOTE** - If you change the VERSION_NUMBER of the docker image you must manually change the associated tag in `.kubernetes/deployment.yaml`. Use `scripts/deploy_kubernetes_config.sh` for updating just  k8 config.
 
 ### Todos
 
