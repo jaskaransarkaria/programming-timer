@@ -4,7 +4,7 @@
 
 ## tl;dr
 
-Keep time and turn order when you pair programming, you can find the server code (here)[https://github.com/jaskaransarkaria/programming-timer-server].
+Keep time and turn order when you pair programming, you can find the server code [here](https://github.com/jaskaransarkaria/programming-timer-server).
 
 ## Git and Deployment
 
@@ -15,7 +15,7 @@ Keep time and turn order when you pair programming, you can find the server code
 
 ## Stack
 
-`Svelte` - A component framework which runs at build time with no virtual DOM. Svelte converts components into highly efficient imperative code that surgically updates the DOM (more details)[https://svelte.dev/].
+`Svelte` - A component framework which runs at build time with no virtual DOM. Svelte converts components into highly efficient imperative code that surgically updates the DOM [more details](https://svelte.dev/).
 `Kubernetes` - an open-source system for automating deployment, scaling, and management of containerized applications.
 `Rollup` - module bundler for JavaScript which compiles small pieces of code into something larger and more complex, such as a library or application.
 `Jest` - JavaScript Testing Framework with a focus on simplicity.
@@ -25,7 +25,7 @@ Keep time and turn order when you pair programming, you can find the server code
 
 ## Getting Started
 
-Install `kubectl` from (here)[https://kubernetes.io/docs/tasks/tools/install-kubectl/]
+Install `kubectl` from [here](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
 
 Set up credentials to a kubernetes cluster.
 
