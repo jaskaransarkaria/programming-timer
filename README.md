@@ -4,7 +4,7 @@
 
 ## tl;dr
 
-Keep time and turn order when you pair programming, you can find the server code (here)[].
+Keep time and turn order when you pair programming, you can find the server code (here)[https://github.com/jaskaransarkaria/programming-timer-server].
 
 ## Git and Deployment
 
@@ -29,17 +29,18 @@ Install `kubectl` from (here)[https://kubernetes.io/docs/tasks/tools/install-kub
 
 Set up credentials to a kubernetes cluster.
 
-Install the dependencies...
+Install the dependencies and run locally...
 
-`npm install`
+  *`npm install`
 
-`npm run dev`
+  *`npm run dev`
 
-Navigate to [localhost:5000](http://localhost:5000). You should see the app running.
+[ NOTE ] - By default, the server will only respond to requests from localhost. To allow connections from other computers, edit the `sirv` commands in package.json to include the option `--host 0.0.0.0`.
 
-By default, the server will only respond to requests from localhost. To allow connections from other computers, edit the `sirv` commands in package.json to include the option `--host 0.0.0.0`.
+*Environment varibales such as the `SERVER_ADDR` can be found in `rollup.config.js`
 
 ## Useful Commands
+
 * `npm run build` - Compile the code
 * `npm run lint` - Run linter
 * `npm run test` - Run all tests
@@ -56,12 +57,13 @@ To deploy your changes run (see "Useful Commands" for details):
 
   `./scripts/deploy.sh $VERSION_NUMBER`
 
-[NOTE] - If you change the VERSION_NUMBER of the docker image you must manually change the associated tag in `.kubernetes/deployment.yaml`. Use `scripts/deploy_kubernetes_config.sh` for updating just  k8 config.
+[ NOTE ] - If you change the VERSION_NUMBER of the docker image you must manually change the associated tag in `.kubernetes/deployment.yaml`. Use `scripts/deploy_kubernetes_config.sh` for updating just  k8 config.
 
 ### Todos
 
-[ ] Https
-[ ] Add notifications when timer finishes and prompt to restart the timer
-[ ] Travis CI/ CD
-[ ] Graphical representation of timer using SVG
-[ ] Tidy up bash scripts so can be called from proj root, prompt for required arguments and set VERSION_NUMBER so it is consistent across docker and k8 manifest.
+[ ] - Https
+[ ] - Add notifications when timer finishes and prompt to restart the timer
+[ ] - Travis CI/ CD
+[ ] - Graphical representation of timer using SVG
+[ ] - Tidy up bash scripts so can be called from proj root, prompt for required arguments and set VERSION_NUMBER so it is consistent across docker and k8 manifest.
+[ ] - Set up proper environment configs
