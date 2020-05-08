@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -ex
+set -e
 
 for FILENAME in ../.kubernetes/*.yaml; do
   [ -e "$FILENAME" ] || continue

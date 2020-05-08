@@ -16,7 +16,8 @@ Keep time and turn order when you are pair programming, you can find the server 
 ## Stack
 
 `Svelte` - A component framework which runs at build time with no virtual DOM. Svelte converts components into highly efficient imperative code that surgically updates the DOM [more details](https://svelte.dev/).
-`Kubernetes` - an open-source system for automating deployment, scaling, and management of containerized applications.
+`Kubernetes` - An open-source system for automating deployment, scaling, and management of containerized applications.
+`Docker` - Docker is a software platform that allows you to build, test, and deploy applications. Docker packages software into standardized units called containers that have everything the software needs to run.
 `Rollup` - module bundler for JavaScript which compiles small pieces of code into something larger and more complex, such as a library or application.
 `Jest` - JavaScript Testing Framework with a focus on simplicity.
 `Eslint` - static code analysis tool for identifying problematic patterns found in JavaScript code.

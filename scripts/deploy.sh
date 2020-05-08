@@ -9,3 +9,5 @@ VERSION_NUMBER=$1
 
 kubectl scale --replicas=0 deployment timer-client
 kubectl scale --replicas=1 deployment timer-client
+
+exit 0
