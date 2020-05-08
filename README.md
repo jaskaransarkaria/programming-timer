@@ -4,7 +4,7 @@
 
 ## tl;dr
 
-Keep time and turn order when you pair programming, you can find the server code [here](https://github.com/jaskaransarkaria/programming-timer-server).
+Keep time and turn order when you are pair programming, you can find the server code [here](https://github.com/jaskaransarkaria/programming-timer-server).
 
 ## Git and Deployment
 
@@ -63,7 +63,7 @@ To deploy your changes run (see "Useful Commands" for details):
 
 - [ ] Https
 - [ ] Add notifications when timer finishes and prompt to restart the timer
-- [ ] Travis CI/ CD
+- [ ] Travis CI/ CD & git branch rules/protection
 - [ ] Graphical representation of timer using SVG
 - [ ] Tidy up bash scripts so can be called from proj root, prompt for required arguments and set VERSION_NUMBER so it is consistent across docker and k8 manifest.
 - [ ] Set up proper environment configs
