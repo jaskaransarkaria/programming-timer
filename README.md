@@ -1,93 +1,67 @@
-*Looking for a shareable component template? Go here --> [sveltejs/component-template](https://github.com/sveltejs/component-template)*
+# Pair Programming Timer - Client
 
 ---
 
-# svelte app
+## tl;dr
 
-This is a project template for [Svelte](https://svelte.dev) apps. It lives at https://github.com/sveltejs/template.
+Keep time and turn order when you pair programming, you can find the server code (here)[].
 
-To create a new project based on this template using [degit](https://github.com/Rich-Harris/degit):
+## Git and Deployment
 
-```bash
-npx degit sveltejs/template svelte-app
-cd svelte-app
-```
+1) Branch from `master`
+2) Make your changes
+3) Ensure you pass all the tests prompted by Husky's git hooks
+4) Merge back into `master`
 
-*Note that you will need to have [Node.js](https://nodejs.org) installed.*
+## Stack
 
+`Svelte` - A component framework which runs at build time with no virtual DOM. Svelte converts components into highly efficient imperative code that surgically updates the DOM (more details)[https://svelte.dev/].
+`Kubernetes` - an open-source system for automating deployment, scaling, and management of containerized applications.
+`Rollup` - module bundler for JavaScript which compiles small pieces of code into something larger and more complex, such as a library or application.
+`Jest` - JavaScript Testing Framework with a focus on simplicity.
+`Eslint` - static code analysis tool for identifying problematic patterns found in JavaScript code.
+`Husky` - git hooks.
+`scripts/` - build and deploy bash scripts.
 
-## Get started
+## Getting Started
+
+Install `kubectl` from (here)[https://kubernetes.io/docs/tasks/tools/install-kubectl/]
+
+Set up credentials to a kubernetes cluster.
 
 Install the dependencies...
 
-```bash
-cd svelte-app
-npm install
-```
+`npm install`
 
-...then start [Rollup](https://rollupjs.org):
+`npm run dev`
 
-```bash
-npm run dev
-```
-
-Navigate to [localhost:5000](http://localhost:5000). You should see your app running. Edit a component file in `src`, save it, and reload the page to see your changes.
+Navigate to [localhost:5000](http://localhost:5000). You should see the app running.
 
 By default, the server will only respond to requests from localhost. To allow connections from other computers, edit the `sirv` commands in package.json to include the option `--host 0.0.0.0`.
 
+## Useful Commands
+* `npm run build` - Compile the code
+* `npm run lint` - Run linter
+* `npm run test` - Run all tests
+* `npm run test:watch` - Run tests continuously
+* `scripts/deploy.sh $VERSION_NUMBER` - Deploys any changes to kubernetes` manifests, builds a new docker image, pushes it to docker hub and finally scales the deployment to pull the newly created image.
+* `scripts/deploy_kubernetes_config.sh` - Deploys just kubernetes manifest changes (kubernetes secret is excluded from the script).
+* `scripts/push_docker.sh $VERSION_NUMBER` - Builds and pushes the code to dockerhub with a $VERSION_NUMBER as a tag.
 
-## Building and running in production mode
+## Deployment
 
-To create an optimised version of the app:
+Currently deployment is driven by bash scripts found in `scripts/`. _You must currently cd into scripts/ to execute them_.
 
-```bash
-npm run build
-```
+To deploy your changes run (see "Useful Commands" for details):
 
-You can run the newly built app with `npm run start`. This uses [sirv](https://github.com/lukeed/sirv), which is included in your package.json's `dependencies` so that the app will work when you deploy to platforms like [Heroku](https://heroku.com).
+  `./scripts/deploy.sh $VERSION_NUMBER`
 
+[NOTE] - If you change the VERSION_NUMBER of the docker image you must manually change the associated tag in `.kubernetes/deployment.yaml`. Use `scripts/deploy_kubernetes_config.sh` for updating just  k8 config.
 
-## Single-page app mode
+### Todos
 
-By default, sirv will only respond to requests that match files in `public`. This is to maximise compatibility with static fileservers, allowing you to deploy your app anywhere.
-
-If you're building a single-page app (SPA) with multiple routes, sirv needs to be able to respond to requests for *any* path. You can make it so by editing the `"start"` command in package.json:
-
-```js
-"start": "sirv public --single"
-```
-
-
-## Deploying to the web
-
-### With [now](https://zeit.co/now)
-
-Install `now` if you haven't already:
-
-```bash
-npm install -g now
-```
-
-Then, from within your project folder:
-
-```bash
-cd public
-now deploy --name my-project
-```
-
-As an alternative, use the [Now desktop client](https://zeit.co/download) and simply drag the unzipped project folder to the taskbar icon.
-
-### With [surge](https://surge.sh/)
-
-Install `surge` if you haven't already:
-
-```bash
-npm install -g surge
-```
-
-Then, from within your project folder:
-
-```bash
-npm run build
-surge public my-project.surge.sh
-```
+[ ] Https
+[ ] Add notifications when timer finishes and prompt to restart the timer
+[ ] Travis CI/ CD
+[ ] Graphical representation of timer using SVG
+[ ] Tidy up bash scripts so can be called from proj root, prompt for required arguments and set VERSION_NUMBER so it is consistent across docker and k8 manifest.

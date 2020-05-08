@@ -5,3 +5,9 @@ npm-debug.log
 .env
 
 .DS_Store
+
+tls.crt
+
+tls.key
+
+secret.yaml

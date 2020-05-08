@@ -6,6 +6,8 @@ COPY package*.json ./
 
 RUN npm install
 
+CMD ["npm", "run", "build"]
+
 COPY . .
 
 EXPOSE 5000
