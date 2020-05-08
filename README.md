@@ -61,9 +61,9 @@ To deploy your changes run (see "Useful Commands" for details):
 
 ### Todos
 
-[ ] - Https
-[ ] - Add notifications when timer finishes and prompt to restart the timer
-[ ] - Travis CI/ CD
-[ ] - Graphical representation of timer using SVG
-[ ] - Tidy up bash scripts so can be called from proj root, prompt for required arguments and set VERSION_NUMBER so it is consistent across docker and k8 manifest.
-[ ] - Set up proper environment configs
+- [ ] Https
+- [ ] Add notifications when timer finishes and prompt to restart the timer
+- [ ] Travis CI/ CD
+- [ ] Graphical representation of timer using SVG
+- [ ] Tidy up bash scripts so can be called from proj root, prompt for required arguments and set VERSION_NUMBER so it is consistent across docker and k8 manifest.
+- [ ] Set up proper environment configs
