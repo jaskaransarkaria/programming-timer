@@ -62,7 +62,8 @@ To deploy your changes run (see "Useful Commands" for details):
 
 ### Todos
 
-- [ ] Https
+- [x] Https
+- [x] Set up re-direct from `pairprogrammingtimer.com` -> `www.pairprogrammingtimer.com`
 - [ ] Add notifications when timer finishes and prompt to restart the timer
 - [ ] Travis CI/ CD & git branch rules/protection
 - [ ] Graphical representation of timer using SVG

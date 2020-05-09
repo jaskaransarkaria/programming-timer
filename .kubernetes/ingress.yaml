@@ -32,12 +32,8 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/use-regex: "true"
-    cert-manager.io/issuer: "letsencrypt-staging"
+    nginx.ingress.kubernetes.io/permanent-redirect: "https://www.pairprogrammingtimer.com"
 spec:
-  tls:
-    - hosts:
-      - pairprogrammingtimer.com
-      secretName: timer-client-tls-secret
   rules:
   - host: pairprogrammingtimer.com
     http:
