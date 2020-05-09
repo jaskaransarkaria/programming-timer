@@ -63,7 +63,7 @@ To deploy your changes run (see "Useful Commands" for details):
 ### Todos
 
 - [x] Https
-- [x] Set up re-direct from `pairprogrammingtimer.com` -> `www.pairprogrammingtimer.com`
+- [ ] Set up re-direct from `pairprogrammingtimer.com` -> `www.pairprogrammingtimer.com` (redirect is currently blocked by browsers as it is not https - before testing https changes _remember_ to switch to `letencrypt-staging`)
 - [ ] Add notifications when timer finishes and prompt to restart the timer
 - [ ] Travis CI/ CD & git branch rules/protection
 - [ ] Graphical representation of timer using SVG
