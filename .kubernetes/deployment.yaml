@@ -15,14 +15,13 @@ spec:
     spec:
       containers:
       - name: timer-client
-        image: jaskaransarkaria/timer-client:3
+        image: jaskaransarkaria/timer-client:6
         ports:
         - containerPort: 5000
         livenessProbe:
           exec:
             command:
-            - cat
-            - /usr/src/app/public/build/bundle.js
-          initialDelaySeconds: 5
+            - cat /usr/src/app/public/build/bundle.js
+          initialDelaySeconds: 40
           periodSeconds: 5
 

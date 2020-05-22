@@ -11,3 +11,5 @@ tls.crt
 tls.key
 
 secret.yaml
+
+.kubernetes/
