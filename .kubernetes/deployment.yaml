@@ -21,7 +21,8 @@ spec:
         livenessProbe:
           exec:
             command:
-            - cat /usr/src/app/public/build/bundle.js
+            - cat 
+            - /usr/src/app/public/build/bundle.js
           initialDelaySeconds: 40
           periodSeconds: 5
 
