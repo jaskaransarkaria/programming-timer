@@ -25,7 +25,7 @@
       sessionData = JSON.parse(event.data);
       await calculateRemainingTime(sessionData);
     } catch {
-      console.log('message recieved but event.data could not be parsed');
+      console.log('message received but event.data could not be parsed');
     }
 };
 
@@ -52,7 +52,7 @@
   function displayRemainingTime(remainingTime) {
     display(sanitizeDurationProp(remainingTime));
   }
-  
+
   function display(remainingTimeMillis) {
     if (isNaN(remainingTimeMillis)) {
       return displayTime = remainingTimeMillis;

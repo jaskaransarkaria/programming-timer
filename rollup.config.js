@@ -39,7 +39,7 @@ export default {
       ],
     }),
     commonjs(),
-    replace({ process: JSON.stringify({ env: { ADDR: 'server.pairprogrammingtimer.com' } }) }),
+    replace({ process: JSON.stringify({ env: { ADDR: 'localhost:8080' } }) }),
 
     // In dev mode, call `npm run start` once
     // the bundle has been generated
