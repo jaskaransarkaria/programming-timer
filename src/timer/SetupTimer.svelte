@@ -1,9 +1,11 @@
 <script>
-  "use strict";
-  import { onMount } from "svelte";
-  import Timer from "./Timer.svelte";
-  import TimerSVG from "./TimerSVG.svelte";
-  import { newSession, joinSession } from "../utils/handleSession.js";
+  'use strict';
+  import { onMount } from 'svelte';
+  import Timer from './Timer.svelte';
+  import TimerSVG from './TimerSVG.svelte';
+  import {
+    newSession, joinSession,
+  } from '../utils/handleSession.js';
 
   let newTimer = false;
   // eslint-disable-next-line prefer-const
@@ -32,7 +34,7 @@
     try {
       const response = await newSession(duration);
       Object.assign(sessionData, response.Session);
-      sessionStorage.setItem("uuid", response.User.UUID);
+      sessionStorage.setItem('uuid', response.User.UUID);
     } catch (err) {
       console.error(err);
     }
@@ -42,7 +44,7 @@
     try {
       const response = await joinSession(sessionId);
       Object.assign(sessionData, response.Session);
-      sessionStorage.setItem("uuid", response.User.UUID);
+      sessionStorage.setItem('uuid', response.User.UUID);
     } catch (err) {
       console.error(err);
     }
@@ -53,7 +55,6 @@
 
 </style>
 
-<TimerSVG />
 {#if !newTimer && !existingSession}
   <button
     data-testid="setup-timer-new-timer-button"

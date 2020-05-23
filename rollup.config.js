@@ -39,7 +39,16 @@ export default {
       ],
     }),
     commonjs(),
-    replace({ process: JSON.stringify({ env: { ADDR: 'localhost:8080' } }) }),
+    replace({
+      process: JSON.stringify({
+        env: {
+          LOCAL_ADDR: 'http://localhost:8080',
+          LOCAL_WS: 'ws://localhost:8080/ws',
+          PROD_ADDR: 'https://www.pairprogrammingtimer.com',
+          PROD_WS: 'wss://www.pairprogrammingtimer.com/ws',
+        },
+      }),
+    }),
 
     // In dev mode, call `npm run start` once
     // the bundle has been generated

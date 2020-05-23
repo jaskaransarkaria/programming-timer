@@ -9,12 +9,13 @@
     initWebsocket, closeWs,
 }from '../utils/websocket.js';
   import { updateSession } from '../utils/handleSession.js';
+  import TimerSVG from './TimerSVG.svelte';
+
 
   const MAX_DURATION_LIMIT = minsToMillis(120);
 
   let ws;
   export let sessionData = {};
-
   let intervals = [
 ];
   let displayTime = 'Start the timer';
@@ -110,6 +111,7 @@
   }
 </script>
 
+<TimerSVG duration={sessionData.Duration} startTimestamp={sessionData.StartTime}/>
 <h1 data-testid="timer-header">{displayTime}</h1>
 <h2>Session Id: {
   Object.prototype.hasOwnProperty.call(sessionData, 'SessionID') ?

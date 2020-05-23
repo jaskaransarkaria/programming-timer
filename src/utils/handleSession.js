@@ -2,7 +2,7 @@ import { minsToMillis } from './utils.js';
 
 
 export async function joinSession(value) {
-  const response = await fetch(`https://${process.env.ADDR}/session/join`, {
+  const response = await fetch(`${process.env.LOCAL_ADDR}/session/join`, {
     method: 'POST',
     body: JSON.stringify({ joinSession: value }),
   });
@@ -10,14 +10,14 @@ export async function joinSession(value) {
 }
 
 export async function updateSession(value) {
-  await fetch(`https://${process.env.ADDR}/session/update`, {
+  await fetch(`${process.env.LOCAL_ADDR}/session/update`, {
     method: 'POST',
     body: JSON.stringify( value ),
   });
 }
 
 export async function newSession(duration) {
-  const response = await fetch(`https://${process.env.ADDR}/session/new`, {
+  const response = await fetch(`${process.env.LOCAL_ADDR}/session/new`, {
     method: 'POST',
     body: JSON.stringify({
       duration: parseInt(minsToMillis(duration), 10),
