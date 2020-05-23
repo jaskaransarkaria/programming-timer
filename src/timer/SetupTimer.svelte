@@ -2,7 +2,6 @@
   'use strict';
   import { onMount } from 'svelte';
   import Timer from './Timer.svelte';
-  import TimerSVG from './TimerSVG.svelte';
   import {
     newSession, joinSession,
   } from '../utils/handleSession.js';
