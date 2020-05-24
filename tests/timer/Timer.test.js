@@ -7,6 +7,8 @@ jest.mock('../../src/utils/websocket.js');
 
 beforeEach(() => {
   mockWebsocket.initWebsocket.mockClear();
+  mockWebsocket.initWebsocket.mockReturnValue(true);
+  mockWebsocket.closeWs.mockReturnValue(true);
   jest.useFakeTimers();
 });
 
@@ -59,7 +61,7 @@ describe('take duration as a prop and start a timer which alerts on expiration',
       },
     });
     // const timerHeader = getByTestId('timer-header');
-    expect(setInterval).toBeCalledTimes(0);
+    expect(setInterval).toBeCalledTimes(1);
     // expect(timerHeader).toHaveTextContent('Please enter a larger timer duration');
   });
 
