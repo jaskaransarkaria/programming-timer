@@ -111,8 +111,7 @@
   }
 </script>
 
-<TimerSVG duration={sessionData.Duration} startTimestamp={sessionData.StartTime}/>
-<h1 data-testid="timer-header">{displayTime}</h1>
+<TimerSVG duration={sessionData.Duration} startTimestamp={sessionData.StartTime} displayTime={displayTime}/>
 <h2>Session Id: {
   Object.prototype.hasOwnProperty.call(sessionData, 'SessionID') ?
   sessionData.SessionID :
