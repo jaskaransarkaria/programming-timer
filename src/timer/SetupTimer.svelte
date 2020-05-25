@@ -4,7 +4,7 @@
   import Timer from './Timer.svelte';
   import {
     newSession, joinSession,
-} from '../utils/handleSession.js';
+  } from '../utils/handleSession.js';
 
   let newTimer = false;
   // eslint-disable-next-line prefer-const
@@ -12,7 +12,7 @@
   let hideInput = false;
   const sessionData = {};
 
-  onMount( () => {
+  onMount(() => {
     sessionStorage.clear();
   });
 
@@ -38,7 +38,7 @@
       console.error(err);
     }
   }
-  
+
   async function joinExistingSession(sessionId) {
     try {
       const response = await joinSession(sessionId);
@@ -55,21 +55,21 @@
 </style>
 
 {#if !newTimer && !existingSession}
-  <button 
-  data-testid="setup-timer-new-timer-button"
-  on:click={() => newTimer = true}>
+  <button
+    data-testid="setup-timer-new-timer-button"
+    on:click={() => (newTimer = true)}>
     New Timer
-</button>
+  </button>
 
   <button
     data-testid="setup-timer-existing-session-button"
-    on:click={() => existingSession = true}>
+    on:click={() => (existingSession = true)}>
     Join Session
   </button>
 {/if}
 
 {#if newTimer && !hideInput}
-  <input 
+  <input
     autofocus
     data-testid="setup-timer-new-timer-input"
     on:keydown={submit}
@@ -82,8 +82,8 @@
     data-testid="setup-timer-join-session-input"
     on:keydown={submit}
     placeholder="enter your session code here" />
-{/if}
+    {/if}
 
-{#if (newTimer && hideInput) || sessionData && existingSession && hideInput}
+{#if (newTimer && hideInput) || (sessionData && existingSession && hideInput)}
   <Timer {sessionData} />
 {/if}

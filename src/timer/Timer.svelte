@@ -9,12 +9,13 @@
     initWebsocket, closeWs,
 }from '../utils/websocket.js';
   import { updateSession } from '../utils/handleSession.js';
+  import TimerSVG from './TimerSVG.svelte';
+
 
   const MAX_DURATION_LIMIT = minsToMillis(120);
 
   let ws;
   export let sessionData = {};
-
   let intervals = [
 ];
   let displayTime = 'Start the timer';
@@ -25,7 +26,7 @@
       sessionData = JSON.parse(event.data);
       await calculateRemainingTime(sessionData);
     } catch {
-      console.log('message recieved but event.data could not be parsed');
+      console.log('message received but event.data could not be parsed');
     }
 };
 
@@ -52,7 +53,7 @@
   function displayRemainingTime(remainingTime) {
     display(sanitizeDurationProp(remainingTime));
   }
-  
+
   function display(remainingTimeMillis) {
     if (isNaN(remainingTimeMillis)) {
       return displayTime = remainingTimeMillis;
@@ -110,7 +111,7 @@
   }
 </script>
 
-<h1 data-testid="timer-header">{displayTime}</h1>
+<TimerSVG duration={sessionData.Duration} startTimestamp={sessionData.StartTime} displayTime={displayTime}/>
 <h2>Session Id: {
   Object.prototype.hasOwnProperty.call(sessionData, 'SessionID') ?
   sessionData.SessionID :

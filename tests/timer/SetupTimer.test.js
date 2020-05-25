@@ -5,10 +5,15 @@ import {
 } from '@testing-library/svelte';
 import SetupTimer from '../../src/timer/SetupTimer.svelte';
 import * as mockHandleSession from '../../src/utils/handleSession';
+import * as mockWebsocket from '../../src/utils/websocket';
+
 
 jest.mock('../../src/utils/handleSession.js');
+jest.mock('../../src/utils/websocket.js');
 
 beforeEach(() => {
+  mockWebsocket.initWebsocket.mockReturnValue(true);
+  mockWebsocket.closeWs.mockReturnValue(true);
   mockHandleSession.newSession.mockClear();
   mockHandleSession.joinSession.mockClear();
 });
@@ -67,8 +72,9 @@ describe('Conditional rendering of the Timer Component', () => {
     expect(mockHandleSession.joinSession).toBeCalled();
   });
 
-  it('If enter pressed with a value inside the input, \
+  it('If enter pressed with a value inside the new-timer-input, \
   the timer would not have mounted yet', async () => {
+    mockHandleSession.newSession.mockReturnValue({ User: { UUID: 1234 } });
     const { getByTestId } = render(SetupTimer);
     const newTimerButton = getByTestId('setup-timer-new-timer-button');
     await fireEvent.click(newTimerButton);
