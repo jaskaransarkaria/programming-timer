@@ -44,8 +44,8 @@ export default {
         env: {
           LOCAL_ADDR: 'http://localhost:8080',
           LOCAL_WS: 'ws://localhost:8080/ws',
-          PROD_ADDR: 'https://www.pairprogrammingtimer.com',
-          PROD_WS: 'wss://www.pairprogrammingtimer.com/ws',
+          PROD_ADDR: 'https://server.pairprogrammingtimer.com',
+          PROD_WS: 'wss://server.pairprogrammingtimer.com/ws',
         },
       }),
     }),
