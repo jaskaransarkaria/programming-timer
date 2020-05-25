@@ -1,7 +1,7 @@
 export function initWebsocket(onmessageConfig) {
   let ws;
   try {
-    ws = new WebSocket(`${process.env.LOCAL_WS}`);
+    ws = new WebSocket(`${process.env.PROD_WS}`);
     ws.onopen = () => {
       console.log('successfully connected to the websocket');
       ws.send(sessionStorage.getItem('uuid'));
