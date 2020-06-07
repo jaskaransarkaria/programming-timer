@@ -1,6 +1,6 @@
 # Pair Programming Timer - Client
 
-[www.pairprogrammingtimer.com](www.pairprogrammingtimer.com)
+[https://www.pairprogrammingtimer.com](https://www.pairprogrammingtimer.com)
 
 ---
 
