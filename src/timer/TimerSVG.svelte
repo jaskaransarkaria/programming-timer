@@ -54,7 +54,7 @@
       draw = drawCoord(359.99);
       clearInterval(intervalId);
     }
-  }, 100);
+  }, 30);
 </script>
 
 <svg version="1.1" baseProfile="tiny" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"

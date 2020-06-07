@@ -96,16 +96,16 @@ describe('take duration as a prop and start a timer which alerts on expiration',
       sessionData: {
         newTimer: false,
         SessionID : '1234',
-        Duration: 119 * 60 * 1000,
+        Duration: 25 * 60 * 1000,
         StartTime: currentTime,
-        EndTime: currentTime + (119 * 60 * 1000),
+        EndTime: currentTime + (25 * 60 * 1000),
         Users: [
           'randomUser',
         ],
       },
     });
     const timerText = getByText('Start the timer');
-    await jest.advanceTimersByTime(119*60*1000);
+    await jest.advanceTimersByTime(25*60*1000);
     expect(setInterval).toBeCalledTimes(2);
     expect(timerText).toHaveTextContent('Times up!');
   });
