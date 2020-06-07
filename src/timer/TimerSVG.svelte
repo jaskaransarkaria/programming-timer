@@ -57,14 +57,12 @@
   }, 30);
 </script>
 
-<svg version="1.1" baseProfile="tiny" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"
+<svg data-testid="svg-element-parent" version="1.1" baseProfile="tiny" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"
   viewBox="-210 0 560 175">
   <!-- Outer circle -->
-  <circle cx="70" cy="70" r="64"  stroke={'#40e0d0'} stroke-width={'2'} fill={'none'} /> 
-  <!-- The black circle that covers the Color as the timer counts down -->
-  <path d={draw} stroke={' #993299'} stroke-width={'3'} fill={'none'} />
-  <style  ></style>
-  <text x=70 y=70 text-anchor='middle' class='italic' >
+  <circle data-testid="svg-outer-circle" cx="70" cy="70" r="64"  stroke={'#40e0d0'} stroke-width={'2'} fill={'none'} /> 
+  <path data-testid="svg-path" d={draw} stroke={' #993299'} stroke-width={'3'} fill={'none'} />
+  <text data-testid="svg-text" x=70 y=70 text-anchor='middle' class='italic' >
     {displayTime}
   </text>
 </svg>
