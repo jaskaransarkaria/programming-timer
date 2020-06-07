@@ -69,7 +69,7 @@
 
   function sanitizeDurationProp(duration) {
     if (isNaN(duration)) {
-      return 'Please enter a number';
+      return 'Please enter a number (mins) between 0 and 120';
     }
     if (duration <= 0) {
       return 'Please enter a larger timer duration';
