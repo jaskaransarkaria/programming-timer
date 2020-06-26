@@ -14,6 +14,7 @@ jobs:
       - npm run test
     - stage: "Build and Push Docker Image"
       script:
+      - npm run build
       - docker build -t jaskaransarkaria/timer-client:"$TRAVIS_TAG" .
       - echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin
       - docker push jaskaransarkaria/timer-client:"$TRAVIS_TAG"
