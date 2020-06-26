@@ -23,6 +23,6 @@ spec:
             command:
             - cat 
             - /usr/src/app/public/build/bundle.js
-          initialDelaySeconds: 40
+          initialDelaySeconds: 240
           periodSeconds: 5
 
