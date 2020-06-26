@@ -1,5 +1,7 @@
 # Pair Programming Timer - Client
 
+[![Build Status](https://travis-ci.com/jaskaransarkaria/programming-timer.svg?branch=master)](https://travis-ci.com/jaskaransarkaria/programming-timer)
+
 [https://www.pairprogrammingtimer.com](https://www.pairprogrammingtimer.com)
 
 ---
