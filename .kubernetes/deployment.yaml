@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: timer-client
-        image: jaskaransarkaria/timer-client:7
+        image: jaskaransarkaria/timer-client:replace_with_git_tag
         ports:
         - containerPort: 5000
         livenessProbe:
