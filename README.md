@@ -56,6 +56,8 @@ Install the dependencies and run locally...
 
 ## Deployment
 
+To deploy to production tag a release on master branch
+
 Currently deployment is driven by bash scripts found in `scripts/`. _You must currently cd into scripts/ to execute them_.
 
 To deploy your changes run (see "Useful Commands" for details):
