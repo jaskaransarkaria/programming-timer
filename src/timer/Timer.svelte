@@ -68,7 +68,7 @@
         if (!isNaN(remainingTimeMillis)) {
           remainingTimeMillis -= updateTime(remainingTimeMillis);
         }
-      }, 1000);
+      }, 500);
       intervals.push(currentInterval);
     }
   }
