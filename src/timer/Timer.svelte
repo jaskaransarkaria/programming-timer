@@ -2,6 +2,10 @@
   'use strict';
   import { onMount } from 'svelte';
   import {
+    sendDriverNotification,
+    sendNotification,
+} from '../utils/notification.js';
+  import {
     minsToMillis,
     millisToMinutesAndSeconds,
   } from '../utils/utils.js';
@@ -13,7 +17,9 @@
 
 
   const MAX_DURATION_LIMIT = minsToMillis(120);
+  const TIMER_REFRESH_RATE = 250;
 
+  let showReset = false;
   let ws;
   export let sessionData = {};
   let intervals = [
@@ -21,6 +27,7 @@
   let displayTime = 'Start the timer';
 
   const wsOnMessageOverwrite = async (event) => {
+    showReset = false;
     clearTimer();
     try {
       sessionData = JSON.parse(event.data);
@@ -62,7 +69,7 @@
         if (!isNaN(remainingTimeMillis)) {
           remainingTimeMillis -= updateTime(remainingTimeMillis);
         }
-      }, 1000);
+      }, TIMER_REFRESH_RATE);
       intervals.push(currentInterval);
     }
   }
@@ -82,16 +89,16 @@
 
   function updateTime (remainingTimeMillis) {
     // need both conditional statements -- guard against timers getting out of sync
-    if (sessionData.EndTime - Date.now() <= 1000 || remainingTimeMillis <= 1000) {
+    if (sessionData.EndTime - Date.now() <= 700 || remainingTimeMillis <= 700) {
       clearTimer();
       timesUp();
     } else {
       displayTime = millisToMinutesAndSeconds(remainingTimeMillis - 1000);
-      return 1000;
+      return TIMER_REFRESH_RATE;
     }
   }
 
-  async function timesUp() {
+  function timesUp() {
     displayTime = 'Times up!';
     const uuid = sessionStorage.getItem('uuid');
     if (
@@ -99,7 +106,14 @@
       Object.prototype.hasOwnProperty.call(sessionData.CurrentDriver, 'UUID')
     ) {
       if (uuid === sessionData.CurrentDriver.UUID && !(Number.isInteger(displayTime))) {
-        await updateSession(sessionData);
+        showReset = true;
+        const notification = sendDriverNotification();
+        notification.onclick = () => {
+          updateSession(sessionData);
+          notification.close();
+        };
+      } else {
+        sendNotification();
       }
     }
   }
@@ -117,6 +131,10 @@
   sessionData.SessionID :
   'loading..'
 }</h2>
+
+{#if showReset}
+<button on:click={() => updateSession(sessionData)}>Reset</button>
+{/if}
 
 <style>
 </style>

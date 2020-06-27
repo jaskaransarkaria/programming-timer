@@ -60,9 +60,9 @@ Install the dependencies and run locally...
 
 To deploy to production tag a release on master branch
 
-Currently deployment is driven by bash scripts found in `scripts/`. _You must currently cd into scripts/ to execute them_.
+Manual deployment is driven by bash scripts found in `scripts/`. _You must currently cd into scripts/ to execute them_.
 
-To deploy your changes run (see "Useful Commands" for details):
+To deploy your changes manually run (see "Useful Commands" for details):
 
   `./scripts/deploy.sh $VERSION_NUMBER`
 
@@ -71,11 +71,12 @@ To deploy your changes run (see "Useful Commands" for details):
 ### Todos
 
 - [x] Https
-- [ ] Set up re-direct from `pairprogrammingtimer.com` -> `www.pairprogrammingtimer.com` (redirect is currently blocked by browsers as it is not https - before testing https changes _remember_ to switch to `letencrypt-staging`)
 - [x] Travis CI/ CD & git branch rules/protection
 - [x] Graphical representation of timer using SVG
 - [x] Add tests for the SVG
+- [x] Add notifications when timer finishes and prompt to restart the timer
 
-- [ ] Add notifications when timer finishes and prompt to restart the timer
+- [ ] Add notification sound
+- [ ] Set up re-direct from `pairprogrammingtimer.com` -> `www.pairprogrammingtimer.com` (redirect is currently blocked by browsers as it is not https - before testing https changes _remember_ to switch to `letencrypt-staging`)
 - [ ] Tidy up bash scripts so can be called from proj root, prompt for required arguments and set VERSION_NUMBER so it is consistent across docker and k8 manifest.
 - [ ] Set up proper environment configs

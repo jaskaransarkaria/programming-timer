@@ -5,8 +5,8 @@
   export let duration = 0; // number of seconds the timer will run for
   export let startTimestamp;
   export let displayTime;
-  let draw = null;
   let elapsedMilis = 0;
+  let draw = null;
   const degrees = 360 / duration;
 
   onDestroy(() => {
@@ -52,7 +52,6 @@
       draw = drawCoord(elapsedMilis * degrees);
     } else {
       draw = drawCoord(359.99);
-      clearInterval(intervalId);
     }
   }, 30);
 </script>
