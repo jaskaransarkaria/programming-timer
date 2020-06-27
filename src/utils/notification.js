@@ -17,7 +17,7 @@ export async function checkPermissions() {
 
 export function sendDriverNotification() {
   return new Notification('Times up!', {
-    icon: '../../public/favicon.png',
+    icon: '/favicon.png',
     body: 'You\'re the driver. Are you ready to start?',
     requireInteraction: true,
     vibrate: [
@@ -30,7 +30,7 @@ export function sendDriverNotification() {
 
 export function sendNotification() {
   return new Notification('Times up!', {
-    icon: '../../public/favicon.png',
+    icon: '/favicon.png',
     body: 'Waiting for the driver to start the timer.',
     vibrate: [
       200,

@@ -17,6 +17,7 @@
 
 
   const MAX_DURATION_LIMIT = minsToMillis(120);
+  const TIMER_REFRESH_RATE = 250;
 
   let showReset = false;
   let ws;
@@ -68,7 +69,7 @@
         if (!isNaN(remainingTimeMillis)) {
           remainingTimeMillis -= updateTime(remainingTimeMillis);
         }
-      }, 500);
+      }, TIMER_REFRESH_RATE);
       intervals.push(currentInterval);
     }
   }
@@ -88,12 +89,12 @@
 
   function updateTime (remainingTimeMillis) {
     // need both conditional statements -- guard against timers getting out of sync
-    if (sessionData.EndTime - Date.now() <= 500 || remainingTimeMillis <= 500) {
+    if (sessionData.EndTime - Date.now() <= 700 || remainingTimeMillis <= 700) {
       clearTimer();
       timesUp();
     } else {
       displayTime = millisToMinutesAndSeconds(remainingTimeMillis - 1000);
-      return 1000;
+      return TIMER_REFRESH_RATE;
     }
   }
 

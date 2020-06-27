@@ -2,7 +2,9 @@ import { minsToMillis } from './utils.js';
 
 
 export async function joinSession(value) {
-  const response = await fetch(`${process.env.LOCAL_ADD}/session/join`, {
+  console.log('VALUE', value);
+  console.log(process.env.LOCAL_ADDR);
+  const response = await fetch(`${process.env.LOCAL_ADDR}/session/join`, {
     method: 'POST',
     body: JSON.stringify({ joinSession: value }),
   });

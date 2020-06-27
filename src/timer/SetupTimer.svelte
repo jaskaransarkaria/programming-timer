@@ -28,6 +28,7 @@
         await initNewSession(e.target.value);
       }
       if (existingSession) {
+        console.log('e.target.value', e.target.value);
         await joinExistingSession(e.target.value);
       }
       sessionData.newTimer = newTimer;
@@ -47,6 +48,7 @@
 
   async function joinExistingSession(sessionId) {
     try {
+      console.log('sessionId', sessionId);
       const response = await joinSession(sessionId);
       Object.assign(sessionData, response.Session);
       sessionStorage.setItem('uuid', response.User.UUID);
@@ -93,3 +95,5 @@
 {#if (newTimer && hideInput) || (sessionData && existingSession && hideInput)}
   <Timer {sessionData} />
 {/if}
+
+<h3>Allow notifications so we can alert you when time's up</h3> 
