@@ -48,7 +48,6 @@
 
   async function joinExistingSession(sessionId) {
     try {
-      console.log('sessionId', sessionId);
       const response = await joinSession(sessionId);
       Object.assign(sessionData, response.Session);
       sessionStorage.setItem('uuid', response.User.UUID);
