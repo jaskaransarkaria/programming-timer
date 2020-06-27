@@ -1,6 +1,7 @@
 <script>
   'use strict';
   import { onMount } from 'svelte';
+  import { checkPermissions } from '../utils/notification.js';
   import Timer from './Timer.svelte';
   import {
     newSession, joinSession,
@@ -14,6 +15,11 @@
 
   onMount(() => {
     sessionStorage.clear();
+    try {
+      checkPermissions();
+    } catch (e) {
+      console.error('Cannot instantiate Notification constructor');
+    }
   });
 
   async function submit(e) {
