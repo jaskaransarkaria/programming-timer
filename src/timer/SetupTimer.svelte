@@ -28,8 +28,7 @@
         await initNewSession(e.target.value);
       }
       if (existingSession) {
-        console.log('e.target.value', e.target.value);
-        await joinExistingSession(e.target.value);
+        await joinExistingSession(e.target.value.toLowerCase());
       }
       sessionData.newTimer = newTimer;
       hideInput = true;
