@@ -4,6 +4,12 @@ import Timer from '../../src/timer/Timer.svelte';
 import * as mockWebsocket from '../../src/utils/websocket';
 
 jest.mock('../../src/utils/websocket.js');
+const restoreDate = Date.now();
+
+// fast foward time by stubbing Date.now()
+function mockDate(endTime) {
+  global.Date.now = jest.fn(() => endTime);
+}
 
 beforeEach(() => {
   mockWebsocket.initWebsocket.mockClear();
@@ -14,6 +20,7 @@ beforeEach(() => {
 
 afterEach(() => {
   jest.clearAllTimers();
+  global.Date.now = restoreDate;
 });
 
 describe('take duration as a prop and start a timer which alerts on expiration', () => {
@@ -105,6 +112,7 @@ describe('take duration as a prop and start a timer which alerts on expiration',
       },
     });
     const timerText = getByText('Start the timer');
+    await mockDate(currentTime + (25 * 60 * 1000));
     await jest.advanceTimersByTime(25*60*1000);
     expect(setInterval).toBeCalledTimes(2);
     expect(timerText).toHaveTextContent('Times up!');

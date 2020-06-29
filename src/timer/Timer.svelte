@@ -67,8 +67,7 @@
     } else {
       const currentInterval = setInterval(() => {
         if (!isNaN(remainingTimeMillis)) {
-          remainingTimeMillis = sessionData.EndTime - Date.now();
-          updateTime();
+          remainingTimeMillis = updateTime(sessionData.EndTime - Date.now());
         }
       }, TIMER_REFRESH_RATE);
       intervals.push(currentInterval);
@@ -94,6 +93,7 @@
       timesUp();
     } else {
       displayTime = millisToMinutesAndSeconds(remainingTimeMillis);
+      return remainingTimeMillis;
     }
   }
 
