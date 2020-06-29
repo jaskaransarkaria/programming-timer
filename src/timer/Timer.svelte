@@ -67,7 +67,8 @@
     } else {
       const currentInterval = setInterval(() => {
         if (!isNaN(remainingTimeMillis)) {
-          remainingTimeMillis -= updateTime(remainingTimeMillis);
+          remainingTimeMillis = sessionData.EndTime - Date.now();
+          updateTime();
         }
       }, TIMER_REFRESH_RATE);
       intervals.push(currentInterval);
@@ -88,13 +89,11 @@
   }
 
   function updateTime (remainingTimeMillis) {
-    // need both conditional statements -- guard against timers getting out of sync
-    if (sessionData.EndTime - Date.now() <= 700 || remainingTimeMillis <= 700) {
+    if (remainingTimeMillis <= 700) {
       clearTimer();
       timesUp();
     } else {
-      displayTime = millisToMinutesAndSeconds(remainingTimeMillis - 1000);
-      return TIMER_REFRESH_RATE;
+      displayTime = millisToMinutesAndSeconds(remainingTimeMillis);
     }
   }
 
