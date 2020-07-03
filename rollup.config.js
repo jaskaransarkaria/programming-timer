@@ -42,10 +42,12 @@ export default {
     replace({
       process: JSON.stringify({
         env: {
-          LOCAL_ADDR: 'http://localhost:8080',
-          LOCAL_WS: 'ws://localhost:8080/ws',
-          PROD_ADDR: 'https://server.pairprogrammingtimer.com',
-          PROD_WS: 'wss://server.pairprogrammingtimer.com/ws',
+          ADDR: production ?
+            'https://server.pairprogrammingtimer.com' :
+            'http://localhost:8080',
+          WS: production ?
+            'wss://server.pairprogrammingtimer.com/ws' :
+            'ws://localhost:8080/ws',
         },
       }),
     }),

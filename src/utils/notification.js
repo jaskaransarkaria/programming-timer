@@ -1,3 +1,8 @@
+function playNotificationSound() {
+  const notifySound = new Audio('/deduction.mp3');
+  notifySound.play();
+}
+
 export async function checkPermissions() {
   try {
     switch (Notification.permission) {
@@ -16,9 +21,10 @@ export async function checkPermissions() {
 }
 
 export function sendDriverNotification() {
-  return new Notification('Times up!', {
+  playNotificationSound();
+  return new Notification('Times up as the driver, it\'s somebody else\'s turn!', {
     icon: '/favicon.png',
-    body: 'You\'re the driver. Are you ready to start?',
+    body: 'Click me to start the timer again.',
     requireInteraction: true,
     vibrate: [
       200,
@@ -29,9 +35,23 @@ export function sendDriverNotification() {
 }
 
 export function sendNotification() {
+  playNotificationSound();
   return new Notification('Times up!', {
     icon: '/favicon.png',
     body: 'Waiting for the driver to start the timer.',
+    vibrate: [
+      200,
+      100,
+      200,
+    ],
+  });
+}
+
+export function newDriverNotification() {
+  const newDriverSound = new Audio('/open-ended.mp3');
+  newDriverSound.play();
+  return new Notification('You\'re the new driver!', {
+    icon: '/favicon.png',
     vibrate: [
       200,
       100,

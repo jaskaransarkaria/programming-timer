@@ -94,4 +94,4 @@
   <Timer {sessionData} />
 {/if}
 
-<h3>Allow notifications so we can alert you when time's up</h3> 
+<h3>Allow notifications so we can alert you when time's up</h3>

@@ -4,6 +4,7 @@
   import {
     sendDriverNotification,
     sendNotification,
+    newDriverNotification,
 } from '../utils/notification.js';
   import {
     minsToMillis,
@@ -17,33 +18,43 @@
 
 
   const MAX_DURATION_LIMIT = minsToMillis(120);
-  const TIMER_REFRESH_RATE = 250;
+  const TIMER_REFRESH_RATE_MS = 50;
+  const TIMES_UP_LIMIT_MS = TIMER_REFRESH_RATE_MS * 2;
 
   let showReset = false;
   let ws;
+  let uuid;
   export let sessionData = {};
   let intervals = [
 ];
   let displayTime = 'Start the timer';
 
-  const wsOnMessageOverwrite = async (event) => {
+  async function wsOnMessageOverwrite (event) {
     showReset = false;
     clearTimer();
     try {
       sessionData = JSON.parse(event.data);
+      if (sessionData.CurrentDriver.UUID === uuid) {
+        newDriverNotification();
+      }
       await calculateRemainingTime(sessionData);
     } catch {
       console.log('message received but event.data could not be parsed');
     }
-};
-
-  onMount(() => {
+  }
+  onMount(async () => {
     ws = initWebsocket(wsOnMessageOverwrite);
     if (!sessionData.newTimer) {
       calculateRemainingTime(sessionData);
     } else {
       startTimer(sessionData.Duration);
+      try {
+        await navigator.clipboard.writeText(sessionData.SessionID);
+      } catch (e) {
+        console.error('Cannot execute navigator.clipboard.writeText');
+      }
     }
+    uuid = sessionStorage.getItem('uuid');
     return () => closeWs(ws);
   });
 
@@ -69,7 +80,7 @@
         if (!isNaN(remainingTimeMillis)) {
           remainingTimeMillis = updateTime(sessionData.EndTime - Date.now());
         }
-      }, TIMER_REFRESH_RATE);
+      }, TIMER_REFRESH_RATE_MS);
       intervals.push(currentInterval);
     }
   }
@@ -88,7 +99,7 @@
   }
 
   function updateTime (remainingTimeMillis) {
-    if (remainingTimeMillis <= 700) {
+    if (remainingTimeMillis <= TIMES_UP_LIMIT_MS) {
       clearTimer();
       timesUp();
     } else {
@@ -99,7 +110,6 @@
 
   function timesUp() {
     displayTime = 'Times up!';
-    const uuid = sessionStorage.getItem('uuid');
     if (
       Object.prototype.hasOwnProperty.call(sessionData, 'CurrentDriver') &&
       Object.prototype.hasOwnProperty.call(sessionData.CurrentDriver, 'UUID')
@@ -127,7 +137,7 @@
 <TimerSVG duration={sessionData.Duration} startTimestamp={sessionData.StartTime} displayTime={displayTime}/>
 <h2>Session Id: {
   Object.prototype.hasOwnProperty.call(sessionData, 'SessionID') ?
-  sessionData.SessionID :
+  `${sessionData.SessionID} (copied to clipboard!)` :
   'loading..'
 }</h2>
 

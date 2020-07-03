@@ -27,18 +27,6 @@ describe('take duration as a prop and start a timer which alerts on expiration',
     expect(mockWebsocket.initWebsocket).toBeCalled();
   });
 
-  it('alert after the duration has expired', async () => {
-    render(Timer, {
-      sessionData: {
-        newTimer: true,
-        Duration: 1 *60 * 1000,
-        EndTime: Date.now(),
-      },
-    });
-    await jest.advanceTimersByTime(1*61*1000);
-    expect(setInterval).toBeCalledTimes(2);
-  });
-
   it('if duration prop <= 0 then don\'t begin timer and reprompt', () => {
     render(Timer, {
       sessionData: {
@@ -63,7 +51,9 @@ describe('take duration as a prop and start a timer which alerts on expiration',
         ],
       },
     });
-    expect(getByText('Session Id: 1234')).toBeInTheDocument();
+    expect(
+      getByText('Session Id: 1234 (copied to clipboard!)'),
+    ).toBeInTheDocument();
   });
 
   it('if duration prop is too large then don\'t begin timer', () => {
