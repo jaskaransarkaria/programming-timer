@@ -5,9 +5,9 @@
   export let duration = 0; // number of seconds the timer will run for
   export let startTimestamp;
   export let displayTime;
+  export let degrees = 360 / duration;
   let elapsedMillis = 0;
   let draw = null;
-  const degrees = 360 / duration;
 
   onDestroy(() => {
     clearInterval(intervalId);

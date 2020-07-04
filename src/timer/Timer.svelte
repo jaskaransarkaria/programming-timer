@@ -41,6 +41,7 @@
     clearTimer();
     try {
       sessionData = JSON.parse(event.data);
+      console.log(sessionData);
       if (sessionData.CurrentDriver.UUID === uuid) {
         newDriverNotification();
       }
@@ -192,7 +193,12 @@
   }
 </script>
 
-<TimerSVG duration={sessionData.Duration} startTimestamp={sessionData.StartTime} displayTime={displayTime}/>
+<TimerSVG 
+  duration={sessionData.Duration}
+  startTimestamp={sessionData.StartTime}
+  displayTime={displayTime}
+  degrees={360 / sessionData.Duration}
+/>
 <h2>Session Id: {
   'SessionID' in sessionData ?
   `${sessionData.SessionID} (copied to clipboard!)` :
