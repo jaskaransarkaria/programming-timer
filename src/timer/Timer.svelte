@@ -11,7 +11,8 @@
     millisToMinutesAndSeconds,
   } from '../utils/utils.js';
   import {
-    initWebsocket, closeWs,
+    initWebsocket,
+    closeWs,
 }from '../utils/websocket.js';
   import { updateSession } from '../utils/handleSession.js';
   import TimerSVG from './TimerSVG.svelte';

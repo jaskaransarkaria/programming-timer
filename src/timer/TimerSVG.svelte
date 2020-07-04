@@ -5,7 +5,7 @@
   export let duration = 0; // number of seconds the timer will run for
   export let startTimestamp;
   export let displayTime;
-  let elapsedMilis = 0;
+  let elapsedMillis = 0;
   let draw = null;
   const degrees = 360 / duration;
 
@@ -47,9 +47,9 @@
   };
 
   const intervalId = setInterval(() => {
-    elapsedMilis = Date.now() - startTimestamp;
-    if (elapsedMilis <= duration) {
-      draw = drawCoord(elapsedMilis * degrees);
+    elapsedMillis = Date.now() - startTimestamp;
+    if (elapsedMillis <= duration) {
+      draw = drawCoord(elapsedMillis * degrees);
     } else {
       draw = drawCoord(359.99);
     }

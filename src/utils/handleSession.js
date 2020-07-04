@@ -9,10 +9,13 @@ export async function joinSession(value) {
   return await response.json();
 }
 
-export async function updateSession(value) {
+export async function updateSession({ SessionID, UpdatedDuration = undefined }) {
   await fetch(`${process.env.ADDR}/session/update`, {
     method: 'POST',
-    body: JSON.stringify( value ),
+    body: JSON.stringify( {
+      sessionId: SessionID,
+      updatedDuration: UpdatedDuration,
+    } ),
   });
 }
 
