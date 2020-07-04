@@ -54,12 +54,6 @@
       console.error(err);
     }
   }
-
-  function changeSessionDuration(e) {
-    if (e.keyCode === 13) {
-      sessionData.UpdatedDuration = Number(e.target.value);
-    }
-  }
 </script>
 
 <style>
@@ -98,7 +92,6 @@
 
 {#if (newTimer && hideInput) || (sessionData && existingSession && hideInput)}
   <Timer {sessionData} />
-  <input on:keydown={changeSessionDuration}>
 {/if}
 
 <h3>Allow notifications so we can alert you when time's up</h3>

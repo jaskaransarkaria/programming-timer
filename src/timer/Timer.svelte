@@ -9,6 +9,7 @@
   import {
     minsToMillis,
     millisToMinutesAndSeconds,
+    validateInput,
   } from '../utils/utils.js';
   import {
     initWebsocket,
@@ -17,18 +18,18 @@
   import { updateSession } from '../utils/handleSession.js';
   import TimerSVG from './TimerSVG.svelte';
 
-
   const MAX_DURATION_LIMIT = minsToMillis(120);
   const TIMER_REFRESH_RATE_MS = 50;
   const TIMES_UP_LIMIT_MS = TIMER_REFRESH_RATE_MS * 2;
 
+  export let sessionData = {};
   let showReset = false;
   let ws;
   let uuid;
-  export let sessionData = {};
   let intervals = [
-];
+  ];
   let displayTime = 'Start the timer';
+  let updatedDuration;
 
   /**
    * Process received WebSocket messages
@@ -102,7 +103,7 @@
    * @param {number} remainingTime - MS
    */
   function displayRemainingTime(remainingTime) {
-    display(sanitizeDurationProp(remainingTime));
+    display(validateInput(remainingTime, MAX_DURATION_LIMIT));
   }
 
   /**
@@ -122,25 +123,6 @@
       }, TIMER_REFRESH_RATE_MS);
       intervals.push(currentInterval);
     }
-  }
-
-  /**
-   * Ensure the correct timer length has been input
-   *
-   * @param {number} duration - MS
-   * @return {string | number} reprompt for correct input | pass the valid duration through
-   */
-  function sanitizeDurationProp(duration) {
-    if (isNaN(duration)) {
-      return 'Please enter a number (mins) between 0 and 120';
-    }
-    if (duration <= 0) {
-      return 'Please enter a larger timer duration';
-    }
-    if (duration > MAX_DURATION_LIMIT) {
-      return 'The max timer length is 2 hours; enter a smaller timer length';
-    }
-    return duration;
   }
 
   /**
@@ -191,6 +173,20 @@
     intervals = [
     ];
   }
+
+  /**
+   * handle updates to the session duration
+   * @param {object} e - event
+   */
+  function changeSessionDuration(e) {
+    const validateResult = validateInput(e.target.value, MAX_DURATION_LIMIT);
+    if (!isNaN(validateResult)) {
+      sessionData.UpdatedDuration = minsToMillis(validateResult);
+    } else {
+      alert(validateResult);
+      return false;
+    }
+  }
 </script>
 
 <TimerSVG 
@@ -206,6 +202,14 @@
 }</h2>
 
 {#if showReset}
+<input
+  type=number
+  min=0
+  max={MAX_DURATION_LIMIT}
+  on:change={changeSessionDuration}
+  bind:value={updatedDuration}
+  placeholder={millisToMinutesAndSeconds(sessionData.Duration)}
+>
 <button on:click={() => updateSession(sessionData)}>Reset</button>
 {/if}
 
