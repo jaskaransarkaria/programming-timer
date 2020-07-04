@@ -11,9 +11,10 @@ metadata:
     cert-manager.io/issuer: "letsencrypt-prod"
 spec:
   tls:
-    - hosts:
-      - www.pairprogrammingtimer.com
-      secretName: timer-client-tls-secret-www
+  - secretName: timer-client-tls-secret
+    hosts:
+    - www.pairprogrammingtimer.com
+    - pairprogrammingtimer.com
   rules:
   - host: www.pairprogrammingtimer.com
     http:
@@ -22,23 +23,10 @@ spec:
           backend:
             servicePort: 5000
             serviceName: timer-client-service
-
-# ---
-
-# apiVersion: extensions/v1beta1
-# kind: Ingress
-# metadata:
-#   name: timer-client
-#   annotations:
-#     kubernetes.io/ingress.class: "nginx"
-#     nginx.ingress.kubernetes.io/use-regex: "true"
-#     nginx.ingress.kubernetes.io/permanent-redirect: "https://www.pairprogrammingtimer.com"
-# spec:
-#   rules:
-#   - host: pairprogrammingtimer.com
-#     http:
-#       paths:
-#         - path: /*
-#           backend:
-#             servicePort: 5000
-#             serviceName: timer-client-service
+  - host: pairprogrammingtimer.com
+    http:
+      paths:
+        - path: /*
+          backend:
+            servicePort: 5000
+            serviceName: timer-client-service
