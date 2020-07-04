@@ -26,8 +26,7 @@
   let showReset = false;
   let ws;
   let uuid;
-  let intervals = [
-  ];
+  let intervals = [ ];
   let displayTime = 'Start the timer';
   let updatedDuration;
 
@@ -170,8 +169,7 @@
    */
   function clearTimer() {
     intervals.forEach(interval => clearInterval(interval));
-    intervals = [
-    ];
+    intervals = [  ];
   }
 
   /**

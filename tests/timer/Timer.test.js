@@ -5,6 +5,8 @@ import * as mockWebsocket from '../../src/utils/websocket';
 
 jest.mock('../../src/utils/websocket.js');
 
+const CURRENT_TIME = Date.now();
+
 // fast foward time by stubbing Date.now()
 function mockDate(endTime) {
   global.Date.now = jest.fn(() => endTime);
@@ -38,17 +40,15 @@ describe('take duration as a prop and start a timer which alerts on expiration',
   });
 
   it('existing SessionID passed in, so should be displayed', () => {
-    const remainingTime = Date.now() + (119 * 60 * 1000);
+    const remainingTime = CURRENT_TIME + (119 * 60 * 1000);
     const { getByText } = render(Timer, {
       sessionData: {
         newTimer: false,
         SessionID: '1234',
         Duration: 121 * 60 * 1000,
-        StartTime: Date.now() - (119 * 60 * 1000),
+        StartTime: CURRENT_TIME - (119 * 60 * 1000),
         EndTime: remainingTime,
-        Users: [
-          'randomUser',
-        ],
+        Users: [ 'randomUser' ],
       },
     });
     expect(
@@ -86,25 +86,56 @@ describe('take duration as a prop and start a timer which alerts on expiration',
   });
 
   it('pass in existing session\'s SessionData and display it correctly', async () => {
-    const currentTime = Date.now();
     const { getByText } = render(Timer, {
       sessionData: {
         newTimer: false,
         SessionID : '1234',
         Duration: 25 * 60 * 1000,
-        StartTime: currentTime,
-        EndTime: currentTime + (25 * 60 * 1000),
-        Users: [
-          'randomUser',
-        ],
+        StartTime: CURRENT_TIME,
+        EndTime: CURRENT_TIME + (25 * 60 * 1000),
+        Users: [ 'randomUser' ],
       },
     });
     const timerText = getByText('Start the timer');
-    await mockDate(currentTime + (25 * 60 * 1000));
+    mockDate(CURRENT_TIME + (25 * 60 * 1000));
     await jest.advanceTimersByTime(25*60*1000);
     expect(setInterval).toBeCalledTimes(2);
     expect(timerText).toHaveTextContent('Times up!');
-    // restore Date.now()
-    global.Date.now = currentTime;
   });
+
+  it('new timer session should display the duration correctly', async () => {
+    const { getByText } = render(Timer, {
+      sessionData: {
+        newTimer: true,
+        SessionID: '1234',
+        Duration: 25 * 60 * 1000,
+        StartTimer: CURRENT_TIME,
+        EndTime: CURRENT_TIME + (25 * 60 * 1000),
+      },
+    });
+    const timerText = getByText('Start the timer');
+    mockDate(CURRENT_TIME + (25 * 60 * 1000));
+    await jest.advanceTimersByTime((25 * 60 * 1000));
+    expect(setInterval).toBeCalledTimes(2);
+    expect(timerText).toHaveTextContent('Times up!');
+  });
+
+  it.skip('change the timer duration after the timer has run once', async () => {
+    const { getByText } = render(Timer, {
+      sessionData: {
+        newTimer: true,
+        SessionID: '1234',
+        Duration: 25 * 60 * 1000,
+        StartTimer: CURRENT_TIME,
+        EndTime: CURRENT_TIME + (25 * 60 * 1000),
+      },
+    });
+    const timerText = getByText('Start the timer');
+    mockDate(CURRENT_TIME + (25 * 60 * 1000));
+    await jest.advanceTimersByTime((25 * 60 * 1000));
+    expect(setInterval).toBeCalledTimes(2);
+    expect(timerText).toHaveTextContent('Times up!');
+    // then change the duration and expect the timer to reflect that
+  });
+
 });

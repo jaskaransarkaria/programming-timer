@@ -43,7 +43,10 @@
     "brace-style": ["error", "1tbs", {"allowSingleLine": true}],
     "array-element-newline": ["error", "always"],
     "array-bracket-spacing": ["error", "always"],
-    "array-bracket-newline": ["error", "always"],
+    "array-bracket-newline": ["error", {
+        "multiline": true,
+        "minItems": 2
+      }],
     "indent": [
         "error",
         2
