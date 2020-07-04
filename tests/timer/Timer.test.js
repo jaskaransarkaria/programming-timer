@@ -136,6 +136,9 @@ describe('take duration as a prop and start a timer which alerts on expiration',
     expect(setInterval).toBeCalledTimes(2);
     expect(timerText).toHaveTextContent('Times up!');
     // then change the duration and expect the timer to reflect that
+    // get the input box
+    // input a time
+    // forward the timer and check that expected.to.not.be('Time's up')
   });
 
 });
