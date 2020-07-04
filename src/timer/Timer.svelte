@@ -29,6 +29,12 @@
 ];
   let displayTime = 'Start the timer';
 
+  /**
+   * Process received WebSocket messages
+   * Reset the timer and trigger neccessary notifications
+   *
+   * @param {object} event - incoming message
+    */
   async function wsOnMessageOverwrite (event) {
     showReset = false;
     clearTimer();
@@ -42,6 +48,16 @@
       console.log('message received but event.data could not be parsed');
     }
   }
+
+  /**
+   * On component mount:
+   * initialise the WebSocket,
+   * start the timer,
+   * copy session ID to clipboard,
+   * set `uuid`
+   *
+   * @return {fn} on component unmount close the WebSocket
+    */
   onMount(async () => {
     ws = initWebsocket(wsOnMessageOverwrite);
     if (!sessionData.newTimer) {
@@ -58,20 +74,41 @@
     return () => closeWs(ws);
   });
 
+  /**
+   * Calculate and display remaining time MS
+   * for a pre-existing session
+   *
+   * @param {object} existingSessionData
+   */
   function calculateRemainingTime(existingSessionData) {
     const endTime = existingSessionData.EndTime;
     const remainingTimeMillis = endTime - Date.now();
     displayRemainingTime(remainingTimeMillis);
   }
 
+  /**
+   * Start and display the timer
+   * when a new session is created
+   *
+   * @param {number} duration - MS
+   */
   function startTimer(duration) {
     displayRemainingTime(duration);
   }
 
+  /**
+   * @param {number} remainingTime - MS
+   */
   function displayRemainingTime(remainingTime) {
     display(sanitizeDurationProp(remainingTime));
   }
 
+  /**
+   * Continously refresh the timer display
+   * for the duration of the timer
+   *
+   * @param {number} remainingTimeMillis
+   */
   function display(remainingTimeMillis) {
     if (isNaN(remainingTimeMillis)) {
       return displayTime = remainingTimeMillis;
@@ -85,6 +122,12 @@
     }
   }
 
+  /**
+   * Ensure the correct timer length has been input
+   *
+   * @param {number} duration - MS
+   * @return {string | number} reprompt for correct input | pass the valid duration through
+   */
   function sanitizeDurationProp(duration) {
     if (isNaN(duration)) {
       return 'Please enter a number (mins) between 0 and 120';
@@ -98,7 +141,13 @@
     return duration;
   }
 
-  function updateTime (remainingTimeMillis) {
+  /**
+   * Handle updating the timer and indicate when time's up
+   *
+   * @param {number} remainingTimeMillis
+   * @return {void | remainingTimeMillis}
+   */
+  function updateTime(remainingTimeMillis) {
     if (remainingTimeMillis <= TIMES_UP_LIMIT_MS) {
       clearTimer();
       timesUp();
@@ -108,6 +157,11 @@
     }
   }
 
+  /**
+   * Handle when the timer has finished:
+   * update the server with session data,
+   * show relevant notification
+   */
   function timesUp() {
     displayTime = 'Times up!';
     if (
@@ -127,6 +181,9 @@
     }
   }
 
+  /**
+   * Clear the set Intervals responsible for displaying the timer
+   */
   function clearTimer() {
     intervals.forEach(interval => clearInterval(interval));
     intervals = [
