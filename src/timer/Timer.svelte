@@ -111,8 +111,8 @@
   function timesUp() {
     displayTime = 'Times up!';
     if (
-      Object.prototype.hasOwnProperty.call(sessionData, 'CurrentDriver') &&
-      Object.prototype.hasOwnProperty.call(sessionData.CurrentDriver, 'UUID')
+      'CurrentDriver' in sessionData &&
+      'UUID' in sessionData.CurrentDriver
     ) {
       if (uuid === sessionData.CurrentDriver.UUID && !(Number.isInteger(displayTime))) {
         showReset = true;
@@ -136,7 +136,7 @@
 
 <TimerSVG duration={sessionData.Duration} startTimestamp={sessionData.StartTime} displayTime={displayTime}/>
 <h2>Session Id: {
-  Object.prototype.hasOwnProperty.call(sessionData, 'SessionID') ?
+  'SessionID' in sessionData ?
   `${sessionData.SessionID} (copied to clipboard!)` :
   'loading..'
 }</h2>
