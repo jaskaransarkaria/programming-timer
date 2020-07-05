@@ -144,7 +144,7 @@
    * show relevant notification
    */
   function timesUp() {
-    displayTime = 'Times up!';
+    displayTime = 'Time\'s up!';
     if (
       'CurrentDriver' in sessionData &&
       'UUID' in sessionData.CurrentDriver

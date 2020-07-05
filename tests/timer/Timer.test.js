@@ -137,7 +137,7 @@ describe('take duration as a prop and start a timer which alerts on expiration',
     mockDate(CURRENT_TIME + (25 * 60 * 1000));
     await jest.advanceTimersByTime(25*60*1000);
     expect(setInterval).toBeCalledTimes(2);
-    expect(timerText).toHaveTextContent('Times up!');
+    expect(timerText).toHaveTextContent('Time\'s up!');
   });
 
   it('new timer session should display the duration correctly', async () => {
@@ -154,7 +154,7 @@ describe('take duration as a prop and start a timer which alerts on expiration',
     mockDate(CURRENT_TIME + (25 * 60 * 1000));
     await jest.advanceTimersByTime((25 * 60 * 1000));
     expect(setInterval).toBeCalledTimes(2);
-    expect(timerText).toHaveTextContent('Times up!');
+    expect(timerText).toHaveTextContent('Time\'s up!');
   });
 
   it('change the timer duration after the timer has already ran', async () => {
@@ -172,7 +172,7 @@ describe('take duration as a prop and start a timer which alerts on expiration',
     mockDate(CURRENT_TIME + (25 * 60 * 1000));
     await jest.advanceTimersByTime((25 * 60 * 1000));
     expect(setInterval).toBeCalledTimes(2);
-    expect(timerText).toHaveTextContent('Times up!');
+    expect(timerText).toHaveTextContent('Time\'s up!');
     // then change the duration and expect the timer to reflect that
     // get the input box
     const changeDurationInput = getByPlaceholderText('25:00');
@@ -186,11 +186,11 @@ describe('take duration as a prop and start a timer which alerts on expiration',
     mockDate(CURRENT_TIME + (25 * 60 * 1000) + (5 * 60 * 1000 ));
     // advance timer by only 5 mins (half of the timer duration)
     await jest.advanceTimersByTime((5 * 60 * 1000));
-    // this should not display 'Times up!' as the timer is mid countdown
-    expect(timerText).not.toHaveTextContent('Times up!');
+    // this should not display 'Time\'s up!' as the timer is mid countdown
+    expect(timerText).not.toHaveTextContent('Time\'s up!');
     // forward the date to the end time
     mockDate(CURRENT_TIME + 25 * 60 * 1000 + 5 * 60 * 1000 + 5 * 60 * 1000);
     await jest.advanceTimersByTime((5 * 60 * 1000));
-    expect(timerText).toHaveTextContent('Times up!');
+    expect(timerText).toHaveTextContent('Time\'s up!');
   });
 });
