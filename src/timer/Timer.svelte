@@ -25,7 +25,7 @@
   export let sessionData = {};
   let showReset = false;
   let ws;
-  let uuid;
+  const uuid = sessionStorage.getItem('uuid');
   let intervals = [ ];
   let displayTime = 'Start the timer';
   let updatedDuration;
@@ -41,13 +41,12 @@
     clearTimer();
     try {
       sessionData = JSON.parse(event.data);
-      console.log(sessionData);
       if (sessionData.CurrentDriver.UUID === uuid) {
         newDriverNotification();
       }
       await calculateRemainingTime(sessionData);
-    } catch {
-      console.log('message received but event.data could not be parsed');
+    } catch (e) {
+      console.log('message received but event.data could not be parsed', e);
     }
   }
 
@@ -72,7 +71,6 @@
         console.error('Cannot execute navigator.clipboard.writeText');
       }
     }
-    uuid = sessionStorage.getItem('uuid');
     return () => closeWs(ws);
   });
 

@@ -5,17 +5,20 @@ import {
 } from '@testing-library/svelte';
 import SetupTimer from '../../src/timer/SetupTimer.svelte';
 import * as mockHandleSession from '../../src/utils/handleSession';
-import * as mockWebsocket from '../../src/utils/websocket';
 
 
 jest.mock('../../src/utils/handleSession.js');
 jest.mock('../../src/utils/websocket.js');
+jest.mock('../../src/utils/notification.js');
+
+const mockClipboard = { writeText: jest.fn() };
+
 
 beforeEach(() => {
-  mockWebsocket.initWebsocket.mockReturnValue(true);
-  mockWebsocket.closeWs.mockReturnValue(true);
   mockHandleSession.newSession.mockClear();
   mockHandleSession.joinSession.mockClear();
+  global.navigator.clipboard = mockClipboard;
+
 });
 
 
