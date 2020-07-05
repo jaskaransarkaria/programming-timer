@@ -7,26 +7,26 @@ import {
   WebSocket, Server,
 } from 'mock-socket';
 
+// store the Date.now() function so we can restore it later after we have mocked it
 const CURRENT_TIME = Date.now();
-process.env.WS = 'ws://localhost:8080';
 
+// set a fake url for our mock Socket Server
+process.env.WS = 'ws://localhost:8080';
 const mockServer = new Server('ws://localhost:8080');
+
 jest.mock('../../src/utils/notification.js', () => {
   return {
-    sendDriverNotification: jest.fn(() => ({ onclick: true })),
+    sendDriverNotification: jest.fn(() => ({ })),
     newDriverNotification: jest.fn(() => true),
   };
 });
+
+// mock the behaviour of the updateSession function
+// the mock additionally fires a mock server socket message which contains
+// the updated sessionData payload
 jest.mock('../../src/utils/handleSession.js', () => {
   return {
     updateSession: jest.fn(() => {
-
-      mockServer.on('connection', (socket) => {
-        socket.on('message', () => {});
-        socket.on('close', () => {});
-
-        socket.send('message');
-      });
       mockServer.emit(
         'message',
         JSON.stringify({
@@ -72,6 +72,7 @@ describe('take duration as a prop and start a timer which alerts on expiration',
         Duration: -1,
       },
     });
+    // Only the timer interval has fired. The timerSVG setIntervals have not been executed
     expect(setInterval).toBeCalledTimes(1);
   });
 
@@ -156,7 +157,7 @@ describe('take duration as a prop and start a timer which alerts on expiration',
     expect(timerText).toHaveTextContent('Times up!');
   });
 
-  it('change the timer duration after the timer has run once', async () => {
+  it('change the timer duration after the timer has already ran', async () => {
     const { getByText, getByPlaceholderText } = render(Timer, {
       sessionData: {
         newTimer: true,
@@ -178,13 +179,16 @@ describe('take duration as a prop and start a timer which alerts on expiration',
     // input a time
     await fireEvent.input(changeDurationInput, { target: { value: 10 } });
     expect(changeDurationInput).toHaveValue(10);
-    // get rest button and hit it
+    // get reset button and hit it
+    // the mock updatesession response is emitted, this updates sessionData
     const resetButton = getByText('Reset');
-    // mock updatesession response.... which updates sessionData
     await fireEvent.click(resetButton);
     mockDate(CURRENT_TIME + (25 * 60 * 1000) + (5 * 60 * 1000 ));
+    // advance timer by only 5 mins (half of the timer duration)
     await jest.advanceTimersByTime((5 * 60 * 1000));
+    // this should not display 'Times up!' as the timer is mid countdown
     expect(timerText).not.toHaveTextContent('Times up!');
+    // forward the date to the end time
     mockDate(CURRENT_TIME + 25 * 60 * 1000 + 5 * 60 * 1000 + 5 * 60 * 1000);
     await jest.advanceTimersByTime((5 * 60 * 1000));
     expect(timerText).toHaveTextContent('Times up!');
