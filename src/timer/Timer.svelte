@@ -21,6 +21,11 @@
   const MAX_DURATION_LIMIT = minsToMillis(120);
   const TIMER_REFRESH_RATE_MS = 50;
   const TIMES_UP_LIMIT_MS = TIMER_REFRESH_RATE_MS * 2;
+  // sound needs to stored in var here so they can be accessed when the tab is inactive
+  const notifySound = new Audio('/deduction.mp3');
+  const newDriverSound = new Audio('/open-ended.mp3');
+
+
 
   export let sessionData = {};
   let showReset = false;
@@ -42,7 +47,7 @@
     try {
       sessionData = JSON.parse(event.data);
       if (sessionData.CurrentDriver.UUID === uuid) {
-        newDriverNotification();
+        newDriverNotification(newDriverSound);
       }
       await calculateRemainingTime(sessionData);
     } catch (e) {
@@ -151,13 +156,13 @@
     ) {
       if (uuid === sessionData.CurrentDriver.UUID && !(Number.isInteger(displayTime))) {
         showReset = true;
-        const notification = sendDriverNotification();
+        const notification = sendDriverNotification(notifySound);
         notification.onclick = () => {
           updateSession(sessionData);
           notification.close();
         };
       } else {
-        sendNotification();
+        sendNotification(notifySound);
       }
     }
   }
