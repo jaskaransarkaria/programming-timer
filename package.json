@@ -4,7 +4,7 @@
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
-    "start": "sirv public",
+    "start": "sirv public --single",
     "lint": "eslint src/**/**/*.svelte tests/**/**/*.js",
     "test": "jest",
     "test:watch": "jest --watch"
@@ -31,6 +31,7 @@
     "svelte-jester": "^1.0.5"
   },
   "dependencies": {
+    "page.js": "^4.13.3",
     "sirv-cli": "^0.4.4"
   },
   "husky": {

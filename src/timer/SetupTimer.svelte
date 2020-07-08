@@ -6,14 +6,20 @@
   import {
     newSession, joinSession,
   } from '../utils/handleSession.js';
-
+  import initRouter from '../router/router.js';
   let newTimer = false;
   // eslint-disable-next-line prefer-const
   let existingSession = false;
   let hideInput = false;
   const sessionData = {};
 
-  onMount(() => {
+  onMount(async () => {
+    const existingSessionPath = initRouter();
+    if (existingSessionPath) {
+      await joinExistingSession(existingSessionPath.slice(1));
+      hideInput = true;
+      existingSession = true;
+    }
     sessionStorage.clear();
     try {
       checkPermissions();
