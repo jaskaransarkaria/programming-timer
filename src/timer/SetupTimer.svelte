@@ -6,7 +6,9 @@
   import {
     newSession, joinSession,
   } from '../utils/handleSession.js';
-  import initRouter from '../router/router.js';
+  import {
+    initRouter, redirect,
+} from '../router/router.js';
   let newTimer = false;
   // eslint-disable-next-line prefer-const
   let existingSession = false;
@@ -17,8 +19,6 @@
     const existingSessionPath = initRouter();
     if (existingSessionPath) {
       await joinExistingSession(existingSessionPath.slice(1));
-      hideInput = true;
-      existingSession = true;
     }
     sessionStorage.clear();
     try {
@@ -28,26 +28,18 @@
     }
   });
 
-  async function submit(e) {
+  async function initNewSession(e) {
     if (e.keyCode === 13) {
-      if (newTimer) {
-        await initNewSession(e.target.value);
-      }
-      if (existingSession) {
-        await joinExistingSession(e.target.value.toLowerCase());
+      try {
+        const response = await newSession(e.target.value);
+        Object.assign(sessionData, response.Session);
+        sessionStorage.setItem('uuid', response.User.UUID);
+        redirect(sessionData.SessionID);
+      } catch (err) {
+        console.error(err);
       }
       sessionData.newTimer = newTimer;
       hideInput = true;
-    }
-  }
-
-  async function initNewSession(duration) {
-    try {
-      const response = await newSession(duration);
-      Object.assign(sessionData, response.Session);
-      sessionStorage.setItem('uuid', response.User.UUID);
-    } catch (err) {
-      console.error(err);
     }
   }
 
@@ -56,6 +48,8 @@
       const response = await joinSession(sessionId);
       Object.assign(sessionData, response.Session);
       sessionStorage.setItem('uuid', response.User.UUID);
+      hideInput = true;
+      existingSession = true;
     } catch (err) {
       console.error(err);
     }
@@ -72,29 +66,15 @@
     on:click={() => (newTimer = true)}>
     New Timer
   </button>
-
-  <button
-    data-testid="setup-timer-existing-session-button"
-    on:click={() => (existingSession = true)}>
-    Join Session
-  </button>
 {/if}
 
 {#if newTimer && !hideInput}
   <input
     autofocus
     data-testid="setup-timer-new-timer-input"
-    on:keydown={submit}
+    on:keydown={initNewSession}
     placeholder="enter the timer length in mins" />
 {/if}
-
-{#if existingSession && !hideInput}
-  <input
-    autofocus
-    data-testid="setup-timer-join-session-input"
-    on:keydown={submit}
-    placeholder="enter your session code here" />
-    {/if}
 
 {#if (newTimer && hideInput) || (sessionData && existingSession && hideInput)}
   <Timer {sessionData} />
