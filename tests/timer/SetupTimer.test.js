@@ -59,7 +59,7 @@ describe('Conditional rendering of the Timer Component', () => {
     expect(mockHandleSession.newSession).toBeCalled();
   });
 
-  it('expect join session POST to be called when join session URL is invoked', async () => {
+  it('expect join session POST to be called when join session URL is invoked', () => {
     mockHandleSession.joinSession.mockReturnValue({
       User: { UUID: 1234 },
       example: 'json',
