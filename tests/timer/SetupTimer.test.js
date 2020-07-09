@@ -5,11 +5,12 @@ import {
 } from '@testing-library/svelte';
 import SetupTimer from '../../src/timer/SetupTimer.svelte';
 import * as mockHandleSession from '../../src/utils/handleSession';
+import * as mockRouter from '../../src/router/router';
 
 jest.mock('../../src/router/router.js', () => {
   return {
-    initRouter: jest.fn(() => '1234'),
-    redirect: jest.fn(true),
+    initRouter: jest.fn(),
+    redirect: jest.fn(() => true),
   };
 });
 jest.mock('../../src/utils/handleSession.js');
@@ -46,6 +47,7 @@ describe('Conditional rendering of the Timer Component', () => {
       User: { UUID: 1234 },
       example: 'json',
     });
+    mockRouter.initRouter.mockReturnValue(undefined);
     const { getByTestId } = render(SetupTimer);
     const newTimerButton = getByTestId('setup-timer-new-timer-button');
     await fireEvent.click(newTimerButton);
@@ -62,6 +64,7 @@ describe('Conditional rendering of the Timer Component', () => {
       User: { UUID: 1234 },
       example: 'json',
     });
+    mockRouter.initRouter.mockImplementation(jest.fn(() => '/1234'));
     render(SetupTimer);
     expect(mockHandleSession.joinSession).toBeCalled();
   });
