@@ -16,7 +16,7 @@ const mockServer = new Server('ws://localhost:8080');
 
 jest.mock('../../src/utils/notification.js', () => {
   return {
-    sendDriverNotification: jest.fn(() => ({ })),
+    sendDriverNotification: jest.fn(() => ({})),
     newDriverNotification: jest.fn(() => true),
   };
 });
@@ -85,11 +85,11 @@ describe('take duration as a prop and start a timer which alerts on expiration',
         Duration: 121 * 60 * 1000,
         StartTime: CURRENT_TIME - (119 * 60 * 1000),
         EndTime: remainingTime,
-        Users: [ 'randomUser' ],
+        Users: ['randomUser'],
       },
     });
     expect(
-      getByText('Session Id: 1234 (copied to clipboard!)'),
+      getByText('url copied to clipboard!'),
     ).toBeInTheDocument();
   });
 
@@ -126,16 +126,16 @@ describe('take duration as a prop and start a timer which alerts on expiration',
     const { getByText } = render(Timer, {
       sessionData: {
         newTimer: false,
-        SessionID : '1234',
+        SessionID: '1234',
         Duration: 25 * 60 * 1000,
         StartTime: CURRENT_TIME,
         EndTime: CURRENT_TIME + (25 * 60 * 1000),
-        Users: [ 'randomUser' ],
+        Users: ['randomUser'],
       },
     });
     const timerText = getByText('Start the timer');
     mockDate(CURRENT_TIME + (25 * 60 * 1000));
-    await jest.advanceTimersByTime(25*60*1000);
+    await jest.advanceTimersByTime(25 * 60 * 1000);
     expect(setInterval).toBeCalledTimes(2);
     expect(timerText).toHaveTextContent('Time\'s up!');
   });
@@ -183,7 +183,7 @@ describe('take duration as a prop and start a timer which alerts on expiration',
     // the mock updatesession response is emitted, this updates sessionData
     const resetButton = getByText('Reset');
     await fireEvent.click(resetButton);
-    mockDate(CURRENT_TIME + (25 * 60 * 1000) + (5 * 60 * 1000 ));
+    mockDate(CURRENT_TIME + (25 * 60 * 1000) + (5 * 60 * 1000));
     // advance timer by only 5 mins (half of the timer duration)
     await jest.advanceTimersByTime((5 * 60 * 1000));
     // this should not display 'Time\'s up!' as the timer is mid countdown

@@ -5,8 +5,14 @@ import {
 } from '@testing-library/svelte';
 import SetupTimer from '../../src/timer/SetupTimer.svelte';
 import * as mockHandleSession from '../../src/utils/handleSession';
+import * as mockRouter from '../../src/router/router';
 
-
+jest.mock('../../src/router/router.js', () => {
+  return {
+    initRouter: jest.fn(),
+    redirect: jest.fn(() => true),
+  };
+});
 jest.mock('../../src/utils/handleSession.js');
 jest.mock('../../src/utils/websocket.js');
 jest.mock('../../src/utils/notification.js');
@@ -36,18 +42,12 @@ describe('Conditional rendering of the Timer Component', () => {
     expect(getByTestId('setup-timer-new-timer-button')).toBeInTheDocument();
   });
 
-  it('Existing session button clicked; show input to join the sesion', async () => {
-    const { getByTestId } = render(SetupTimer);
-    const joinSessionButton = getByTestId('setup-timer-existing-session-button');
-    await fireEvent.click(joinSessionButton);
-    expect(getByTestId('setup-timer-join-session-input')).toBeInTheDocument();
-  });
-
   it('expect new session POST to be called when new session time is input', async () => {
     mockHandleSession.newSession.mockReturnValue({
       User: { UUID: 1234 },
       example: 'json',
     });
+    mockRouter.initRouter.mockReturnValue(undefined);
     const { getByTestId } = render(SetupTimer);
     const newTimerButton = getByTestId('setup-timer-new-timer-button');
     await fireEvent.click(newTimerButton);
@@ -55,38 +55,17 @@ describe('Conditional rendering of the Timer Component', () => {
     expect(input).toBeInTheDocument();
     await fireEvent.input(input, { target: { value: '9' } });
     expect(input).toHaveValue('9');
-    await fireEvent.keyDown(input, { keyCode: '13' } );
+    await fireEvent.keyDown(input, { keyCode: '13' });
     expect(mockHandleSession.newSession).toBeCalled();
   });
 
-  it('expect join session POST to be called when join session code is input', async () => {
+  it('expect join session POST to be called when join session URL is invoked', () => {
     mockHandleSession.joinSession.mockReturnValue({
       User: { UUID: 1234 },
       example: 'json',
     });
-    const { getByTestId } = render(SetupTimer);
-    const existingTimerButton = getByTestId('setup-timer-existing-session-button');
-    await fireEvent.click(existingTimerButton);
-    const input = getByTestId('setup-timer-join-session-input');
-    expect(input).toBeInTheDocument();
-    await fireEvent.input(input, { target: { value: '9' } });
-    expect(input).toHaveValue('9');
-    await fireEvent.keyDown(input, { keyCode: '13' });
+    mockRouter.initRouter.mockImplementation(jest.fn(() => '/1234'));
+    render(SetupTimer);
     expect(mockHandleSession.joinSession).toBeCalled();
-  });
-
-  it('If enter pressed with a value inside the new-timer-input, \
-  the timer would not have mounted yet', async () => {
-    mockHandleSession.newSession.mockReturnValue({ User: { UUID: 1234 } });
-    const { getByTestId } = render(SetupTimer);
-    const newTimerButton = getByTestId('setup-timer-new-timer-button');
-    await fireEvent.click(newTimerButton);
-    const input = getByTestId('setup-timer-new-timer-input');
-    expect(input).toBeInTheDocument();
-    await fireEvent.input(input, { target: { value: '9' } });
-    expect(input).toHaveValue('9');
-    await fireEvent.keyDown(input, { keyCode: '13' });
-    expect(input).toHaveFocus();
-    expect(input).toHaveValue('9');
   });
 });

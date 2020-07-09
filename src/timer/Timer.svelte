@@ -25,8 +25,6 @@
   const notifySound = new Audio('/deduction.mp3');
   const newDriverSound = new Audio('/open-ended.mp3');
 
-
-
   export let sessionData = {};
   let showReset = false;
   let ws;
@@ -71,7 +69,7 @@
     } else {
       startTimer(sessionData.Duration);
       try {
-        await navigator.clipboard.writeText(sessionData.SessionID);
+        await navigator.clipboard.writeText(`pairprogrammingtimer.com/${sessionData.SessionID}`);
       } catch (e) {
         console.error('Cannot execute navigator.clipboard.writeText');
       }
@@ -196,11 +194,11 @@
   displayTime={displayTime}
   degrees={360 / sessionData.Duration}
 />
-<h2>Session Id: {
-  'SessionID' in sessionData ?
-  `${sessionData.SessionID} (copied to clipboard!)` :
-  'loading..'
-}</h2>
+{#if 'newTimer' in sessionData}
+<h2>
+  url copied to clipboard!
+</h2>
+{/if}
 
 {#if showReset}
 <input
