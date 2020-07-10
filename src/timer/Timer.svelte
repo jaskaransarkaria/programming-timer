@@ -103,7 +103,7 @@
    * @param {number} remainingTime - MS
    */
   function displayRemainingTime(remainingTime) {
-    display(validateInput(remainingTime, MAX_DURATION_LIMIT));
+    display(remainingTime);
   }
 
   /**

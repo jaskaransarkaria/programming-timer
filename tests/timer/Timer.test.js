@@ -65,17 +65,6 @@ describe('take duration as a prop and start a timer which alerts on expiration',
     expect(global.WebSocket.OPEN).toBe(1);
   });
 
-  it('if duration prop <= 0 then don\'t begin timer and reprompt', () => {
-    render(Timer, {
-      sessionData: {
-        newTimer: true,
-        Duration: -1,
-      },
-    });
-    // Only the timer interval has fired. The timerSVG setIntervals have not been executed
-    expect(setInterval).toBeCalledTimes(1);
-  });
-
   it('existing SessionID passed in, so should be displayed', () => {
     const remainingTime = CURRENT_TIME + (119 * 60 * 1000);
     const { getByText } = render(Timer, {
@@ -91,35 +80,6 @@ describe('take duration as a prop and start a timer which alerts on expiration',
     expect(
       getByText('url copied to clipboard!'),
     ).toBeInTheDocument();
-  });
-
-  it('if duration prop is too large then don\'t begin timer', () => {
-    const { getByText } = render(Timer, {
-      sessionData: {
-        newTimer: true,
-        Duration: 121 * 60 * 1000,
-      },
-    });
-    const timerText = getByText('The max timer length is 2 hours; enter a smaller timer length');
-    expect(setInterval).toBeCalledTimes(1);
-    expect(timerText).toBeInTheDocument();
-  });
-
-  it('if duration isNaN(), then don\'t begin timer and reprompt', () => {
-    const { getByText } = render(Timer, {
-      sessionData: {
-        newTimer: true,
-        Duration: 'not a number',
-      },
-    });
-    const timerText = getByText('Please enter a number (mins) between 0 and 120');
-    expect(timerText).toBeInTheDocument();
-  });
-
-  it('if no prop passed prompt a number', () => {
-    const { getByText } = render(Timer, { sessionData: { newTimer: true } });
-    const timerText = getByText('Please enter a number (mins) between 0 and 120');
-    expect(timerText).toBeInTheDocument();
   });
 
   it('pass in existing session\'s SessionData and display it correctly', async () => {

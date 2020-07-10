@@ -24,11 +24,55 @@ beforeEach(() => {
   mockHandleSession.newSession.mockClear();
   mockHandleSession.joinSession.mockClear();
   global.navigator.clipboard = mockClipboard;
-
 });
 
 
 describe('Conditional rendering of the Timer Component', () => {
+  it('if input <= 0 then don\'t begin timer and reprompt', async () => {
+    const { getByTestId, getByText } = render(SetupTimer);
+    const newTimerButton = getByTestId('setup-timer-new-timer-button');
+    await fireEvent.click(newTimerButton);
+    const input = getByTestId('setup-timer-new-timer-input');
+    await fireEvent.input(input, { target: { value: '0' } });
+    await fireEvent.keyDown(input, { keyCode: '13' });
+    const timerText = getByText('Please enter a larger timer duration');
+    expect(timerText).toBeInTheDocument();
+  });
+
+  it('if duration input is too large then don\'t begin timer', async () => {
+    const { getByText, getByTestId } = render(SetupTimer);
+    const newTimerButton = getByTestId('setup-timer-new-timer-button');
+    await fireEvent.click(newTimerButton);
+    const input = getByTestId('setup-timer-new-timer-input');
+    await fireEvent.input(input, { target: { value: '121' } });
+    await fireEvent.keyDown(input, { keyCode: '13' });
+    const timerText = getByText('The max timer length is 2 hours; enter a smaller timer length');
+    expect(timerText).toBeInTheDocument();
+  });
+
+  it('if duration isNaN(), then don\'t begin timer and reprompt', async () => {
+    const { getByText, getByTestId } = render(SetupTimer);
+    const newTimerButton = getByTestId('setup-timer-new-timer-button');
+    await fireEvent.click(newTimerButton);
+    const input = getByTestId('setup-timer-new-timer-input');
+    await fireEvent.input(input, { target: { value: 'NOT A NUMBER' } });
+    await fireEvent.keyDown(input, { keyCode: '13' });
+    const timerText = getByText('Please enter a number (mins) between 0 and 120');
+    expect(timerText).toBeInTheDocument();
+  });
+
+  it('if no input passed prompt a number', async () => {
+    const { getByText, getByTestId } = render(SetupTimer);
+    const newTimerButton = getByTestId('setup-timer-new-timer-button');
+    await fireEvent.click(newTimerButton);
+    const input = getByTestId('setup-timer-new-timer-input');
+    await fireEvent.input(input, { target: { value: '' } });
+    await fireEvent.keyDown(input, { keyCode: '13' });
+    const timerText = getByText('Please enter a larger timer duration');
+    expect(timerText).toBeInTheDocument();
+  });
+
+
   it('If newTimer true and hideInput false show input', async () => {
     const { getByTestId } = render(SetupTimer);
     const newTimerButton = getByTestId('setup-timer-new-timer-button');
