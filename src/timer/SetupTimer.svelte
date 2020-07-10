@@ -9,6 +9,10 @@
   import {
     initRouter, redirect,
 } from '../router/router.js';
+import {
+    validateInput, minsToMillis,
+} from '../utils/utils.js';
+  let input;
   let newTimer = false;
   // eslint-disable-next-line prefer-const
   let existingSession = false;
@@ -30,16 +34,21 @@
 
   async function initNewSession(e) {
     if (e.keyCode === 13) {
-      try {
-        const response = await newSession(e.target.value);
-        Object.assign(sessionData, response.Session);
-        sessionStorage.setItem('uuid', response.User.UUID);
-        redirect(sessionData.SessionID);
-      } catch (err) {
-        console.error(err);
+      input = validateInput(minsToMillis(e.target.value), minsToMillis(120));
+      if (typeof  input === 'number') {
+        try {
+          const response = await newSession(e.target.value);
+          Object.assign(sessionData, response.Session);
+          sessionStorage.setItem('uuid', response.User.UUID);
+          redirect(sessionData.SessionID);
+        } catch (err) {
+          console.error(err);
+        }
+        sessionData.newTimer = newTimer;
+        hideInput = true;
+      } else {
+        e.target.value = '';
       }
-      sessionData.newTimer = newTimer;
-      hideInput = true;
     }
   }
 
@@ -81,3 +90,7 @@
 {/if}
 
 <h3>Allow notifications so we can alert you when time's up</h3>
+
+{#if typeof input === 'string'}
+  <h3>{input}</h3>
+{/if}
