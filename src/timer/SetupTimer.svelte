@@ -65,32 +65,87 @@ import {
   }
 </script>
 
-<style>
+<body>
+  {#if !newTimer && !existingSession}
+    <button
+      data-testid="setup-timer-new-timer-button"
+      on:click={() => (newTimer = true)}>
+      <img src="/new-timer-button.svg" alt="start new timer"/>
+    </button>
+    <h3>Allow notifications so we can alert you when time's up</h3>
+  {/if}
 
-</style>
-
-{#if !newTimer && !existingSession}
-  <button
-    data-testid="setup-timer-new-timer-button"
-    on:click={() => (newTimer = true)}>
-    New Timer
-  </button>
-{/if}
-
-{#if newTimer && !hideInput}
-  <input
+  {#if newTimer && !hideInput}
+  <div class="input-container">
+    <img class="input-svg" src="/new-timer-input.svg" alt="input timer duration minutes"/>
+    <input
     autofocus
     data-testid="setup-timer-new-timer-input"
     on:keydown={initNewSession}
-    placeholder="enter the timer length in mins" />
-{/if}
+    placeholder="enter duration (mins)"
+    required
+    />
+  </div>
+  {/if}
 
-{#if (newTimer && hideInput) || (sessionData && existingSession && hideInput)}
-  <Timer {sessionData} />
-{/if}
+  {#if (newTimer && hideInput) || (sessionData && existingSession && hideInput)}
+    <div class="timer-container">
+      <Timer {sessionData} />
+  </div>
+    {/if}
+    
+    {#if typeof input === 'string'}
+      <h3>{input}</h3>
+    {/if}
+</body>
 
-<h3>Allow notifications so we can alert you when time's up</h3>
+<style>
+  h3 {
+    font-family: Kalam-Regular;
+    color:  #eeaaffff;
+    font-size: 2.5em;
+		font-weight: 100;
+  }
 
-{#if typeof input === 'string'}
-  <h3>{input}</h3>
-{/if}
+  button {
+    background-color: Transparent;
+    background-repeat:no-repeat;
+    border: none;
+    cursor:pointer;
+    overflow: hidden;
+    outline:none;
+    border-radius: 50%;
+  }
+
+  input {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    /* bring your own prefixes */
+    transform: translate(-50%, -50%);
+    text-align: center;
+    background-color: Transparent;
+    border: none;
+    outline:none;
+    background: transparent;
+    font-size: 2rem;
+    color: #993299;
+    z-index: 99;
+    border-bottom: solid #993299;
+  }
+
+  .input-svg {
+    fill: none;
+  }
+
+  .timer-container {
+    position: absolute;
+    height:75%;
+    width: 100%;
+    top: 50%;
+    left: 50%;
+    /* bring your own prefixes */
+    transform: translate(-50%, -50%);
+    /* border: blue 2px solid; */
+  }
+</style>

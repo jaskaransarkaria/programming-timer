@@ -27,6 +27,8 @@
 
   export let sessionData = {};
   let showReset = false;
+  let invalidInput = false;
+  let message = '';
   let ws;
   const uuid = sessionStorage.getItem('uuid');
   let intervals = [ ];
@@ -70,6 +72,7 @@
       startTimer(sessionData.Duration);
       try {
         await navigator.clipboard.writeText(`pairprogrammingtimer.com/${sessionData.SessionID}`);
+        message = 'url copied to clipboard!';
       } catch (e) {
         console.error('Cannot execute navigator.clipboard.writeText');
       }
@@ -180,10 +183,12 @@
   function changeSessionDuration(e) {
     const validateResult = validateInput(e.target.value, MAX_DURATION_LIMIT);
     if (!isNaN(validateResult)) {
+      invalidInput = false;
       sessionData.UpdatedDuration = minsToMillis(validateResult);
     } else {
-      alert(validateResult);
-      return false;
+      invalidInput = true;
+      e.target.value = millisToMinutesAndSeconds(sessionData.Duration);
+      message = validateResult;
     }
   }
 </script>
@@ -194,23 +199,75 @@
   displayTime={displayTime}
   degrees={360 / sessionData.Duration}
 />
-{#if 'newTimer' in sessionData}
+{#if 'newTimer' in sessionData || invalidInput}
 <h2>
-  url copied to clipboard!
+  {message}
 </h2>
 {/if}
 
 {#if showReset}
-<input
-  type=number
-  min=0
+<div class="reset-container">
+  <input
+  type="number"
+  min="0"
   max={MAX_DURATION_LIMIT}
   on:change={changeSessionDuration}
   bind:value={updatedDuration}
   placeholder={millisToMinutesAndSeconds(sessionData.Duration)}
->
-<button on:click={() => updateSession(sessionData)}>Reset</button>
+  class="reset-input"
+  >
+  <button class="reset-button" on:click={() => updateSession(sessionData)}>
+    <img class="reset-img" data-testid="reset-svg" src="/reset-timer.svg" alt="reset the timer" />
+  </button>
+</div>
 {/if}
 
 <style>
+  h2 {
+    position: absolute;
+    top: 80%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: Kalam-Regular;
+    color:  #eeaaffff;
+    font-size: 2.5em;
+		font-weight: 100;
+  }
+
+  .reset-container {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .reset-input {
+    text-align: center;
+    background-color: Transparent;
+    border: none;
+    outline:none;
+    background: transparent;
+    font-size: 2rem;
+    color: #993299;
+    z-index: 99;
+    border-bottom: solid #993299;
+  }
+
+  .reset-button {
+    background-color: Transparent;
+    background-repeat:no-repeat;
+    border: none;
+    cursor:pointer;
+    overflow: hidden;
+    outline:none;
+    border-radius: 50%;
+  }
+
+  .reset-img {
+    position: absolute;
+    top: 50%;
+    left: 105%;
+    transform: translate(-50%, -50%);
+  }
+
 </style>

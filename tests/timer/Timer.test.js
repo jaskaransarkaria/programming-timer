@@ -65,23 +65,6 @@ describe('take duration as a prop and start a timer which alerts on expiration',
     expect(global.WebSocket.OPEN).toBe(1);
   });
 
-  it('existing SessionID passed in, so should be displayed', () => {
-    const remainingTime = CURRENT_TIME + (119 * 60 * 1000);
-    const { getByText } = render(Timer, {
-      sessionData: {
-        newTimer: false,
-        SessionID: '1234',
-        Duration: 121 * 60 * 1000,
-        StartTime: CURRENT_TIME - (119 * 60 * 1000),
-        EndTime: remainingTime,
-        Users: ['randomUser'],
-      },
-    });
-    expect(
-      getByText('url copied to clipboard!'),
-    ).toBeInTheDocument();
-  });
-
   it('pass in existing session\'s SessionData and display it correctly', async () => {
     const { getByText } = render(Timer, {
       sessionData: {
@@ -118,7 +101,9 @@ describe('take duration as a prop and start a timer which alerts on expiration',
   });
 
   it('change the timer duration after the timer has already ran', async () => {
-    const { getByText, getByPlaceholderText } = render(Timer, {
+    const {
+      getByText, getByPlaceholderText, getByTestId,
+    } = render(Timer, {
       sessionData: {
         newTimer: true,
         SessionID: '1234',
@@ -141,7 +126,7 @@ describe('take duration as a prop and start a timer which alerts on expiration',
     expect(changeDurationInput).toHaveValue(10);
     // get reset button and hit it
     // the mock updatesession response is emitted, this updates sessionData
-    const resetButton = getByText('Reset');
+    const resetButton = getByTestId('reset-svg');
     await fireEvent.click(resetButton);
     mockDate(CURRENT_TIME + (25 * 60 * 1000) + (5 * 60 * 1000));
     // advance timer by only 5 mins (half of the timer duration)

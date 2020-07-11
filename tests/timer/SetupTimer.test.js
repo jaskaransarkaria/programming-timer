@@ -19,13 +19,11 @@ jest.mock('../../src/utils/notification.js');
 
 const mockClipboard = { writeText: jest.fn() };
 
-
 beforeEach(() => {
   mockHandleSession.newSession.mockClear();
   mockHandleSession.joinSession.mockClear();
   global.navigator.clipboard = mockClipboard;
 });
-
 
 describe('Conditional rendering of the Timer Component', () => {
   it('if input <= 0 then don\'t begin timer and reprompt', async () => {
@@ -71,7 +69,6 @@ describe('Conditional rendering of the Timer Component', () => {
     const timerText = getByText('Please enter a larger timer duration');
     expect(timerText).toBeInTheDocument();
   });
-
 
   it('If newTimer true and hideInput false show input', async () => {
     const { getByTestId } = render(SetupTimer);

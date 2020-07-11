@@ -3,6 +3,7 @@
 </script>
 
 <main>
+  <h1>pair programming timer</h1>
   <SetupTimer/>
 </main>
 
@@ -12,11 +13,18 @@
 		padding: 1em;
 		max-width: 240px;
 		margin: 0 auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: #f6d5ffff;
 	}
 
 	h1 {
-		color: #ff3e00;
-		text-transform: uppercase;
+    font-family: Kalam-Bold;
+		color: #eeaaffff;
+		/* text-transform: uppercase; */
 		font-size: 4em;
 		font-weight: 100;
 	}
