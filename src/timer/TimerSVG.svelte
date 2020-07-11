@@ -19,6 +19,7 @@
     const offset = 10;
     const rX = radius + offset + Math.sin(radians) * radius;
     const rY = radius + offset - Math.cos(radians) * radius;
+    // eslint-disable-next-line multiline-ternary
     const dir = degrees > 180 ? 1 : 0;
     const coord =
       'M' +
