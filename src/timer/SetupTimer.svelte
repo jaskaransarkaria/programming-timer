@@ -13,9 +13,8 @@ import {
     validateInput, minsToMillis,
 } from '../utils/utils.js';
   let input;
-  let newTimer = false;
-  // eslint-disable-next-line prefer-const
-  let existingSession = false;
+  export let newTimer = false;
+  export let existingSession = false;
   let hideInput = false;
   const sessionData = {};
 

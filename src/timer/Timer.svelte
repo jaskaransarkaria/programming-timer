@@ -192,7 +192,6 @@
     }
   }
 </script>
-
 <TimerSVG 
   duration={sessionData.Duration}
   startTimestamp={sessionData.StartTime}

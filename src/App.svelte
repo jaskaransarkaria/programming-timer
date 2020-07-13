@@ -1,10 +1,21 @@
 <script>
   import SetupTimer from './timer/SetupTimer.svelte';
+  let existingSession;
+  let newTimer;
 </script>
 
 <main>
-  <h1>pair programming timer</h1>
-  <SetupTimer/>
+  <div class="header">
+    {#if newTimer || existingSession }
+    <button class="back-button">
+      <a href={process.env.HOME_URL}>
+        <img src="/back-button.svg" alt="return to main page">
+      </a>
+    </button>
+    {/if}
+    <h1>pair programming timer</h1>
+  </div>
+  <SetupTimer bind:newTimer bind:existingSession />
 </main>
 
 <style>
@@ -18,16 +29,28 @@
     left: 0;
     height: 100%;
     width: 100%;
-    background-color: #f6d5ffff;
 	}
 
 	h1 {
     font-family: Kalam-Bold;
 		color: #eeaaffff;
-		/* text-transform: uppercase; */
 		font-size: 4em;
 		font-weight: 100;
-	}
+  }
+  
+
+
+  .back-button {
+    position: absolute;
+    left: 2.5%;
+    top: 7.5%;
+    background-color: Transparent;
+    background-repeat:no-repeat;
+    border: none;
+    cursor:pointer;
+    overflow: hidden;
+    outline:none;
+  }
 
 	@media (min-width: 640px) {
 		main {

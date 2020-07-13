@@ -15,3 +15,10 @@ export function redirect(path) {
   page('/', () => page.redirect(`/${path}`));
   page.start();
 }
+
+export function isWelcomeScreen() {
+  const url = window.location.href;
+  return url.split('/').length > 3 ?
+    false :
+    true;
+}

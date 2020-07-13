@@ -34,14 +34,15 @@ export default {
     // https://github.com/rollup/plugins/tree/master/packages/commonjs
     resolve({
       browser: true,
-      dedupe: [
-        'svelte',
-      ],
+      dedupe: ['svelte'],
     }),
     commonjs(),
     replace({
       process: JSON.stringify({
         env: {
+          HOME_URL: production ?
+            'https://pairprogrammingtimer.com' :
+            'http://localhost:5000',
           ADDR: production ?
             'https://server.pairprogrammingtimer.com' :
             'http://localhost:8080',
