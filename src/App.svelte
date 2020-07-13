@@ -2,15 +2,17 @@
   import SetupTimer from './timer/SetupTimer.svelte';
   let existingSession;
   let newTimer;
+
+  function redirectHome() {
+    location.href = `${process.env.HOME_URL}`;
+  }
 </script>
 
 <main>
   <div class="header">
     {#if newTimer || existingSession }
-    <button class="back-button">
-      <a href={process.env.HOME_URL}>
+    <button class="back-button" on:click={redirectHome}>
         <img src="/back-button.svg" alt="return to main page">
-      </a>
     </button>
     {/if}
     <h1>pair programming timer</h1>
