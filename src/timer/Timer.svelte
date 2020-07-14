@@ -259,6 +259,7 @@
     top: 70%;
     left: 50%;
     transform: translateX(-50%);
+    width: 15%;
   }
 
 </style>
