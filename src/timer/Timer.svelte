@@ -27,8 +27,8 @@
 
   export let sessionData = {};
   let showReset = false;
-  let invalidInput = false;
-  let message = '';
+  export let invalidInput = false;
+  export let message = '';
   let ws;
   const uuid = sessionStorage.getItem('uuid');
   let intervals = [ ];
@@ -192,17 +192,13 @@
     }
   }
 </script>
-<TimerSVG 
+<TimerSVG
+  class="timer-svg"
   duration={sessionData.Duration}
   startTimestamp={sessionData.StartTime}
   displayTime={displayTime}
   degrees={360 / sessionData.Duration}
 />
-{#if 'newTimer' in sessionData || invalidInput}
-<h2>
-  {message}
-</h2>
-{/if}
 
 {#if showReset}
 <div class="reset-container">
@@ -221,6 +217,7 @@
 </div>
 {/if}
 
+
 <style>
   h2 {
     position: absolute;
@@ -235,7 +232,7 @@
 
   .reset-container {
     position: absolute;
-    top: 100%;
+    top: 65%;
     left: 50%;
     transform: translate(-50%, -50%);
   }

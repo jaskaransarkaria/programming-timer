@@ -14,9 +14,9 @@
   });
 
   const drawCoord = (degrees) => {
-    const radius = 60;
+    const radius = 110;
     const radians = (degrees * Math.PI) / 180;
-    const offset = 10;
+    const offset = 30;
     const rX = radius + offset + Math.sin(radians) * radius;
     const rY = radius + offset - Math.cos(radians) * radius;
     // eslint-disable-next-line multiline-ternary
@@ -59,21 +59,20 @@
 <svg
   data-testid="svg-element-parent"
   version="1.1"
-  baseProfile="tiny"
   xmlns="http://www.w3.org/2000/svg"
   width="100%"
-  height="100%"
-  viewBox="-210 0 560 175"
+  viewBox="-210 0 700 270"
 >
+  >
   <!-- Outer circle -->
-  <circle data-testid="svg-outer-circle" cx="70" cy="70" r="64"
-  stroke={'#40e0d0'} stroke-width={'2'} fill={'none'} /> <path
+  <circle data-testid="svg-outer-circle" cx="140" cy="140" r="120"
+  stroke={'#40e0d0'} stroke-width={'5'} fill={'none'} /> <path
   data-testid="svg-path" d={draw} stroke={' #993299'} stroke-width={'3'}
   fill={'none'} />
   <text
     data-testid="svg-text"
-    x="70"
-    y="70"
+    x="140"
+    y="130"
     text-anchor="middle"
     class="timer-text"
   >

@@ -15,6 +15,8 @@ import {
   let input;
   export let newTimer = false;
   export let existingSession = false;
+  let message;
+  let invalidInput;
   let hideInput = false;
   const sessionData = {};
 
@@ -64,14 +66,13 @@ import {
   }
 </script>
 
-<body>
   {#if !newTimer && !existingSession}
+  <h3>Allow notifications so we can alert you when time's up</h3>
     <button
       data-testid="setup-timer-new-timer-button"
       on:click={() => (newTimer = true)}>
-      <img src="/new-timer-button.svg" alt="start new timer"/>
+      <img class="new-timer-svg" src="/new-timer-button.svg" alt="start new timer"/>
     </button>
-    <h3>Allow notifications so we can alert you when time's up</h3>
   {/if}
 
   {#if newTimer && !hideInput}
@@ -87,23 +88,35 @@ import {
   </div>
   {/if}
 
+  {#if message || invalidInput}
+    <h2 class="message">{message}</h2>
+  {/if}
+  {#if typeof input === 'string'}
+    <h3>{input}</h3>
+  {/if}
+
   {#if (newTimer && hideInput) || (sessionData && existingSession && hideInput)}
     <div class="timer-container">
-      <Timer {sessionData} />
-  </div>
-    {/if}
-    
-    {#if typeof input === 'string'}
-      <h3>{input}</h3>
-    {/if}
-</body>
-
+      <Timer {sessionData} bind:message bind:invalidInput />
+    </div>
+  {/if}
 <style>
-  h3 {
+
+  h3, h2 {
+    position: absolute;
     font-family: Kalam-Regular;
     color:  #eeaaffff;
-    font-size: 2.5em;
-		font-weight: 100;
+    font-size: 1.8em;
+    font-weight: 100;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 16%;
+  }
+
+  .message {
+    left: 50%;
+    transform: translateX(-50%);
+    top: 18%;
   }
 
   button {
@@ -118,14 +131,14 @@ import {
 
   input {
     position: absolute;
-    top: 50%;
+    top: 65%;
     left: 50%;
-    /* bring your own prefixes */
     transform: translate(-50%, -50%);
     text-align: center;
     background-color: Transparent;
     border: none;
-    outline:none;
+    width: 25%;
+    outline: none;
     background: transparent;
     font-size: 2rem;
     color: #993299;
@@ -133,18 +146,17 @@ import {
     border-bottom: solid #993299;
   }
 
-  .input-svg {
+  .input-svg, .new-timer-svg {
     fill: none;
+    width: 68vh;
   }
 
   .timer-container {
     position: absolute;
     height:75%;
     width: 100%;
-    top: 50%;
+    top: 70%;
     left: 50%;
-    /* bring your own prefixes */
     transform: translate(-50%, -50%);
-    /* border: blue 2px solid; */
   }
 </style>

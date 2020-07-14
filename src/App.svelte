@@ -24,20 +24,21 @@
 	main {
 		text-align: center;
 		padding: 1em;
-		max-width: 240px;
-		margin: 0 auto;
+		/* max-width: 10px; */
+		/* margin: 0 auto; */
     position: absolute;
     top: 0;
     left: 0;
-    height: 100%;
-    width: 100%;
+    height: 80%;
+    width: 95%;
 	}
 
 	h1 {
     font-family: Kalam-Bold;
 		color: #eeaaffff;
 		font-size: 4em;
-		font-weight: 100;
+    font-weight: 100;
+    margin-block-start: 0.28em;
   }
   
 
