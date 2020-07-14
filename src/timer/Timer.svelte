@@ -219,22 +219,17 @@
 
 
 <style>
-  h2 {
-    position: absolute;
-    top: 80%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-family: Kalam-Regular;
-    color:  #eeaaffff;
-    font-size: 2.5em;
-		font-weight: 100;
-  }
-
   .reset-container {
+    display: flex;
+    flex-flow: column wrap;
     position: absolute;
     top: 65%;
     left: 50%;
     transform: translate(-50%, -50%);
+    height: 50%;
+    justify-content: center;
+    align-items: center;
+  
   }
 
   .reset-input {
@@ -261,9 +256,9 @@
 
   .reset-img {
     position: absolute;
-    top: 50%;
-    left: 105%;
-    transform: translate(-50%, -50%);
+    top: 70%;
+    left: 50%;
+    transform: translateX(-50%);
   }
 
 </style>
