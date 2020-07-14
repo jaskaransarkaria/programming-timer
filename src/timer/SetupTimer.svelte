@@ -110,7 +110,7 @@ import {
     font-weight: 100;
     left: 50%;
     transform: translateX(-50%);
-    top: 16%;
+    top: 12.5%;
   }
 
   .message {
