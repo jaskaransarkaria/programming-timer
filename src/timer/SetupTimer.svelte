@@ -140,6 +140,7 @@ import {
     width: 25%;
     outline: none;
     background: transparent;
+    font-family: Kalam-Bold;
     font-size: 2rem;
     color: #993299;
     z-index: 99;

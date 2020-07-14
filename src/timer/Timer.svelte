@@ -48,6 +48,7 @@
       sessionData = JSON.parse(event.data);
       if (sessionData.CurrentDriver.UUID === uuid) {
         newDriverNotification(newDriverSound);
+        message = 'You are the new driver!';
       }
       await calculateRemainingTime(sessionData);
     } catch (e) {

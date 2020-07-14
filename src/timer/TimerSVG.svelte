@@ -72,7 +72,7 @@
   <text
     data-testid="svg-text"
     x="140"
-    y="130"
+    y="138"
     text-anchor="middle"
     class="timer-text"
   >
@@ -83,6 +83,8 @@
 <style>
   text {
     fill: #993299;
+    font-family: Kalam-Light;
+    font-size: 2em;
   }
   svg {
     position: absolute;
