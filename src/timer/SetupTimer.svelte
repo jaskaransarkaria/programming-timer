@@ -21,11 +21,11 @@ import {
   const sessionData = {};
 
   onMount(async () => {
+    sessionStorage.clear();
     const existingSessionPath = initRouter();
     if (existingSessionPath) {
       await joinExistingSession(existingSessionPath.slice(1));
     }
-    sessionStorage.clear();
     try {
       checkPermissions();
     } catch (e) {
