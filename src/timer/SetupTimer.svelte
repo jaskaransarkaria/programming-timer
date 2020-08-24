@@ -5,11 +5,11 @@
   import Timer from './Timer.svelte';
   import {
     newSession, joinSession,
-  } from '../utils/handleSession.js';
+} from '../utils/handleSession.js';
   import {
     initRouter, redirect,
 } from '../router/router.js';
-import {
+  import {
     validateInput, minsToMillis,
 } from '../utils/utils.js';
   let input;
@@ -36,7 +36,7 @@ import {
   async function initNewSession(e) {
     if (e.keyCode === 13) {
       input = validateInput(minsToMillis(e.target.value), minsToMillis(120));
-      if (typeof  input === 'number') {
+      if (typeof input === 'number') {
         try {
           const response = await newSession(e.target.value);
           Object.assign(sessionData, response.Session);
@@ -64,48 +64,18 @@ import {
       console.error(err);
     }
   }
+
+  const updateInput = (value, target) => {
+    document.getElementById(target).value = value;
+  };
 </script>
 
-  {#if !newTimer && !existingSession}
-  <h3>Allow notifications so we can alert you when time's up</h3>
-    <button
-      data-testid="setup-timer-new-timer-button"
-      on:click={() => (newTimer = true)}>
-      <img class="new-timer-svg" src="/new-timer-button.svg" alt="start new timer"/>
-    </button>
-  {/if}
-
-  {#if newTimer && !hideInput}
-  <div class="input-container">
-    <img class="input-svg" src="/new-timer-input.svg" alt="input timer duration minutes"/>
-    <input
-    autofocus
-    data-testid="setup-timer-new-timer-input"
-    on:keydown={initNewSession}
-    placeholder="enter duration (mins)"
-    required
-    />
-  </div>
-  {/if}
-
-  {#if message || invalidInput}
-    <h2 class="message">{message}</h2>
-  {/if}
-  {#if typeof input === 'string'}
-    <h3>{input}</h3>
-  {/if}
-
-  {#if (newTimer && hideInput) || (sessionData && existingSession && hideInput)}
-    <div class="timer-container">
-      <Timer {sessionData} bind:message bind:invalidInput />
-    </div>
-  {/if}
 <style>
-
-  h3, h2 {
+  h3,
+  h2 {
     position: absolute;
     font-family: Kalam-Regular;
-    color:  #eeaaffff;
+    color: #eeaaffff;
     font-size: 1.8em;
     font-weight: 100;
     left: 50%;
@@ -121,11 +91,11 @@ import {
 
   button {
     background-color: Transparent;
-    background-repeat:no-repeat;
+    background-repeat: no-repeat;
     border: none;
-    cursor:pointer;
+    cursor: pointer;
     overflow: hidden;
-    outline:none;
+    outline: none;
     border-radius: 50%;
   }
 
