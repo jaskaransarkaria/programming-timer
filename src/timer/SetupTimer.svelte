@@ -147,17 +147,78 @@ import {
     border-bottom: solid #993299;
   }
 
-  .input-svg, .new-timer-svg {
+  #range-slider {
+    position: absolute;
+    top: 70%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 25%;
+  }
+
+  .input-svg,
+  .new-timer-svg {
     fill: none;
     width: 68vh;
   }
 
   .timer-container {
     position: absolute;
-    height:75%;
+    height: 75%;
     width: 100%;
     top: 70%;
     left: 50%;
     transform: translate(-50%, -50%);
   }
 </style>
+
+{#if !newTimer && !existingSession}
+  <h3>Allow notifications so we can alert you when time's up</h3>
+  <button
+    data-testid="setup-timer-new-timer-button"
+    on:click={() => (newTimer = true)}>
+    <img
+      class="new-timer-svg"
+      src="/new-timer-button.svg"
+      alt="start new timer" />
+  </button>
+{/if}
+
+{#if newTimer && !hideInput}
+  <div class="input-container">
+    <h2>enter duration (mins)</h2>
+    <img
+      class="input-svg"
+      src="/new-timer-input.svg"
+      alt="input timer duration minutes" />
+    <div></div>
+    <input
+      id="setup-input"
+      type="number"
+      data-testid="setup-timer-new-timer-input"
+      on:keydown={initNewSession}
+      on:input={(event) => updateInput(event.target.value, 'range-slider')}
+      placeholder="enter duration (mins)"
+      value={15}
+      required />
+    <input
+      id="range-slider"
+      on:input={(event) => updateInput(event.target.value, 'setup-input')}
+      type="range"
+      min="1"
+      max="120"
+      value="10" />
+  </div>
+{/if}
+
+{#if message || invalidInput}
+  <h2 class="message">{message}</h2>
+{/if}
+{#if typeof input === 'string'}
+  <h3>{input}</h3>
+{/if}
+
+{#if (newTimer && hideInput) || (sessionData && existingSession && hideInput)}
+  <div class="timer-container">
+    <Timer {sessionData} bind:message bind:invalidInput />
+  </div>
+{/if}
