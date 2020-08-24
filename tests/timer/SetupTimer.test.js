@@ -55,7 +55,7 @@ describe('Conditional rendering of the Timer Component', () => {
     const input = getByTestId('setup-timer-new-timer-input');
     await fireEvent.input(input, { target: { value: 'NOT A NUMBER' } });
     await fireEvent.keyDown(input, { keyCode: '13' });
-    const timerText = getByTestId('setup-timer-new-timer-button');
+    const timerText = getByTestId('setup-timer-new-timer-input');
     expect(timerText).toBeInTheDocument();
   });
 
