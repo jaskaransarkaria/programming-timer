@@ -20,6 +20,10 @@
   let hideInput = false;
   const sessionData = {};
 
+  const INITIAL_VALUE_MIN = 15;
+  const MAX_VALUE_MIN = 120;
+  const MIN_VALUE_MIN = 1;
+
   onMount(async () => {
     sessionStorage.clear();
     const existingSessionPath = initRouter();
@@ -99,7 +103,7 @@
     border-radius: 50%;
   }
 
-  input {
+  input[type="number"] {
     position: absolute;
     top: 65%;
     left: 50%;
@@ -160,24 +164,26 @@
       class="input-svg"
       src="/new-timer-input.svg"
       alt="input timer duration minutes" />
-    <div></div>
-    <input
-      id="setup-input"
-      type="number"
-      data-testid="setup-timer-new-timer-input"
-      on:keydown={initNewSession}
-      on:input={(event) => updateInput(event.target.value, 'range-slider')}
-      placeholder="enter duration (mins)"
-      value={15}
-      required />
-    <input
-      id="range-slider"
-      on:input={(event) => updateInput(event.target.value, 'setup-input')}
-      type="range"
-      min="1"
-      max="120"
-      value="10" />
-  </div>
+      <input
+        id="setup-timer-new-timer-input"
+        type="number"
+        max={MAX_VALUE_MIN}
+        min={MIN_VALUE_MIN}
+        data-testid="setup-timer-new-timer-input"
+        on:keydown={initNewSession}
+        on:input={(event) => updateInput(event.target.value, 'range-slider')}
+        placeholder="enter duration (mins)"
+        value={15}
+        required />
+      <input
+        id="range-slider"
+        data-testid="range-slider"
+        on:input={(event) => updateInput(event.target.value, 'setup-timer-new-timer-input')}
+        type="range"
+        min={MIN_VALUE_MIN}
+        max={MAX_VALUE_MIN}
+        value={INITIAL_VALUE_MIN} />
+    </div>
 {/if}
 
 {#if message || invalidInput}
