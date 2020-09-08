@@ -12,6 +12,7 @@
   import {
     validateInput, minsToMillis,
 } from '../utils/utils.js';
+
   let input;
   export let newTimer = false;
   export let existingSession = false;
@@ -20,9 +21,9 @@
   let hideInput = false;
   const sessionData = {};
 
-  const INITIAL_VALUE = 15;
-  const MAX_VALUE_MIN = 120;
-  const MIN_VALUE_MIN = 1;
+  const INITIAL_VALUE_MINS = 15;
+  const MAX_VALUE_MINS = 120;
+  const MIN_VALUE_MINS = 1;
 
   onMount(async () => {
     sessionStorage.clear();
@@ -39,7 +40,7 @@
 
   async function initNewSession(e) {
     if (e.keyCode === 13) {
-      input = validateInput(minsToMillis(e.target.value), minsToMillis(120));
+      input = validateInput(minsToMillis(e.target.value), minsToMillis(MAX_VALUE_MINS));
       if (typeof input === 'number') {
         try {
           const response = await newSession(e.target.value);
@@ -163,20 +164,20 @@
       <input
         id="setup-timer-new-timer-input"
         type="number"
-        max={MAX_VALUE_MIN}
-        min={MIN_VALUE_MIN}
+        max={MAX_VALUE_MINS}
+        min={MIN_VALUE_MINS}
         data-testid="setup-timer-new-timer-input"
         on:keydown={initNewSession}
         placeholder="enter duration (mins)"
-        value={INITIAL_VALUE}
+        value={INITIAL_VALUE_MINS}
         required />
       <input
         id="range-slider"
         data-testid="range-slider"
         type="range"
-        min={MIN_VALUE_MIN}
-        max={MAX_VALUE_MIN}
-        value={INITIAL_VALUE} />
+        min={MIN_VALUE_MINS}
+        max={MAX_VALUE_MINS}
+        value={INITIAL_VALUE_MINS} />
     </div>
 {/if}
 

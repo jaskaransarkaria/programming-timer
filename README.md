@@ -39,7 +39,9 @@ Install the dependencies and run locally...
 
 - `npm install`
 
-- `npm run dev`
+- `npm run dev` - for local developement
+
+- `npm start` - for production
 
 > **NOTE** - By default, the server will only respond to requests from localhost. To allow connections from other computers, edit the `sirv` commands in package.json to include the option `--host 0.0.0.0`.
 
