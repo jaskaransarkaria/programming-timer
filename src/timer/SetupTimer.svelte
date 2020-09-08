@@ -20,7 +20,7 @@
   let hideInput = false;
   const sessionData = {};
 
-  const INITIAL_VALUE_MIN = 15;
+  const INITIAL_VALUE = 15;
   const MAX_VALUE_MIN = 120;
   const MIN_VALUE_MIN = 1;
 
@@ -68,10 +68,6 @@
       console.error(err);
     }
   }
-
-  const updateInput = (value, target) => {
-    document.getElementById(target).value = value;
-  };
 </script>
 
 <style>
@@ -171,18 +167,16 @@
         min={MIN_VALUE_MIN}
         data-testid="setup-timer-new-timer-input"
         on:keydown={initNewSession}
-        on:input={(event) => updateInput(event.target.value, 'range-slider')}
         placeholder="enter duration (mins)"
-        value={15}
+        value={INITIAL_VALUE}
         required />
       <input
         id="range-slider"
         data-testid="range-slider"
-        on:input={(event) => updateInput(event.target.value, 'setup-timer-new-timer-input')}
         type="range"
         min={MIN_VALUE_MIN}
         max={MAX_VALUE_MIN}
-        value={INITIAL_VALUE_MIN} />
+        value={INITIAL_VALUE} />
     </div>
 {/if}
 
