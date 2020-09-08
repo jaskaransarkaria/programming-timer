@@ -6,6 +6,7 @@
     "dev": "rollup -c -w",
     "start": "sirv public --single",
     "lint": "eslint src/**/**/*.svelte tests/**/**/*.js",
+    "lint:fix": "eslint --fix src/**/**/*.svelte tests/**/**/*.js",
     "test": "jest",
     "test:watch": "jest --watch"
   },

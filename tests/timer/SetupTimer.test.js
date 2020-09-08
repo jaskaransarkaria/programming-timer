@@ -49,13 +49,13 @@ describe('Conditional rendering of the Timer Component', () => {
   });
 
   it('if duration isNaN(), then don\'t begin timer and reprompt', async () => {
-    const { getByText, getByTestId } = render(SetupTimer);
+    const { getByTestId } = render(SetupTimer);
     const newTimerButton = getByTestId('setup-timer-new-timer-button');
     await fireEvent.click(newTimerButton);
     const input = getByTestId('setup-timer-new-timer-input');
     await fireEvent.input(input, { target: { value: 'NOT A NUMBER' } });
     await fireEvent.keyDown(input, { keyCode: '13' });
-    const timerText = getByText('Please enter a number (mins) between 0 and 120');
+    const timerText = getByTestId('setup-timer-new-timer-input');
     expect(timerText).toBeInTheDocument();
   });
 
@@ -94,8 +94,8 @@ describe('Conditional rendering of the Timer Component', () => {
     await fireEvent.click(newTimerButton);
     const input = getByTestId('setup-timer-new-timer-input');
     expect(input).toBeInTheDocument();
-    await fireEvent.input(input, { target: { value: '9' } });
-    expect(input).toHaveValue('9');
+    await fireEvent.input(input, { target: { value: 9 } });
+    expect(input).toHaveValue(9);
     await fireEvent.keyDown(input, { keyCode: '13' });
     expect(mockHandleSession.newSession).toBeCalled();
   });
