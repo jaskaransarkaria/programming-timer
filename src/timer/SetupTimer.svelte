@@ -19,9 +19,9 @@
   let message;
   let invalidInput;
   let hideInput = false;
+  let INITIAL_VALUE_MINS = 15;
+  
   const sessionData = {};
-
-  const INITIAL_VALUE_MINS = 15;
   const MAX_VALUE_MINS = 120;
   const MIN_VALUE_MINS = 1;
 
@@ -169,7 +169,7 @@
         data-testid="setup-timer-new-timer-input"
         on:keydown={initNewSession}
         placeholder="enter duration (mins)"
-        value={INITIAL_VALUE_MINS}
+        bind:value={INITIAL_VALUE_MINS}
         required />
       <input
         id="range-slider"
@@ -177,7 +177,7 @@
         type="range"
         min={MIN_VALUE_MINS}
         max={MAX_VALUE_MINS}
-        value={INITIAL_VALUE_MINS} />
+        bind:value={INITIAL_VALUE_MINS} />
     </div>
 {/if}
 
