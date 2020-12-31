@@ -74,7 +74,7 @@
     } else {
       startTimer(sessionData.Duration);
       try {
-        await navigator.clipboard.writeText(`pairprogrammingtimer.com/${sessionData.SessionID}`);
+        await navigator.clipboard.writeText(`https://pairprogrammingtimer.com/${sessionData.SessionID}`);
         message = 'url copied to clipboard!';
       } catch (e) {
         console.error('Cannot execute navigator.clipboard.writeText');
