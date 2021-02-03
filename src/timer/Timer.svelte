@@ -1,4 +1,3 @@
-#prettier-ignore
 
 <script>
   'use strict';
@@ -17,7 +16,10 @@
     initWebsocket,
     closeWs,
 }from '../utils/websocket.js';
-  import { updateSession, pauseSession } from '../utils/handleSession.js';
+  import {
+    updateSession,
+    pauseSession,
+} from '../utils/handleSession.js';
   import TimerSVG from './TimerSVG.svelte';
 
   const MAX_DURATION_LIMIT = minsToMillis(120);
@@ -76,7 +78,7 @@
       calculateRemainingTime(sessionData);
     } else {
       startTimer(sessionData.Duration);
-      console.log(sessionData)
+      console.log(sessionData);
       try {
         await navigator.clipboard.writeText(
           `https://pairprogrammingtimer.com/${sessionData.SessionID}`);
@@ -96,15 +98,15 @@
    */
   function calculateRemainingTime(existingSessionData) {
     if (existingSessionData.PauseTime !== 0){
-      console.log("calculating pause timer")
+      console.log('calculating pause timer');
       const endTime = existingSessionData.EndTime;
       const pauseTime = existingSessionData.PauseTime;
       const remainingTimeMillis = endTime - pauseTime;
-      displayRemainingTime(remainingTimeMillis)
+      displayRemainingTime(remainingTimeMillis);
     } else {
-    const endTime = existingSessionData.EndTime;
-    const remainingTimeMillis = endTime - Date.now();
-    displayRemainingTime(remainingTimeMillis);
+        const endTime = existingSessionData.EndTime;
+        const remainingTimeMillis = endTime - Date.now();
+        displayRemainingTime(remainingTimeMillis);
     }
   }
 
@@ -127,7 +129,7 @@
 
   // let pauseInterval;
 
-   /**
+  /**
    * Handle pause button, starts a new pause timer for duration of pause
    * 
    *
@@ -163,9 +165,9 @@
 
   function handlePause() {
     clearTimer();
-    const pauseMoment = Date.now()
+    const pauseMoment = Date.now();
     const remainingMillis = sessionData.EndTime - pauseMoment;
-    pauseSession(sessionData.SessionID, pauseMoment)
+    pauseSession(sessionData.SessionID, pauseMoment);
     // updatedDuration = displayTime;
     setInterval(() => {
       sessionData.StartTime = Date.now() + remainingMillis;
@@ -183,11 +185,9 @@
    */
   function display(remainingTimeMillis) {
     if (pause){
-      displayTime = "Paused"
-      return
-    }
-      else
-       if (isNaN(remainingTimeMillis)){
+      displayTime = 'Paused';
+      return;
+    } else if (isNaN(remainingTimeMillis)){
       return displayTime = remainingTimeMillis;
     } else {
       const currentInterval = setInterval(() => {
@@ -210,9 +210,8 @@
       clearTimer();
       timesUp();
     } else if (pause){
-      return displayTime="Paused"
-    }
-      else {
+      return displayTime='Paused';
+    } else {
       displayTime = millisToMinutesAndSeconds(remainingTimeMillis);
       return remainingTimeMillis;
     }
