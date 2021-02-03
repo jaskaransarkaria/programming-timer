@@ -104,9 +104,9 @@
       const remainingTimeMillis = endTime - pauseTime;
       displayRemainingTime(remainingTimeMillis);
     } else {
-        const endTime = existingSessionData.EndTime;
-        const remainingTimeMillis = endTime - Date.now();
-        displayRemainingTime(remainingTimeMillis);
+      const endTime = existingSessionData.EndTime;
+      const remainingTimeMillis = endTime - Date.now();
+      displayRemainingTime(remainingTimeMillis);
     }
   }
 
