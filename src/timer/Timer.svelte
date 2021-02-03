@@ -104,9 +104,9 @@
       const remainingTimeMillis = endTime - pauseTime;
       displayRemainingTime(remainingTimeMillis);
     } else {
-        const endTime = existingSessionData.EndTime;
-        const remainingTimeMillis = endTime - Date.now();
-        displayRemainingTime(remainingTimeMillis);
+    const endTime = existingSessionData.EndTime;
+    const remainingTimeMillis = endTime - Date.now();
+    displayRemainingTime(remainingTimeMillis);
     }
   }
 
@@ -127,41 +127,12 @@
     display(remainingTime);
   }
 
-  // let pauseInterval;
-
   /**
    * Handle pause button, starts a new pause timer for duration of pause
    * 
    *
    *
    */
-  // function handlePause(){
-  //   pause = !pause;
-  //   //starts a new timer when pause is pressed
-  //   if (pause){
-  //     //communicate to server that session is paused
-
-
-  //     console.log(pause)
-  //     console.log("before pause ", sessionData.EndTime)
-  //   const beginningTime = Date.now()
-  //   pauseInterval = setInterval(() => {
-	// 	const currentTime = Date.now();
-  //   let pauseTimer = currentTime - beginningTime;
-  //   sessionData.EndTime += pauseTimer;
-  // }, TIMER_REFRESH_RATE_MS);
-  //   //add pauseTimer to the session duration
-  // } else {
-  //   console.log("play pressed", sessionData.EndTime)
-  //   clearInterval(pauseInterval)
-  //   //communicate to server that session has resumed
-
-
-  //   // let remainingTimeMillis = (sessionData.EndTime - Date.now())
-  //   // display(remainingTimeMillis)
-  //   return
-  // }
-  // }
 
   function handlePause() {
     clearTimer();
