@@ -1,6 +1,6 @@
 <script>
-  "use strict";
-  import { onDestroy } from "svelte";
+  'use strict';
+  import { onDestroy } from 'svelte';
 
   export let duration = 0; // number of seconds the timer will run for
   export let startTimestamp;
@@ -22,25 +22,25 @@
     // eslint-disable-next-line multiline-ternary
     const dir = degrees > 180 ? 1 : 0;
     const coord =
-      "M" +
+      'M' +
       (radius + offset) +
-      "," +
+      ',' +
       offset +
-      " " +
-      "L" +
+      ' ' +
+      'L' +
       (radius + offset) +
-      "," +
+      ',' +
       offset +
-      " " +
-      "A" +
+      ' ' +
+      'A' +
       radius +
-      "," +
+      ',' +
       radius +
-      " 0 " +
+      ' 0 ' +
       dir +
-      ",1 " +
+      ',1 ' +
       rX +
-      "," +
+      ',' +
       rY;
 
     return coord;
@@ -68,47 +68,36 @@
     left: 50%;
     transform: translate(-50%, -50%);
   }
-  .pause-button {
-    display: block;
-  }
 </style>
 
 <svg
-  data-testid="svg-element-parent"
-  version="1.1"
-  xmlns="http://www.w3.org/2000/svg"
-  width="100%"
-  viewBox="-210 0 700 270">
+  data-testid='svg-element-parent'
+  version='1.1'
+  xmlns='http://www.w3.org/2000/svg'
+  width='100%'
+  viewBox='-210 0 700 270'>
   >
   <!-- Outer circle -->
   <circle
-    data-testid="svg-outer-circle"
-    cx="140"
-    cy="140"
-    r="120"
+    data-testid='svg-outer-circle'
+    cx='140'
+    cy='140'
+    r='120'
     stroke={'#40e0d0'}
     stroke-width={'5'}
     fill={'none'} />
   <path
-    data-testid="svg-path"
+    data-testid='svg-path'
     d={draw}
     stroke={' #993299'}
     stroke-width={'3'}
     fill={'none'} />
   <text
-    data-testid="svg-text"
-    x="140"
-    y="138"
-    text-anchor="middle"
-    class="timer-text">
+    data-testid='svg-text'
+    x='140'
+    y='138'
+    text-anchor='middle'
+    class='timer-text'>
     {displayTime}
   </text>
-  <rect x="117" y="165" width="45px" height="35px" fill={'none'} />
-  <image
-    href="/pause.svg"
-    alt="play and pause button"
-    x="115"
-    y="155"
-    height="50px"
-    width="50px" />
 </svg>

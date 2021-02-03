@@ -29,3 +29,13 @@ export async function newSession(duration) {
   });
   return await response.json();
 }
+
+export async function pauseSession(sessionID, pauseTime){
+  await fetch(`${process.env.ADDR}/session/pause`, {
+    method: 'POST',
+    body: JSON.stringify( {
+      sessionId: sessionID,
+      pauseTime: pauseTime,
+    }),
+  });
+}

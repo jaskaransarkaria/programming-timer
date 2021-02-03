@@ -15,7 +15,7 @@
     initWebsocket,
     closeWs,
 }from '../utils/websocket.js';
-  import { updateSession } from '../utils/handleSession.js';
+  import { updateSession, pauseSession } from '../utils/handleSession.js';
   import TimerSVG from './TimerSVG.svelte';
 
   const MAX_DURATION_LIMIT = minsToMillis(120);
@@ -34,6 +34,7 @@
   let intervals = [ ];
   let displayTime = 'Start the timer';
   let updatedDuration;
+  let pause = false;
 
   /**
    * Process received WebSocket messages
@@ -73,6 +74,7 @@
       calculateRemainingTime(sessionData);
     } else {
       startTimer(sessionData.Duration);
+      console.log(sessionData)
       try {
         await navigator.clipboard.writeText(
           `https://pairprogrammingtimer.com/${sessionData.SessionID}`);
@@ -91,9 +93,17 @@
    * @param {object} existingSessionData
    */
   function calculateRemainingTime(existingSessionData) {
+    if (existingSessionData.PauseTime !== 0){
+      console.log("calculating pause timer")
+      const endTime = existingSessionData.EndTime;
+      const pauseTime = existingSessionData.PauseTime;
+      const remainingTimeMillis = endTime - pauseTime;
+      displayRemainingTime(remainingTimeMillis)
+    } else {
     const endTime = existingSessionData.EndTime;
     const remainingTimeMillis = endTime - Date.now();
     displayRemainingTime(remainingTimeMillis);
+    }
   }
 
   /**
@@ -113,14 +123,69 @@
     display(remainingTime);
   }
 
+  // let pauseInterval;
+
+   /**
+   * Handle pause button, starts a new pause timer for duration of pause
+   * 
+   *
+   *
+   */
+  // function handlePause(){
+  //   pause = !pause;
+  //   //starts a new timer when pause is pressed
+  //   if (pause){
+  //     //communicate to server that session is paused
+
+
+  //     console.log(pause)
+  //     console.log("before pause ", sessionData.EndTime)
+  //   const beginningTime = Date.now()
+  //   pauseInterval = setInterval(() => {
+	// 	const currentTime = Date.now();
+  //   let pauseTimer = currentTime - beginningTime;
+  //   sessionData.EndTime += pauseTimer;
+  // }, TIMER_REFRESH_RATE_MS);
+  //   //add pauseTimer to the session duration
+  // } else {
+  //   console.log("play pressed", sessionData.EndTime)
+  //   clearInterval(pauseInterval)
+  //   //communicate to server that session has resumed
+
+
+  //   // let remainingTimeMillis = (sessionData.EndTime - Date.now())
+  //   // display(remainingTimeMillis)
+  //   return
+  // }
+  // }
+
+  function handlePause() {
+    clearTimer();
+    const pauseMoment = Date.now()
+    const remainingMillis = sessionData.EndTime - pauseMoment;
+    pauseSession(sessionData.SessionID, pauseMoment)
+    // updatedDuration = displayTime;
+    setInterval(() => {
+      sessionData.StartTime = Date.now() + remainingMillis;
+    }, 30);
+    displayTime = displayTime.toString();
+    // need remaining millis seconds and an interval to keep track of it assign it to StartTime
+    console.log('pausing');
+  }
+
   /**
    * Continously refresh the timer display
-   * for the duration of the timer
+   * for the duration of the timer, unless timer is paused
    *
    * @param {number} remainingTimeMillis
    */
   function display(remainingTimeMillis) {
-    if (isNaN(remainingTimeMillis)) {
+    if (pause){
+      displayTime = "Paused"
+      return
+    }
+      else
+       if (isNaN(remainingTimeMillis)){
       return displayTime = remainingTimeMillis;
     } else {
       const currentInterval = setInterval(() => {
@@ -142,7 +207,10 @@
     if (remainingTimeMillis <= TIMES_UP_LIMIT_MS) {
       clearTimer();
       timesUp();
-    } else {
+    } else if (pause){
+      return displayTime="Paused"
+    }
+      else {
       displayTime = millisToMinutesAndSeconds(remainingTimeMillis);
       return remainingTimeMillis;
     }
@@ -201,10 +269,12 @@
   startTimestamp={sessionData.StartTime}
   displayTime={displayTime}
   degrees={360 / sessionData.Duration}
+  bind:pause
 />
 
-{#if showReset}
+
 <div class="reset-container">
+  {#if showReset}
   <input
   type="number"
   min="0"
@@ -217,8 +287,12 @@
   <button class="reset-button" on:click={() => updateSession(sessionData)}>
     <img class="reset-img" data-testid="reset-svg" src="/reset-timer.svg" alt="reset the timer" />
   </button>
-</div>
+  {:else}
+  <button class="pause-button" on:click={() => handlePause()}>
+    <img class="pause-img" data-testid="pause-svg" src="/pause.svg" alt="pause button"/>
+  </button>
 {/if}
+</div>
 
 
 <style>
@@ -232,7 +306,7 @@
     height: 50%;
     justify-content: center;
     align-items: center;
-  
+    width: 20vw;
   }
 
   .reset-input {
@@ -247,7 +321,7 @@
     border-bottom: solid #993299;
   }
 
-  .reset-button {
+  .reset-button, .pause-button {
     background-color: Transparent;
     background-repeat:no-repeat;
     border: none;
@@ -257,7 +331,7 @@
     border-radius: 50%;
   }
 
-  .reset-img {
+  .reset-img, .pause-img {
     position: absolute;
     top: 70%;
     left: 50%;
