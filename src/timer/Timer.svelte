@@ -1,3 +1,5 @@
+#prettier-ignore
+
 <script>
   'use strict';
   import { onMount } from 'svelte';
