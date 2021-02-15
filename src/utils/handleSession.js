@@ -39,3 +39,14 @@ export async function pauseSession(sessionID, pauseTime){
     }),
   });
 }
+
+export async function unpauseSession(sessionID, unpauseTime){
+  console.log(sessionID)
+  await fetch(`${process.env.ADDR}/session/unpause`, {
+    method: 'POST',
+    body: JSON.stringify( {
+      sessionId: sessionID,
+      unpauseTime: unpauseTime,
+    }),
+  });
+}

@@ -3,8 +3,6 @@
   'use strict';
   import { onMount } from 'svelte';
   import {
-    sendDriverNotification,
-    sendNotification,
     newDriverNotification,
 } from '../utils/notification.js';
   import {
@@ -19,14 +17,17 @@
   import {
     updateSession,
     pauseSession,
+    unpauseSession,
 } from '../utils/handleSession.js';
   import TimerSVG from './TimerSVG.svelte';
+  import { calculateRemainingTime } from '../utils/timer-utils.js'
 
   const MAX_DURATION_LIMIT = minsToMillis(120);
   const TIMER_REFRESH_RATE_MS = 50;
   const TIMES_UP_LIMIT_MS = TIMER_REFRESH_RATE_MS * 2;
+  let intervals = [];
+
   // sound needs to stored in var here so they can be accessed when the tab is inactive
-  const notifySound = new Audio('/deduction.mp3');
   const newDriverSound = new Audio('/open-ended.mp3');
 
   export let sessionData = {};
@@ -35,10 +36,10 @@
   export let message = '';
   let ws;
   const uuid = sessionStorage.getItem('uuid');
-  let intervals = [ ];
   let displayTime = 'Start the timer';
   let updatedDuration;
   let pause = false;
+  let pauseMoment;
 
   /**
    * Process received WebSocket messages
@@ -47,17 +48,31 @@
    * @param {object} event - incoming message
     */
   async function wsOnMessageOverwrite (event) {
+    console.log({event})
     showReset = false;
     clearTimer();
     try {
-      sessionData = JSON.parse(event.data);
-      if (sessionData.CurrentDriver.UUID === uuid) {
-        newDriverNotification(newDriverSound);
-        message = 'You are the driver!';
-      } else {
-        message = '';
+      const dataReceived = JSON.parse(event.data);
+      if (dataReceived.CurrentDriver){
+        sessionData = dataReceived;
+        endTime = sessionData.EndTime
+        if (sessionData.CurrentDriver.UUID === uuid) {
+          newDriverNotification(newDriverSound);
+          message = 'You are the driver!';
+          } else {
+            message = '';
+          }
+          await calculateRemainingTime(sessionData);
+    } else if (dataReceived.PauseTime){
+        sessionData = {...sessionData, ...dataReceived}
+        console.log("PAUSED", sessionData)
+      } else if (dataReceived.UnpauseTime){
+        pause = false
+        startTimer(sessionData.Duration - (dataReceived.UnpauseTime - sessionData.StartTime), sessionData.EndTime);
+        sessionData = {...sessionData, StartTime: sessionData.StartTime + (dataReceived.UnpauseTime - sessionData.StartTime), sessionData.EndTime + (dataReceived.UnpauseTime - sessionData.PauseTime), ...dataReceived}
+        console.log("RESUME", sessionData)
+        console.log("RESUME2", sessionData.StartTime + (dataReceived.UnpauseTime - sessionData.StartTime))
       }
-      await calculateRemainingTime(sessionData);
     } catch (e) {
       console.log('message received but event.data could not be parsed', e);
     }
@@ -77,8 +92,7 @@
     if (!sessionData.newTimer) {
       calculateRemainingTime(sessionData);
     } else {
-      startTimer(sessionData.Duration);
-      console.log(sessionData);
+      startTimer(sessionData.Duration, sessionData.EndTime);
       try {
         await navigator.clipboard.writeText(
           `https://pairprogrammingtimer.com/${sessionData.SessionID}`);
@@ -90,135 +104,90 @@
     return () => closeWs(ws);
   });
 
+  
   /**
-   * Calculate and display remaining time MS
-   * for a pre-existing session
-   *
-   * @param {object} existingSessionData
-   */
-  function calculateRemainingTime(existingSessionData) {
-    if (existingSessionData.PauseTime !== 0){
-      console.log('calculating pause timer');
-      const endTime = existingSessionData.EndTime;
-      const pauseTime = existingSessionData.PauseTime;
-      const remainingTimeMillis = endTime - pauseTime;
-      displayRemainingTime(remainingTimeMillis);
-    } else {
-      const endTime = existingSessionData.EndTime;
-      const remainingTimeMillis = endTime - Date.now();
-      displayRemainingTime(remainingTimeMillis);
-    }
-  }
+ * Start and display the timer
+ * when a new session is created
+ *
+ * @param {number} duration - MS
+ */
+export function startTimer(duration, endtime) {
+  return display(duration, endtime);
+}
 
-  /**
-   * Start and display the timer
-   * when a new session is created
-   *
-   * @param {number} duration - MS
-   */
-  function startTimer(duration) {
-    displayRemainingTime(duration);
-  }
-
-  /**
-   * @param {number} remainingTime - MS
-   */
-  function displayRemainingTime(remainingTime) {
-    display(remainingTime);
-  }
-
-  /**
-   * Handle pause button, starts a new pause timer for duration of pause
-   *
-   *
-   *
-   */
-
-  function handlePause() {
-    clearTimer();
-    const pauseMoment = Date.now();
-    const remainingMillis = sessionData.EndTime - pauseMoment;
-    pauseSession(sessionData.SessionID, pauseMoment);
-    // updatedDuration = displayTime;
-    setInterval(() => {
-      sessionData.StartTime = Date.now() + remainingMillis;
-    }, 30);
-    displayTime = displayTime.toString();
-    // need remaining millis seconds and an interval to keep track of it assign it to StartTime
-    console.log('pausing');
-  }
-
-  /**
-   * Continously refresh the timer display
-   * for the duration of the timer, unless timer is paused
-   *
-   * @param {number} remainingTimeMillis
-   */
-  function display(remainingTimeMillis) {
-    if (pause){
-      displayTime = 'Paused';
-      return;
-    } else if (isNaN(remainingTimeMillis)){
-      return displayTime = remainingTimeMillis;
-    } else {
-      const currentInterval = setInterval(() => {
-        if (!isNaN(remainingTimeMillis)) {
-          remainingTimeMillis = updateTime(sessionData.EndTime - Date.now());
-        }
-      }, TIMER_REFRESH_RATE_MS);
-      intervals.push(currentInterval);
-    }
-  }
-
-  /**
-   * Handle updating the timer and indicate when time's up
-   *
-   * @param {number} remainingTimeMillis
-   * @return {void | remainingTimeMillis}
-   */
-  function updateTime(remainingTimeMillis) {
-    if (remainingTimeMillis <= TIMES_UP_LIMIT_MS) {
-      clearTimer();
-      timesUp();
-    } else if (pause){
-      return displayTime='Paused';
-    } else {
-      displayTime = millisToMinutesAndSeconds(remainingTimeMillis);
-      return remainingTimeMillis;
-    }
-  }
-
-  /**
-   * Handle when the timer has finished:
-   * update the server with session data,
-   * show relevant notification
-   */
-  function timesUp() {
-    displayTime = 'Time\'s up!';
-    if (
-      'CurrentDriver' in sessionData &&
-      'UUID' in sessionData.CurrentDriver
-    ) {
-      if (uuid === sessionData.CurrentDriver.UUID && !(Number.isInteger(displayTime))) {
-        showReset = true;
-        const notification = sendDriverNotification(notifySound);
-        notification.onclick = () => {
-          updateSession(sessionData);
-          notification.close();
-        };
-      } else {
-        sendNotification(notifySound);
+/**
+ * Continously refresh the timer display
+ * for the duration of the timer, unless timer is paused
+ *
+ * @param {number} remainingTimeMillis
+ * @param {number} endtime
+ */
+function display(remainingTimeMillis, endTime) {
+  if (isNaN(remainingTimeMillis)) {
+    return remainingTimeMillis;
+  } else {
+    const currentInterval = setInterval(() => {
+      if (!isNaN(remainingTimeMillis)) {
+        remainingTimeMillis = updateTime(endTime - Date.now());
+        displayTime = millisToMinutesAndSeconds(remainingTimeMillis);
       }
-    }
+    }, TIMER_REFRESH_RATE_MS);
+  intervals.push(currentInterval);
   }
+}
+
+/**
+ * Handle updating the timer and indicate when time's up
+ *
+ * @param {number} remainingTimeMillis
+ * @return {void | remainingTimeMillis}
+ */
+function updateTime(remainingTimeMillis) {
+  if (remainingTimeMillis <= TIMES_UP_LIMIT_MS) {
+    clearTimer();
+    timesUp();
+  } else {
+    return remainingTimeMillis;
+  }
+}
+
 
   /**
    * Clear the set Intervals responsible for displaying the timer
    */
-  function clearTimer() {
+  export function clearTimer() {
     intervals.forEach(interval => clearInterval(interval));
     intervals = [  ];
   }
+
+/**
+ *
+ * Handle pause button, starts a new pause timer for duration of pause
+ */
+function handlePause(pausedState) {
+  if (pausedState === true) {
+    clearTimer();
+    const unpauseMoment = Date.now()
+    unpauseSession(sessionData.SessionID, unpauseMoment);
+    pause = false
+    return
+  }
+  clearTimer();
+  pauseMoment = Date.now();
+  pause = true
+  // need remaining millis seconds and an interval to keep track of it assign it to StartTime
+  const currentInterval = setInterval(() => {
+    const remainingTimeMillis = sessionData.EndTime - Date.now();
+    sessionData.EndTime += TIMER_REFRESH_RATE_MS
+    sessionData.StartTime += TIMER_REFRESH_RATE_MS
+    displayTime = millisToMinutesAndSeconds(remainingTimeMillis)
+  }, TIMER_REFRESH_RATE_MS);
+  intervals.push(currentInterval)
+  pauseSession(sessionData.SessionID, pauseMoment);
+  return
+}
+
+
 
   /**
    * handle updates to the session duration
@@ -260,7 +229,7 @@
     <img class="reset-img" data-testid="reset-svg" src="/reset-timer.svg" alt="reset the timer" />
   </button>
   {:else}
-  <button class="pause-button" on:click={() => handlePause()}>
+  <button class="pause-button" on:click={() => handlePause(pause)}>
     <img class="pause-img" data-testid="pause-svg" src="/pause.svg" alt="pause button"/>
   </button>
 {/if}
