@@ -4,6 +4,8 @@
   import { onMount } from 'svelte';
   import {
     newDriverNotification,
+  sendDriverNotification,
+  sendNotification,
 } from '../utils/notification.js';
   import {
     minsToMillis,
@@ -21,7 +23,8 @@
 } from '../utils/handleSession.js';
   import TimerSVG from './TimerSVG.svelte';
   import { calculateRemainingTime } from '../utils/timer-utils.js'
-
+    
+  const notifySound = new Audio('/deduction.mp3');
   const MAX_DURATION_LIMIT = minsToMillis(120);
   const TIMER_REFRESH_RATE_MS = 50;
   const TIMES_UP_LIMIT_MS = TIMER_REFRESH_RATE_MS * 2;
@@ -39,7 +42,6 @@
   let displayTime = 'Start the timer';
   let updatedDuration;
   let pause = false;
-  let pauseMoment;
 
   /**
    * Process received WebSocket messages
@@ -50,7 +52,7 @@
   async function wsOnMessageOverwrite (event) {
     console.log({event})
     showReset = false;
-    clearTimer();
+    //clearTimer();
     try {
       const dataReceived = JSON.parse(event.data);
       if (dataReceived.CurrentDriver){
@@ -69,7 +71,7 @@
       } else if (dataReceived.UnpauseTime){
         pause = false
         startTimer(sessionData.Duration - (dataReceived.UnpauseTime - sessionData.StartTime), sessionData.EndTime);
-        sessionData = {...sessionData, StartTime: sessionData.StartTime + (dataReceived.UnpauseTime - sessionData.StartTime), sessionData.EndTime + (dataReceived.UnpauseTime - sessionData.PauseTime), ...dataReceived}
+        sessionData = {...sessionData, StartTime: sessionData.StartTime + (dataReceived.UnpauseTime - sessionData.StartTime), EndTime: sessionData.EndTime + (dataReceived.UnpauseTime - sessionData.PauseTime), ...dataReceived}
         console.log("RESUME", sessionData)
         console.log("RESUME2", sessionData.StartTime + (dataReceived.UnpauseTime - sessionData.StartTime))
       }
@@ -134,7 +136,7 @@ function display(remainingTimeMillis, endTime) {
     }, TIMER_REFRESH_RATE_MS);
   intervals.push(currentInterval);
   }
-}
+  }
 
 /**
  * Handle updating the timer and indicate when time's up
@@ -145,19 +147,43 @@ function display(remainingTimeMillis, endTime) {
 function updateTime(remainingTimeMillis) {
   if (remainingTimeMillis <= TIMES_UP_LIMIT_MS) {
     clearTimer();
-    timesUp();
+    displayTime = timesUp(uuid, sessionData);
   } else {
     return remainingTimeMillis;
   }
 }
 
+/**
+ * Handle when the timer has finished:
+ * update the server with session data,
+ * show relevant notification
+ */
+function timesUp() {
+  displayTime = 'Time\'s up!';
+  if (
+    'CurrentDriver' in sessionData &&
+    'UUID' in sessionData.CurrentDriver
+  ) {
+    if (uuid === sessionData.CurrentDriver.UUID && !(Number.isInteger(displayTime))) {
+      showReset = true;
+      const notification = sendDriverNotification(notifySound);
+      notification.onclick = () => {
+        updateSession(sessionData);
+        notification.close();
+      };
+    } else {
+      sendNotification(notifySound);
+    }
+  }
+}
 
   /**
    * Clear the set Intervals responsible for displaying the timer
    */
   export function clearTimer() {
     intervals.forEach(interval => clearInterval(interval));
-    intervals = [  ];
+      intervals = [  ];
+      console.log("clearing")
   }
 
 /**
@@ -167,23 +193,23 @@ function updateTime(remainingTimeMillis) {
 function handlePause(pausedState) {
   if (pausedState === true) {
     clearTimer();
-    const unpauseMoment = Date.now()
-    unpauseSession(sessionData.SessionID, unpauseMoment);
+    unpauseSession(sessionData.SessionID, Date.now());
     pause = false
     return
   }
   clearTimer();
-  pauseMoment = Date.now();
   pause = true
-  // need remaining millis seconds and an interval to keep track of it assign it to StartTime
-  const currentInterval = setInterval(() => {
-    const remainingTimeMillis = sessionData.EndTime - Date.now();
-    sessionData.EndTime += TIMER_REFRESH_RATE_MS
-    sessionData.StartTime += TIMER_REFRESH_RATE_MS
-    displayTime = millisToMinutesAndSeconds(remainingTimeMillis)
-  }, TIMER_REFRESH_RATE_MS);
-  intervals.push(currentInterval)
-  pauseSession(sessionData.SessionID, pauseMoment);
+    // need remaining millis seconds and an interval to keep track of \
+    // it and assign it to StartTime
+    const currentInterval = setInterval(() => {
+      // const remainingTimeMillis = sessionData.EndTime + Date.now();
+      sessionData.EndTime += TIMER_REFRESH_RATE_MS
+      sessionData.StartTime += TIMER_REFRESH_RATE_MS
+      //displayTime = millisToMinutesAndSeconds(remainingTimeMillis)
+    }, TIMER_REFRESH_RATE_MS);
+    intervals.push(currentInterval)
+    // http POST to server
+  pauseSession(sessionData.SessionID, Date.now());
   return
 }
 
@@ -207,8 +233,8 @@ function handlePause(pausedState) {
 </script>
 <TimerSVG
   duration={sessionData.Duration}
-  startTimestamp={sessionData.StartTime}
-  displayTime={displayTime}
+  bind:startTimestamp={sessionData.StartTime}
+  bind:displayTime
   degrees={360 / sessionData.Duration}
   bind:pause
 />
