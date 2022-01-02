@@ -1,10 +1,11 @@
+
 <script>
   'use strict';
   import { onMount } from 'svelte';
   import {
+    newDriverNotification,
     sendDriverNotification,
     sendNotification,
-    newDriverNotification,
 } from '../utils/notification.js';
   import {
     minsToMillis,
@@ -15,14 +16,21 @@
     initWebsocket,
     closeWs,
 }from '../utils/websocket.js';
-  import { updateSession } from '../utils/handleSession.js';
+  import {
+    updateSession,
+    pauseSession,
+    unpauseSession,
+} from '../utils/handleSession.js';
   import TimerSVG from './TimerSVG.svelte';
-
+  import { calculateRemainingTime } from '../utils/timer-utils.js';
+  
+  const notifySound = new Audio('/deduction.mp3');
   const MAX_DURATION_LIMIT = minsToMillis(120);
   const TIMER_REFRESH_RATE_MS = 50;
   const TIMES_UP_LIMIT_MS = TIMER_REFRESH_RATE_MS * 2;
+  let intervals = [];
+
   // sound needs to stored in var here so they can be accessed when the tab is inactive
-  const notifySound = new Audio('/deduction.mp3');
   const newDriverSound = new Audio('/open-ended.mp3');
 
   export let sessionData = {};
@@ -31,9 +39,9 @@
   export let message = '';
   let ws;
   const uuid = sessionStorage.getItem('uuid');
-  let intervals = [ ];
   let displayTime = 'Start the timer';
   let updatedDuration;
+  let pause = false;
 
   /**
    * Process received WebSocket messages
@@ -42,17 +50,43 @@
    * @param {object} event - incoming message
     */
   async function wsOnMessageOverwrite (event) {
+    console.log({ event });
     showReset = false;
-    clearTimer();
+    //clearTimer();
     try {
-      sessionData = JSON.parse(event.data);
-      if (sessionData.CurrentDriver.UUID === uuid) {
-        newDriverNotification(newDriverSound);
-        message = 'You are the driver!';
-      } else {
-        message = '';
+      const dataReceived = JSON.parse(event.data);
+      if (dataReceived.CurrentDriver){
+        sessionData = dataReceived;
+        // endTime = sessionData.EndTime;
+        if (sessionData.CurrentDriver.UUID === uuid) {
+          newDriverNotification(newDriverSound);
+          message = 'You are the driver!';
+        } else {
+          message = '';
+        }
+        await calculateRemainingTime(sessionData);
+      } else if (dataReceived.PauseTime){
+        sessionData = {
+          ...sessionData,
+          ...dataReceived,
+        };
+        console.log('PAUSED', sessionData);
+      } else if (dataReceived.UnpauseTime){
+        pause = false;
+        startTimer(
+          sessionData.Duration - (dataReceived.UnpauseTime - sessionData.StartTime),
+          sessionData.EndTime);
+        sessionData = {
+          ...sessionData,
+          StartTime: sessionData.StartTime + (dataReceived.UnpauseTime - sessionData.StartTime),
+          EndTime: sessionData.EndTime + (dataReceived.UnpauseTime - sessionData.PauseTime),
+          ...dataReceived,
+        };
+        console.log('RESUME', sessionData);
+        console.log(
+          'RESUME2',
+          sessionData.StartTime + (dataReceived.UnpauseTime - sessionData.StartTime));
       }
-      await calculateRemainingTime(sessionData);
     } catch (e) {
       console.log('message received but event.data could not be parsed', e);
     }
@@ -72,7 +106,7 @@
     if (!sessionData.newTimer) {
       calculateRemainingTime(sessionData);
     } else {
-      startTimer(sessionData.Duration);
+      startTimer(sessionData.Duration, sessionData.EndTime);
       try {
         await navigator.clipboard.writeText(
           `https://pairprogrammingtimer.com/${sessionData.SessionID}`);
@@ -84,80 +118,63 @@
     return () => closeWs(ws);
   });
 
+  
   /**
-   * Calculate and display remaining time MS
-   * for a pre-existing session
-   *
-   * @param {object} existingSessionData
-   */
-  function calculateRemainingTime(existingSessionData) {
-    const endTime = existingSessionData.EndTime;
-    const remainingTimeMillis = endTime - Date.now();
-    displayRemainingTime(remainingTimeMillis);
-  }
+ * Start and display the timer
+ * when a new session is created
+ *
+ * @param {number} duration - MS
+ */
+export function startTimer(duration, endtime) {
+    return display(duration, endtime);
+}
 
-  /**
-   * Start and display the timer
-   * when a new session is created
-   *
-   * @param {number} duration - MS
-   */
-  function startTimer(duration) {
-    displayRemainingTime(duration);
-  }
-
-  /**
-   * @param {number} remainingTime - MS
-   */
-  function displayRemainingTime(remainingTime) {
-    display(remainingTime);
-  }
-
-  /**
-   * Continously refresh the timer display
-   * for the duration of the timer
-   *
-   * @param {number} remainingTimeMillis
-   */
-  function display(remainingTimeMillis) {
+/**
+ * Continously refresh the timer display
+ * for the duration of the timer, unless timer is paused
+ *
+ * @param {number} remainingTimeMillis
+ * @param {number} endtime
+ */
+function display(remainingTimeMillis, endTime) {
     if (isNaN(remainingTimeMillis)) {
-      return displayTime = remainingTimeMillis;
+      return remainingTimeMillis;
     } else {
       const currentInterval = setInterval(() => {
         if (!isNaN(remainingTimeMillis)) {
-          remainingTimeMillis = updateTime(sessionData.EndTime - Date.now());
+          remainingTimeMillis = updateTime(endTime - Date.now());
+          displayTime = millisToMinutesAndSeconds(remainingTimeMillis);
         }
       }, TIMER_REFRESH_RATE_MS);
       intervals.push(currentInterval);
     }
   }
 
-  /**
-   * Handle updating the timer and indicate when time's up
-   *
-   * @param {number} remainingTimeMillis
-   * @return {void | remainingTimeMillis}
-   */
-  function updateTime(remainingTimeMillis) {
+/**
+ * Handle updating the timer and indicate when time's up
+ *
+ * @param {number} remainingTimeMillis
+ * @return {void | remainingTimeMillis}
+ */
+function updateTime(remainingTimeMillis) {
     if (remainingTimeMillis <= TIMES_UP_LIMIT_MS) {
       clearTimer();
-      timesUp();
+      displayTime = timesUp(uuid, sessionData);
     } else {
-      displayTime = millisToMinutesAndSeconds(remainingTimeMillis);
       return remainingTimeMillis;
     }
-  }
+}
 
-  /**
-   * Handle when the timer has finished:
-   * update the server with session data,
-   * show relevant notification
-   */
-  function timesUp() {
+/**
+ * Handle when the timer has finished:
+ * update the server with session data,
+ * show relevant notification
+ */
+function timesUp() {
     displayTime = 'Time\'s up!';
     if (
       'CurrentDriver' in sessionData &&
-      'UUID' in sessionData.CurrentDriver
+    'UUID' in sessionData.CurrentDriver
     ) {
       if (uuid === sessionData.CurrentDriver.UUID && !(Number.isInteger(displayTime))) {
         showReset = true;
@@ -170,15 +187,45 @@
         sendNotification(notifySound);
       }
     }
-  }
+}
 
   /**
    * Clear the set Intervals responsible for displaying the timer
    */
-  function clearTimer() {
+  export function clearTimer() {
     intervals.forEach(interval => clearInterval(interval));
     intervals = [  ];
+    console.log('clearing');
   }
+
+/**
+ *
+ * Handle pause button, starts a new pause timer for duration of pause
+ */
+function handlePause(pausedState) {
+    if (pausedState === true) {
+      clearTimer();
+      unpauseSession(sessionData.SessionID, Date.now());
+      pause = false;
+      return;
+    }
+    clearTimer();
+    pause = true;
+    // need remaining millis seconds and an interval to keep track of \
+    // it and assign it to StartTime
+    const currentInterval = setInterval(() => {
+      // const remainingTimeMillis = sessionData.EndTime + Date.now();
+      sessionData.EndTime += TIMER_REFRESH_RATE_MS;
+      sessionData.StartTime += TIMER_REFRESH_RATE_MS;
+      //displayTime = millisToMinutesAndSeconds(remainingTimeMillis)
+    }, TIMER_REFRESH_RATE_MS);
+    intervals.push(currentInterval);
+    // http POST to server
+    pauseSession(sessionData.SessionID, Date.now());
+    return;
+}
+
+
 
   /**
    * handle updates to the session duration
@@ -198,13 +245,15 @@
 </script>
 <TimerSVG
   duration={sessionData.Duration}
-  startTimestamp={sessionData.StartTime}
-  displayTime={displayTime}
+  bind:startTimestamp={sessionData.StartTime}
+  bind:displayTime
   degrees={360 / sessionData.Duration}
+  bind:pause
 />
 
-{#if showReset}
+
 <div class="reset-container">
+  {#if showReset}
   <input
   type="number"
   min="0"
@@ -217,8 +266,12 @@
   <button class="reset-button" on:click={() => updateSession(sessionData)}>
     <img class="reset-img" data-testid="reset-svg" src="/reset-timer.svg" alt="reset the timer" />
   </button>
-</div>
+  {:else}
+  <button class="pause-button" on:click={() => handlePause(pause)}>
+    <img class="pause-img" data-testid="pause-svg" src="/pause.svg" alt="pause button"/>
+  </button>
 {/if}
+</div>
 
 
 <style>
@@ -232,7 +285,7 @@
     height: 50%;
     justify-content: center;
     align-items: center;
-  
+    width: 20vw;
   }
 
   .reset-input {
@@ -247,7 +300,7 @@
     border-bottom: solid #993299;
   }
 
-  .reset-button {
+  .reset-button, .pause-button {
     background-color: Transparent;
     background-repeat:no-repeat;
     border: none;
@@ -257,7 +310,7 @@
     border-radius: 50%;
   }
 
-  .reset-img {
+  .reset-img, .pause-img {
     position: absolute;
     top: 70%;
     left: 50%;

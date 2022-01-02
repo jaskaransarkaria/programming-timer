@@ -6,8 +6,20 @@
   export let startTimestamp;
   export let displayTime;
   export let degrees = 360 / duration;
+  export let pause;
+
+  let intervalId;
   let elapsedMillis = 0;
   let draw = null;
+
+  // if paused need to clear the intervals and draw the
+  $: if (!pause) {
+    intervalId = drawTimeElapsed();
+  }
+
+  $: if (pause) {
+    clearInterval(intervalId);
+  }
 
   onDestroy(() => {
     clearInterval(intervalId);
@@ -46,39 +58,19 @@
     return coord;
   };
 
-  const intervalId = setInterval(() => {
-    elapsedMillis = Date.now() - startTimestamp;
-    if (elapsedMillis <= duration) {
-      draw = drawCoord(elapsedMillis * degrees);
-    } else {
-      draw = drawCoord(359.99);
-    }
-  }, 30);
-</script>
+  const drawTimeElapsed = () => (
+    setInterval(() => {
+      elapsedMillis = Date.now() - startTimestamp;
+      if (elapsedMillis <= duration) {
+        draw = drawCoord(elapsedMillis * degrees);
+      } else {
+        draw = drawCoord(359.99);
+      }
+    }, 30));
+  
 
-<svg
-  data-testid="svg-element-parent"
-  version="1.1"
-  xmlns="http://www.w3.org/2000/svg"
-  width="100%"
-  viewBox="-210 0 700 270"
->
-  >
-  <!-- Outer circle -->
-  <circle data-testid="svg-outer-circle" cx="140" cy="140" r="120"
-  stroke={'#40e0d0'} stroke-width={'5'} fill={'none'} /> <path
-  data-testid="svg-path" d={draw} stroke={' #993299'} stroke-width={'3'}
-  fill={'none'} />
-  <text
-    data-testid="svg-text"
-    x="140"
-    y="138"
-    text-anchor="middle"
-    class="timer-text"
-  >
-    {displayTime}
-  </text>
-</svg>
+  //intervalId = drawTimeElapsed()
+</script>
 
 <style>
   text {
@@ -93,3 +85,35 @@
     transform: translate(-50%, -50%);
   }
 </style>
+
+<svg
+  data-testid='svg-element-parent'
+  version='1.1'
+  xmlns='http://www.w3.org/2000/svg'
+  width='100%'
+  viewBox='-210 0 700 270'>
+  >
+  <!-- Outer circle -->
+  <circle
+    data-testid='svg-outer-circle'
+    cx='140'
+    cy='140'
+    r='120'
+    stroke={'#40e0d0'}
+    stroke-width={'5'}
+    fill={'none'} />
+  <path
+    data-testid='svg-path'
+    d={draw}
+    stroke={' #993299'}
+    stroke-width={'3'}
+    fill={'none'} />
+  <text
+    data-testid='svg-text'
+    x='140'
+    y='138'
+    text-anchor='middle'
+    class='timer-text'>
+    {displayTime}
+  </text>
+</svg>
