@@ -4,8 +4,8 @@
   import { onMount } from 'svelte';
   import {
     newDriverNotification,
-  sendDriverNotification,
-  sendNotification,
+    sendDriverNotification,
+    sendNotification,
 } from '../utils/notification.js';
   import {
     minsToMillis,
@@ -22,8 +22,8 @@
     unpauseSession,
 } from '../utils/handleSession.js';
   import TimerSVG from './TimerSVG.svelte';
-  import { calculateRemainingTime } from '../utils/timer-utils.js'
-    
+  import { calculateRemainingTime } from '../utils/timer-utils.js';
+  
   const notifySound = new Audio('/deduction.mp3');
   const MAX_DURATION_LIMIT = minsToMillis(120);
   const TIMER_REFRESH_RATE_MS = 50;
@@ -50,30 +50,42 @@
    * @param {object} event - incoming message
     */
   async function wsOnMessageOverwrite (event) {
-    console.log({event})
+    console.log({ event });
     showReset = false;
     //clearTimer();
     try {
       const dataReceived = JSON.parse(event.data);
       if (dataReceived.CurrentDriver){
         sessionData = dataReceived;
-        endTime = sessionData.EndTime
+        // endTime = sessionData.EndTime;
         if (sessionData.CurrentDriver.UUID === uuid) {
           newDriverNotification(newDriverSound);
           message = 'You are the driver!';
-          } else {
-            message = '';
-          }
-          await calculateRemainingTime(sessionData);
-    } else if (dataReceived.PauseTime){
-        sessionData = {...sessionData, ...dataReceived}
-        console.log("PAUSED", sessionData)
+        } else {
+          message = '';
+        }
+        await calculateRemainingTime(sessionData);
+      } else if (dataReceived.PauseTime){
+        sessionData = {
+          ...sessionData,
+          ...dataReceived,
+        };
+        console.log('PAUSED', sessionData);
       } else if (dataReceived.UnpauseTime){
-        pause = false
-        startTimer(sessionData.Duration - (dataReceived.UnpauseTime - sessionData.StartTime), sessionData.EndTime);
-        sessionData = {...sessionData, StartTime: sessionData.StartTime + (dataReceived.UnpauseTime - sessionData.StartTime), EndTime: sessionData.EndTime + (dataReceived.UnpauseTime - sessionData.PauseTime), ...dataReceived}
-        console.log("RESUME", sessionData)
-        console.log("RESUME2", sessionData.StartTime + (dataReceived.UnpauseTime - sessionData.StartTime))
+        pause = false;
+        startTimer(
+          sessionData.Duration - (dataReceived.UnpauseTime - sessionData.StartTime),
+          sessionData.EndTime);
+        sessionData = {
+          ...sessionData,
+          StartTime: sessionData.StartTime + (dataReceived.UnpauseTime - sessionData.StartTime),
+          EndTime: sessionData.EndTime + (dataReceived.UnpauseTime - sessionData.PauseTime),
+          ...dataReceived,
+        };
+        console.log('RESUME', sessionData);
+        console.log(
+          'RESUME2',
+          sessionData.StartTime + (dataReceived.UnpauseTime - sessionData.StartTime));
       }
     } catch (e) {
       console.log('message received but event.data could not be parsed', e);
@@ -114,7 +126,7 @@
  * @param {number} duration - MS
  */
 export function startTimer(duration, endtime) {
-  return display(duration, endtime);
+    return display(duration, endtime);
 }
 
 /**
@@ -125,17 +137,17 @@ export function startTimer(duration, endtime) {
  * @param {number} endtime
  */
 function display(remainingTimeMillis, endTime) {
-  if (isNaN(remainingTimeMillis)) {
-    return remainingTimeMillis;
-  } else {
-    const currentInterval = setInterval(() => {
-      if (!isNaN(remainingTimeMillis)) {
-        remainingTimeMillis = updateTime(endTime - Date.now());
-        displayTime = millisToMinutesAndSeconds(remainingTimeMillis);
-      }
-    }, TIMER_REFRESH_RATE_MS);
-  intervals.push(currentInterval);
-  }
+    if (isNaN(remainingTimeMillis)) {
+      return remainingTimeMillis;
+    } else {
+      const currentInterval = setInterval(() => {
+        if (!isNaN(remainingTimeMillis)) {
+          remainingTimeMillis = updateTime(endTime - Date.now());
+          displayTime = millisToMinutesAndSeconds(remainingTimeMillis);
+        }
+      }, TIMER_REFRESH_RATE_MS);
+      intervals.push(currentInterval);
+    }
   }
 
 /**
@@ -145,12 +157,12 @@ function display(remainingTimeMillis, endTime) {
  * @return {void | remainingTimeMillis}
  */
 function updateTime(remainingTimeMillis) {
-  if (remainingTimeMillis <= TIMES_UP_LIMIT_MS) {
-    clearTimer();
-    displayTime = timesUp(uuid, sessionData);
-  } else {
-    return remainingTimeMillis;
-  }
+    if (remainingTimeMillis <= TIMES_UP_LIMIT_MS) {
+      clearTimer();
+      displayTime = timesUp(uuid, sessionData);
+    } else {
+      return remainingTimeMillis;
+    }
 }
 
 /**
@@ -159,22 +171,22 @@ function updateTime(remainingTimeMillis) {
  * show relevant notification
  */
 function timesUp() {
-  displayTime = 'Time\'s up!';
-  if (
-    'CurrentDriver' in sessionData &&
+    displayTime = 'Time\'s up!';
+    if (
+      'CurrentDriver' in sessionData &&
     'UUID' in sessionData.CurrentDriver
-  ) {
-    if (uuid === sessionData.CurrentDriver.UUID && !(Number.isInteger(displayTime))) {
-      showReset = true;
-      const notification = sendDriverNotification(notifySound);
-      notification.onclick = () => {
-        updateSession(sessionData);
-        notification.close();
-      };
-    } else {
-      sendNotification(notifySound);
+    ) {
+      if (uuid === sessionData.CurrentDriver.UUID && !(Number.isInteger(displayTime))) {
+        showReset = true;
+        const notification = sendDriverNotification(notifySound);
+        notification.onclick = () => {
+          updateSession(sessionData);
+          notification.close();
+        };
+      } else {
+        sendNotification(notifySound);
+      }
     }
-  }
 }
 
   /**
@@ -182,8 +194,8 @@ function timesUp() {
    */
   export function clearTimer() {
     intervals.forEach(interval => clearInterval(interval));
-      intervals = [  ];
-      console.log("clearing")
+    intervals = [  ];
+    console.log('clearing');
   }
 
 /**
@@ -191,26 +203,26 @@ function timesUp() {
  * Handle pause button, starts a new pause timer for duration of pause
  */
 function handlePause(pausedState) {
-  if (pausedState === true) {
+    if (pausedState === true) {
+      clearTimer();
+      unpauseSession(sessionData.SessionID, Date.now());
+      pause = false;
+      return;
+    }
     clearTimer();
-    unpauseSession(sessionData.SessionID, Date.now());
-    pause = false
-    return
-  }
-  clearTimer();
-  pause = true
+    pause = true;
     // need remaining millis seconds and an interval to keep track of \
     // it and assign it to StartTime
     const currentInterval = setInterval(() => {
       // const remainingTimeMillis = sessionData.EndTime + Date.now();
-      sessionData.EndTime += TIMER_REFRESH_RATE_MS
-      sessionData.StartTime += TIMER_REFRESH_RATE_MS
+      sessionData.EndTime += TIMER_REFRESH_RATE_MS;
+      sessionData.StartTime += TIMER_REFRESH_RATE_MS;
       //displayTime = millisToMinutesAndSeconds(remainingTimeMillis)
     }, TIMER_REFRESH_RATE_MS);
-    intervals.push(currentInterval)
+    intervals.push(currentInterval);
     // http POST to server
-  pauseSession(sessionData.SessionID, Date.now());
-  return
+    pauseSession(sessionData.SessionID, Date.now());
+    return;
 }
 
 

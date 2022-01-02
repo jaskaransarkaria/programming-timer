@@ -12,14 +12,14 @@
   let elapsedMillis = 0;
   let draw = null;
 
-    // if paused need to clear the intervals and draw the
-    $: if (!pause) {
-        intervalId = drawTimeElapsed()
-      }
+  // if paused need to clear the intervals and draw the
+  $: if (!pause) {
+    intervalId = drawTimeElapsed();
+  }
 
-    $: if (pause) {
-        clearInterval(intervalId)
-      }
+  $: if (pause) {
+    clearInterval(intervalId);
+  }
 
   onDestroy(() => {
     clearInterval(intervalId);
@@ -58,16 +58,16 @@
     return coord;
   };
 
-    const drawTimeElapsed = () => ( 
-      setInterval(() => {
-          elapsedMillis = Date.now() - startTimestamp;
-          if (elapsedMillis <= duration) {
-            draw = drawCoord(elapsedMillis * degrees);
-          } else {
-            draw = drawCoord(359.99);
-          }
-        }, 30))
-      
+  const drawTimeElapsed = () => (
+    setInterval(() => {
+      elapsedMillis = Date.now() - startTimestamp;
+      if (elapsedMillis <= duration) {
+        draw = drawCoord(elapsedMillis * degrees);
+      } else {
+        draw = drawCoord(359.99);
+      }
+    }, 30));
+  
 
   //intervalId = drawTimeElapsed()
 </script>
